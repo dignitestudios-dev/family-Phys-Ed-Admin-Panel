@@ -1,10 +1,11 @@
 import React, { Suspense } from "react";
-import UserDetails from "./UserDetails";
+
+import Details from "./AllDetails";
 
 const page = () => {
   return (
     <Suspense fallback={<div>Loading ...</div>}>
-      <UserDetails />
+      <Details />
     </Suspense>
   );
 };

@@ -63,7 +63,7 @@ const useGetUsersDetails = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserDetailsInterface | null>(null);
 
-  const getUserById = async (id: string , role:string) => {
+  const getUserById = async (id: string) => {
     setLoading(true);
     try {
      
@@ -85,7 +85,7 @@ const useGetCoachDetails = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState< CoachDetailsInterface | null>(null);
 
-  const getUserById = async (id: string , role:string) => {
+  const getUserById = async (id: string ) => {
     setLoading(true);
     try {
        const response = await api.getCoachById(id);
@@ -452,6 +452,7 @@ const useGetGroupDetails = () => {
 export const getHooks = {
   useGetAllUsers,
   useGetUsersDetails,
+  useGetCoachDetails,
   useGetUserPostsById,
   useGetUserFollowersById,
   useGetUserFollowingsById,

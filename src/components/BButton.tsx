@@ -32,7 +32,7 @@ const BButton: React.FC<BButtonProps> = ({
             ? "w-full"
             : "px-4 min-w-40"
         }
-         flex items-center justify-center gap-2 select-none px-[15px] h-[49px] max-w-full rounded-[12px] transition-all ${
+         flex items-center justify-center gap-2 px-8 select-none  h-[49px] max-w-full rounded-[12px] transition-all ${
            varient === "secondary" ? "bg-[#D8D8D8]" : "bg-red-500 text-white"
          } text-black font-bold ${
         loading || disabled

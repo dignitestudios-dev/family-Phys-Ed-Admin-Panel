@@ -7,7 +7,7 @@ import BackArrow from "@/components/icons/BackArrow";
 import Delete from "@/components/icons/Delete";
 import BButton from "@/components/BButton";
 import Badge from "@/components/icons/Badge";
-import Phone from "@/components/icons/Phone";
+
 import Location from "@/components/icons/Location";
 import BTab from "@/components/BTab";
 import Posts from "@/components/Posts";
@@ -20,13 +20,16 @@ import PageLoader from "@/components/PageLoader";
 import { postHooks } from "@/hooks/usePostRequests";
 import { deleteHooks } from "@/hooks/useDeleteRequests";
 import Image from "next/image";
+import { ArrowLeft, Mail, MapPin, Phone } from "lucide-react";
+import Details from "@/components/coach-details/details";
+import Portfolio from "@/components/coach-details/portfolio";
 
 type SelectedTabs = "" | "0" | "1" | "2" | "3";
 
-const UserDetails = () => {
+const CoachDetails = () => {
 
   const tabs = ["Detail", "Portfolio", "Sessions", "Merchandise"];
-  const { loading, user, setUser, getUserById } = getHooks.useGetUsersDetails();
+  const { loading, user, setUser, getUserById } = getHooks.useGetCoachDetails();
   const { loading: suspendLoading, toggleSuspendUser } =
     postHooks.useToggleSuspendUser();
   const { loading: deleteLoading, deleteUser } = deleteHooks.useDeleteUser();
@@ -58,7 +61,7 @@ const UserDetails = () => {
   }, [currentTab]);
 
   useEffect(() => {
-    id && getUserById(id as string , searchParams.get("role")!);
+    id && getUserById(id as string );
   }, [id]);
 
   const handleToggleDisablePopup = (value: boolean) => {
@@ -75,14 +78,14 @@ const UserDetails = () => {
     }));
   };
 
-  const handleToggleDisableUser = async () => {
-    const suspendUser = !user?.isSuspended;
-    const success = await toggleSuspendUser(id as string, suspendUser);
-    if (success)
-      setUser((prev: any) => ({ ...prev, isSuspended: suspendUser }));
+//   const handleToggleDisableUser = async () => {
+//     // const suspendUser = !user?.isSuspended;
+//     const success = await toggleSuspendUser(id as string, suspendUser);
+//     if (success)
+//       setUser((prev: any) => ({ ...prev, isSuspended: suspendUser }));
 
-    handleToggleDisablePopup(false);
-  };
+//     handleToggleDisablePopup(false);
+//   };
 
   const handleDeleteUser = async () => {
     const success = await deleteUser(id as string);
@@ -96,14 +99,15 @@ const UserDetails = () => {
       {loading ? (
         <PageLoader />
       ) : (
-        <>
-          <Link href="/user-management" className="outline-none">
-            <BackArrow />
-          </Link>
+        <div className="flex flex-col gap-4">
 
           <div className="flex justify-between items-center">
-            <h1 className="section-heading">User Details</h1>
-
+            <div className="flex items-center gap-2 text-white">
+          <Link href="/user-management" className="outline-none">
+           <ArrowLeft />
+          </Link>
+            <h1 className="section-heading ">Coach Profile</h1>
+</div>
             <div className="flex gap-2 items-center">
               {/* <div
                 className="bg-[#FF3B30] rounded-[10px] h-[48px] w-[44px] cursor-pointer active:scale-[0.95] transition-all flex justify-center items-center"
@@ -113,7 +117,7 @@ const UserDetails = () => {
               </div> */}
 
               <BButton
-                title={user?.isSuspended ? "Enable" : "Disable"}
+                title={user?.is_deactivate ? "Activate" : "Deactivate"}
                 w="fit"
                 onBtnClick={() => handleToggleDisablePopup(true)}
               />
@@ -125,17 +129,17 @@ const UserDetails = () => {
               <div
                 className="h-[100px] w-[100px] rounded-full bg-cover bg-center border-[3px] border-white"
                 style={{
-                  backgroundImage: `url(http://family-phys-ed-s3.s3.amazonaws.com/${user?.avatar}?alt=media)`,
+                  backgroundImage: `url(http://family-phys-ed-s3.s3.amazonaws.com/${user?.avatar})`,
                 }}
               />
             </div>
 
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-3">
-                <h2 className="font-general-semibold text-xl text-white">
+                <h2 className="font-general-semibold text-2xl text-white">
                   {user?.name}
                 </h2>
-                {user?.earnedBadges?.length ? (
+                {/* {user?.earnedBadges?.length ? (
                   <Image
                     src={`/badges/${
                       user?.earnedBadges[user?.earnedBadges.length - 1]?._id
@@ -148,27 +152,28 @@ const UserDetails = () => {
                   />
                 ) : (
                   ""
-                )}
+                )} */}
               </div>
 
-              <p className="text-sm text-white">@{user?.name}</p>
-              <h4>{user.experience}</h4>
+              {/* <p className="text-sm text-white">@{user?.name}</p> */}
+              <h4 className="text-white text-sm">{user?.experience}+ Years of Experience</h4>
 
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 text-sm text-[#707070]">
-                  <Phone />
+              <div className="flex items-center gap-4 text-xs text-white">
+                <div className="flex items-center gap-1  ">
+                  <Phone size={20} />
                   <p> {user?.phone_number}</p>
                 </div>
-                <span className="text-[#707070] font-extralight text-sm">
-                  |
-                </span>
-                <div className="flex items-center gap-1 text-sm text-[#707070]">
-                  <Location />
-                  <p> {user?.location}</p>
+              
+                <div className="flex items-center gap-1  ">
+                  <Mail size={20} />
+                  <p> {user?.email}</p>
                 </div>
               </div>
+              <div className="flex items-center gap-2 text-xs text-white">
+                <MapPin size={20} />
+                {user?.location}</div>
 
-              <p className="text-desc text-sm">{user?.fitness_level}</p>
+              {/* <p className="text-desc text-sm">{user?.fitness_level}</p> */}
             </div>
           </div>
 
@@ -185,11 +190,11 @@ const UserDetails = () => {
             ))}
           </div>
 
-          <div className="rounded-lg bg-secondary h-full min-h-[500px] overflow-y-auto">
+          <div className="rounded-lg  h-full overflow-y-auto">
             {selectedTab === "0" ? (
-              <BasicInfo user={user} />
+              <Details coach={user!} />
             ) : selectedTab === "1" ? (
-              <Posts />
+              <Portfolio media={user?.portfolio!} />
             ) : selectedTab === "2" ? (
               <Followers />
             ) : selectedTab === "3" ? (
@@ -200,7 +205,7 @@ const UserDetails = () => {
           </div>
 
           <DangerPopup
-            title={user?.isSuspended ? "Enable User" : "Disable User"}
+            title={user?.is_deactivate ? "Enable User" : "Disable User"}
             desc={`Are you sure you want to ${
               user?.isSuspended ? "enable" : "disable"
             } this user?`}
@@ -220,10 +225,10 @@ const UserDetails = () => {
             onContinue={handleDeleteUser}
             loading={deleteLoading}
           />
-        </>
+        </div>
       )}
     </>
   );
 };
 
-export default UserDetails;
+export default CoachDetails;
