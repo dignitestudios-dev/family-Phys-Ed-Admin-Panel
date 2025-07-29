@@ -1,5 +1,6 @@
 import api from "@/lib/services";
 import {
+  ApprovalRequests,
   CoachDetailsInterface,
   CommunityInterface,
   CommunityMembersInterface,
@@ -57,6 +58,42 @@ const useGetAllUsers = () => {
   };
 
   return { loading, users, totalPages, getAllUsers };
+};
+
+const useGetAllProfileReq = () => {
+  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<ApprovalRequests | undefined>();
+  const [totalPages, setTotalPages] = useState<number>(1);
+
+  const getAllRequests = async (
+    search: string,
+    selectedTab: "0" | "1" | "2" | "" = "0",
+    page?: number,
+    limit?: number
+  ) => {
+    setLoading(true);
+    try {
+      const isSuspendedBoolean: string =
+        selectedTab === "" || selectedTab === "0"
+          ? ""
+          : selectedTab === "1"
+          ? "&isSuspended=false"
+          : selectedTab === "2"
+          ? "&isSuspended=true"
+          : "";
+
+      const response = await api.getAllRequests();
+      console.log(response)
+      setUsers(response);
+      // setTotalPages(response?.data?.pagination?.totalPages);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, users, totalPages, getAllRequests };
 };
 
 const useGetUsersDetails = () => {
@@ -459,6 +496,7 @@ export const getHooks = {
   useGetPostDetails,
   useGetCommunities,
   useGetCommunityDetails,
+  useGetAllProfileReq,
   useGetReportedUsers,
   useGetReportedPosts,
   useGetReportedGroups,

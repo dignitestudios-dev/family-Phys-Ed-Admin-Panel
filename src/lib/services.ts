@@ -22,6 +22,7 @@ import {
   PaginatedResponse,
   User,
   CoachDetailsInterface,
+  ApprovalRequests,
 } from "./types";
 
 // Create an Axios instance
@@ -205,6 +206,17 @@ const getAllUsers = (
       `/users`
     )
   );
+
+const getAllRequests = (
+ 
+) =>
+  apiHandler<ApprovalRequests>(() =>
+    API.get(
+      // `/users?page=${page}&limit=${limit}&search=${search}${isSuspended}`
+      `/approval-requests`
+    )
+  );
+
 
 const getUserById = (id: string) =>
   apiHandler<UserDetailsInterface>(() => API.get(`/user-details/${id}`));
@@ -509,6 +521,7 @@ const api = {
   login,
   getAllUsers,
   getCoachById,
+  getAllRequests,
   getUserById,
   getPostsOfUser,
   getFollowersOfUser,

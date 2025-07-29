@@ -1,4 +1,5 @@
 import { CoachDetailsInterface } from "@/lib/types";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 // import { CoachDetailsInterface } from "@/types"; // Update path based on your project
@@ -50,22 +51,28 @@ const Details: React.FC<Props> = ({ coach }) => {
           <div className="flex  gap-2">
             {coach.identity_verfication_docs.driving_front && (
               <Link
-                href={coach.identity_verfication_docs.driving_front}
+                href={`${process.env.NEXT_PUBLIC_MEDIA_URL}${coach.identity_verfication_docs.driving_front}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-primary hover:underline"
               >
-                Driving License (Front)
+                <div className=" h-[100px] flex flex-col justify-center items-center w-[100px] bg-[#2C2C2E] rounded-xl" >
+                  <Image src={"/images/pdf.png"} alt="pdf" width={50} height={50} />
+                  <h1 className="text-xs text-center" >Driving Liscense Front</h1>
+                </div>
               </Link>
             )}
             {coach.identity_verfication_docs.driving_back && (
               <Link
-                href={coach.identity_verfication_docs.driving_back}
+                href={`${process.env.NEXT_PUBLIC_MEDIA_URL}${coach.identity_verfication_docs.driving_back}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-primary hover:underline"
               >
-                Driving License (Back)
+                <div className=" h-[100px] flex flex-col justify-center items-center w-[100px] bg-[#2C2C2E] rounded-xl" >
+                  <Image src={"/images/pdf.png"} alt="pdf" width={50} height={50} />
+                  <h1 className="text-xs text-center" >Driving Liscense Back</h1>
+                </div>
               </Link>
             )}
           </div>

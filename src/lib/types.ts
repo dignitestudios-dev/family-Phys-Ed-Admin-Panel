@@ -405,3 +405,73 @@ export interface SubscriptionPlan {
   __v: number;
   startDate: string;
 }
+
+
+export interface PaginationLink {
+  url: string | null;
+  label: string;
+  active: boolean;
+}
+
+export interface PaginatedSessionData<T = any> {
+  current_page: number;
+  data: T[];
+  first_page_url: string;
+  from: number | null;
+  last_page: number;
+  last_page_url: string;
+  links: PaginationLink[];
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
+  to: number | null;
+  total: number;
+}
+
+export interface ISessions {
+  public: PaginatedSessionData;
+  private: PaginatedSessionData;
+  custom: PaginatedSessionData;
+}
+
+
+export interface RequestItem {
+  id: number;
+  uid: string;
+  name: string;
+  avatar: string | null;
+  email: string;
+  phone_number: string;
+  address: string;
+  per_slot_price: string | null;
+  hourly_slot_price: string | null;
+  is_approved: string;
+}
+
+export interface PaginationLink {
+  url: string | null;
+  label: string;
+  active: boolean;
+}
+
+export interface PaginatedRequest<T = any> {
+  current_page: number;
+  data: T[];
+  first_page_url: string;
+  from: number | null;
+  last_page: number;
+  last_page_url: string;
+  links: PaginationLink[];
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
+  to: number | null;
+  total: number;
+}
+
+export interface ApprovalRequests {
+  profile_requests: PaginatedRequest<RequestItem>;
+  merchandise_requests: PaginatedRequest;
+}

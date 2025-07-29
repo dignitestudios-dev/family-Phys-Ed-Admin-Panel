@@ -47,12 +47,12 @@ const Sidebar = () => {
       icon: <RequestIcon/>,
       iconSelected: <UserManagementSelected />,
     },
-    {
-      title: "Community Management",
-      path: "/community-management",
-      icon: <CommunityManagement />,
-      iconSelected: <CommunityManagementSelected />,
-    },
+    // {
+    //   title: "Community Management",
+    //   path: "/community-management",
+    //   icon: <CommunityManagement />,
+    //   iconSelected: <CommunityManagementSelected />,
+    // },
     // {
     //   title: "Group Management",
     //   path: "/group-management",

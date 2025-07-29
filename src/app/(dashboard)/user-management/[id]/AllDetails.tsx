@@ -23,7 +23,7 @@ import Image from "next/image";
 import UserDetails from "./UserDetails";
 import CoachDetails from "./CoachDetail";
 
-type SelectedTabs = "" | "0" | "1" | "2" | "3";
+
 
 const Details = () => {
     const searchParams = useSearchParams()

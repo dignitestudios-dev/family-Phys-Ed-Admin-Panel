@@ -4,10 +4,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import BackArrow from "@/components/icons/BackArrow";
-import Delete from "@/components/icons/Delete";
-import BButton from "@/components/BButton";
-import Badge from "@/components/icons/Badge";
-import Phone from "@/components/icons/Phone";
 import Location from "@/components/icons/Location";
 import BTab from "@/components/BTab";
 import Posts from "@/components/Posts";
@@ -20,12 +16,16 @@ import PageLoader from "@/components/PageLoader";
 import { postHooks } from "@/hooks/usePostRequests";
 import { deleteHooks } from "@/hooks/useDeleteRequests";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
+import { ArrowLeft, Mail, MapPin, Phone } from "lucide-react";
+import Details from "@/components/user-management/user-details/details";
+import Sessions from "@/components/user-management/sessions";
 
 type SelectedTabs = "" | "0" | "1" | "2" | "3";
 
 const UserDetails = () => {
 
-  const tabs = ["Detail", "Portfolio", "Sessions", "Merchandise"];
+  const tabs = ["Detail",  "Sessions"];
   const { loading, user, setUser, getUserById } = getHooks.useGetUsersDetails();
   const { loading: suspendLoading, toggleSuspendUser } =
     postHooks.useToggleSuspendUser();
@@ -58,7 +58,7 @@ const UserDetails = () => {
   }, [currentTab]);
 
   useEffect(() => {
-    id && getUserById(id as string , searchParams.get("role")!);
+    id && getUserById(id as string);
   }, [id]);
 
   const handleToggleDisablePopup = (value: boolean) => {
@@ -76,10 +76,10 @@ const UserDetails = () => {
   };
 
   const handleToggleDisableUser = async () => {
-    const suspendUser = !user?.isSuspended;
-    const success = await toggleSuspendUser(id as string, suspendUser);
-    if (success)
-      setUser((prev: any) => ({ ...prev, isSuspended: suspendUser }));
+    // const suspendUser = !user?.is_deactivate;
+    // const success = await toggleSuspendUser(id as string, suspendUser);
+    // if (success)
+    //   setUser((prev: any) => ({ ...prev, is_deactivate: suspendUser }));
 
     handleToggleDisablePopup(false);
   };
@@ -97,12 +97,14 @@ const UserDetails = () => {
         <PageLoader />
       ) : (
         <>
+              <div className="flex items-center justify-between text-white">
+                <div className="flex items-center gap-2">
           <Link href="/user-management" className="outline-none">
-            <BackArrow />
+           <ArrowLeft />
           </Link>
+            <h1 className="section-heading ">User Profile</h1>
 
-          <div className="flex justify-between items-center">
-            <h1 className="section-heading">User Details</h1>
+         </div>
 
             <div className="flex gap-2 items-center">
               {/* <div
@@ -112,18 +114,16 @@ const UserDetails = () => {
                 <Delete />
               </div> */}
 
-              <BButton
-                title={user?.isSuspended ? "Enable" : "Disable"}
-                w="fit"
-                onBtnClick={() => handleToggleDisablePopup(true)}
-              />
+              <button onClick={() => handleToggleDisablePopup(true)} className={cn(user?.is_deactivate ? "bg-[#00C369]" : "bg-[#FF363A]", "p-2 px-8 rounded-lg text-white")} >
+                {user?.is_deactivate ? "Activate" : "Deactivate"}
+              </button>
             </div>
           </div>
 
           <div className="rounded-lg bg-secondary flex gap-5 items-center py-5 px-8">
             <div className="p-[1.5px] bg-primary rounded-full">
               <div
-                className="h-[100px] w-[100px] rounded-full bg-cover bg-center border-[3px] border-white"
+                className="h-[150px] w-[150px] rounded-full bg-cover bg-center border-[3px] border-white"
                 style={{
                   backgroundImage: `url(http://family-phys-ed-s3.s3.amazonaws.com/${user?.avatar}?alt=media)`,
                 }}
@@ -135,7 +135,7 @@ const UserDetails = () => {
                 <h2 className="font-general-semibold text-xl text-white">
                   {user?.name}
                 </h2>
-                {user?.earnedBadges?.length ? (
+                {/* {user?.earnedBadges?.length ? (
                   <Image
                     src={`/badges/${
                       user?.earnedBadges[user?.earnedBadges.length - 1]?._id
@@ -148,27 +148,28 @@ const UserDetails = () => {
                   />
                 ) : (
                   ""
-                )}
+                )} */}
               </div>
 
-              <p className="text-sm text-white">@{user?.name}</p>
-              <h4>{user.experience}</h4>
+              {/* <p className="text-sm text-white">@{user?.name}</p> */}
+              <h4 className="text-white text-sm" >{user?.fitness_level}</h4>
 
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 text-sm text-[#707070]">
-                  <Phone />
-                  <p> {user?.phone_number}</p>
+              <div className="flex items-center gap-2 text-white">
+                <div className="flex items-center gap-1 text-sm ">
+                         <Phone size={20} className="text-primary" />
+                  <p className="text-white"> {user?.phone_number}</p>
                 </div>
-                <span className="text-[#707070] font-extralight text-sm">
-                  |
-                </span>
-                <div className="flex items-center gap-1 text-sm text-[#707070]">
-                  <Location />
-                  <p> {user?.location}</p>
+            
+                <div className="flex items-center gap-1 text-sm ">
+                      <Mail size={20} className="text-primary" />
+                  <p className="text-white"> {user?.email}</p>
                 </div>
               </div>
+                  <div className="flex items-center gap-2 text-xs text-white">
+                <MapPin size={20} className="text-primary" />
+                {user?.location}</div>
 
-              <p className="text-desc text-sm">{user?.fitness_level}</p>
+              {/* <p className="text-desc text-sm">{user?.fitness_level}</p> */}
             </div>
           </div>
 
@@ -185,26 +186,21 @@ const UserDetails = () => {
             ))}
           </div>
 
-          <div className="rounded-lg bg-secondary h-full min-h-[500px] overflow-y-auto">
+          <div className=" h-full min-h-[500px] overflow-y-auto">
             {selectedTab === "0" ? (
-              <BasicInfo user={user} />
+              <Details activity_preferences={user?.activity_preferences!} fitness_goal={user?.fitness_goal!} fitness_level={user?.fitness_level!} />
             ) : selectedTab === "1" ? (
-              <Posts />
-            ) : selectedTab === "2" ? (
-              <Followers />
-            ) : selectedTab === "3" ? (
-              <Following />
+              <Sessions sessions={user?.sessions!} />
             ) : (
               ""
             )}
           </div>
 
           <DangerPopup
-            title={user?.isSuspended ? "Enable User" : "Disable User"}
-            desc={`Are you sure you want to ${
-              user?.isSuspended ? "enable" : "disable"
-            } this user?`}
-            doneTitle={`Yes, ${user?.isSuspended ? "Enable" : "Disable"} Now`}
+            title={user?.is_deactivate ? "Enable User" : "Disable User"}
+            desc={`Are you sure you want to ${user?.is_deactivate ? "enable" : "disable"
+              } this user?`}
+            doneTitle={`Yes, ${user?.is_deactivate ? "Enable" : "Disable"} Now`}
             show={showAlert.disable}
             onClose={() => handleToggleDisablePopup(false)}
             onContinue={handleToggleDisableUser}
