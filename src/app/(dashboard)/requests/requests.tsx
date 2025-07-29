@@ -123,7 +123,7 @@ const Requests = () => {
               ))} */}
                         {
                         users?.profile_requests.data?.map((item, index) => (
-                                <tr key={index} onClick={() => router.push(`/user-management/${item.uid}?role=coach`)} className="border-b cursor-pointer border-[#3a3a3c]">
+                                <tr key={index} onClick={() => router.push(`/requests/${item.uid}?role=coach`)} className="border-b cursor-pointer border-[#3a3a3c]">
                                     <td className="px-4 py-6">{index + 1}</td>
                                     <td className="px-4 py-6">
                                         <div className="flex items-center gap-3">

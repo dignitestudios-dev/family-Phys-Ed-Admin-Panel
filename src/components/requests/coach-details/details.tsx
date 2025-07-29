@@ -2,7 +2,6 @@ import { CoachDetailsInterface } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-// import { CoachDetailsInterface } from "@/types"; // Update path based on your project
 
 interface Props {
   coach: CoachDetailsInterface;

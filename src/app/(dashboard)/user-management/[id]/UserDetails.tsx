@@ -184,7 +184,7 @@ const UserDetails = () => {
             {selectedTab === "0" ? (
               <Details activity_preferences={user?.activity_preferences!} fitness_goal={user?.fitness_goal!} fitness_level={user?.fitness_level!} />
             ) : selectedTab === "1" ? (
-              <Sessions sessions={user?.sessions!} />
+              <Sessions sessions={user?.sessions!} coachId={String(user?.user_id)!} />
             ) : (
               ""
             )}

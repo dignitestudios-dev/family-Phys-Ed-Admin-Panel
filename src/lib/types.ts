@@ -475,3 +475,95 @@ export interface ApprovalRequests {
   profile_requests: PaginatedRequest<RequestItem>;
   merchandise_requests: PaginatedRequest;
 }
+
+export interface CoachInfo {
+  id: number;
+  uid: string;
+  name: string;
+  avatar: string | null;
+  rating: string;
+}
+
+export interface PublicSessionDetail {
+  is_started: boolean;
+  session_id: number;
+  title: string;
+  activity: string;
+  session_type: "public";
+  number_of_slots: number;
+  amount: string;
+  distance: string;
+  date: string;
+  duration: string;
+  description: string;
+  status: string | null;
+  lat: number;
+  long: number;
+  city: string;
+  state: string;
+  location: string;
+  available_slots: number;
+  booked_slots: number;
+  booking_users: any[]; // replace `any` with appropriate user type if available
+  banner_images: string[];
+  use_external_address: boolean;
+  deleted_at: string | null;
+  started_at: string | null;
+  ended_at: string | null;
+  payment_method_id: string | number | null;
+  cancelled_booking_users: any[]; // replace `any` with appropriate user type if available
+  is_booked: boolean;
+  coach: CoachInfo;
+  session_cancellation_reason: string | null;
+  payment_details: any; // update type if payment structure is known
+}
+
+export interface RequestedUser {
+  id: number;
+  uid: string;
+  name: string;
+  avatar: string;
+}
+
+export interface PaymentDetails {
+  subtotal: string;
+  duration: number;
+  total_slots: number;
+  total_amount: string;
+}
+
+export interface PrivateSessionDetail {
+  time_until_start: string;
+  is_started: boolean;
+  session_id: number;
+  title: string;
+  activity: string;
+  session_type: "private";
+  number_of_slots: number;
+  amount: string;
+  distance: string;
+  date: string;
+  duration: string;
+  description: string;
+  status: string;
+  lat: number;
+  long: number;
+  city: string;
+  state: string;
+  location: string;
+  available_slots: number;
+  booked_slots: number;
+  booking_users: any[]; // define user type if needed
+  banner_images: string[];
+  use_external_address: boolean | null;
+  deleted_at: string | null;
+  started_at: string | null;
+  ended_at: string | null;
+  payment_method_id: string | number | null;
+  cancelled_booking_users: any[]; // define user type if needed
+  request_id: number;
+  requested_user: RequestedUser;
+  payment_details: PaymentDetails;
+  request_cancellation_reason: string | null;
+  booking_cancellation_reason: string | null;
+}

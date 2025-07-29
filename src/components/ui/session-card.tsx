@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { CalendarDays, ChevronRight, Clock2, MapPin, Plus } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link";
 
 export interface Session {
     session_id: number;
@@ -28,11 +29,18 @@ export interface Session {
     started_at: string | null;
     ended_at: string | null;
     payment_method_id: number | null;
+    request_id?: number;
+    requested_user?: {
+        id: number;
+        uid: string;
+        name: string;
+        avatar: string;
+    };
     cancelled_booking_users: any[];
 }
 
 
-function SessionCard({ session }: { session: Session }) {
+function SessionCard({ session, coachId }: { session: Session, coachId: string }) {
     return (
         <div className="bg-[#2C2C2E] p-2 w-[32.5%] text-white rounded-xl ">
             <div className="flex flex-col" >
@@ -63,9 +71,9 @@ function SessionCard({ session }: { session: Session }) {
                             <Plus className="text-primary" size={15} />
                         </div>
                         <h1>{session.available_slots} Available Slots</h1>
-                        
+
                     </div >
-                    <button className="bg-primary p-3 rounded-md "><ChevronRight className="text-black" /></button>
+                    <Link href={`/user-management/session/${session.request_id ? session.request_id : session.session_id}?type=${session.session_type}&coach_id=${coachId}`} className="bg-primary p-3 rounded-md "><ChevronRight className="text-black" /></Link>
                 </div>
             </div>
         </div>

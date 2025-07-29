@@ -15,8 +15,9 @@ import { ArrowLeft, Mail, MapPin, Phone } from "lucide-react";
 import Details from "@/components/user-management/coach-details/details";
 import Portfolio from "@/components/user-management/coach-details/portfolio";
 import Sessions from "@/components/user-management/sessions";
-import Merchandise from "@/components/user-management/coach-details/merchandise";
+
 import { cn } from "@/lib/utils";
+import Merchandise from "@/components/requests/coach-details/merchandise";
 
 type SelectedTabs = "" | "0" | "1" | "2" | "3";
 
@@ -26,7 +27,7 @@ const CoachDetails = () => {
   const { loading, user, setUser, getUserById } = getHooks.useGetCoachDetails();
   const { loading: suspendLoading, toggleSuspendUser } =
     postHooks.useToggleSuspendUser();
-  const { loading: deleteLoading, deleteUser } = deleteHooks.useDeleteUser();
+  const { loading: deleteLoading, toggleRejectCoach } = postHooks.useRejectCoach();
 
   const router = useRouter();
   const { id } = useParams();
@@ -81,9 +82,13 @@ const CoachDetails = () => {
     handleToggleDisablePopup(false);
   };
 
-  const handleDeleteUser = async () => {
-    const success = await deleteUser(id as string);
-    if (success) router.push("/user-management");
+  const handleDeleteUser = () =>{
+
+  }
+
+  const handleRejectUser = async () => {
+    const success = await toggleRejectCoach(id as string);
+    if (success) router.push("/requests");
 
     handleToggleDeletePopup(false);
   };
@@ -110,8 +115,11 @@ const CoachDetails = () => {
                 <Delete />
               </div> */}
 
-              <button onClick={()=>handleToggleDisablePopup(true)} className={cn(user?.is_deactivate? "bg-[#00C369]": "bg-[#FF363A]" , "p-2 px-8 rounded-lg text-white")} >
-                {user?.is_deactivate ? "Activate" :"Deactivate"}
+              <button onClick={()=>handleToggleDisablePopup(true)} className={cn( "bg-[#FF363A]" , "p-2 px-8 rounded-lg text-white")} >
+                Reject
+              </button>
+              <button onClick={()=>handleToggleDisablePopup(true)} className={cn("bg-[#00C369]" , "p-2 px-8 rounded-lg text-white")} >
+                Approve
               </button>
             </div>
           </div>
@@ -188,7 +196,7 @@ const CoachDetails = () => {
             ) : selectedTab === "1" ? (
               <Portfolio media={user?.portfolio!} />
             ) : selectedTab === "2" ? (
-              <Sessions sessions={user?.sessions!} />
+              <Sessions sessions={user?.sessions!} coachId={String(user?.coach_id)} />
             ) : selectedTab === "3" ? (
               <Merchandise products={user?.products!} />
             ) : (
@@ -197,7 +205,7 @@ const CoachDetails = () => {
           </div>
 
           <DangerPopup
-            title={user?.is_deactivate ? "Activate User" : "Deactivate Coach"}
+            title={"Reject Profile"}
             desc={`Are you sure you want to
               ${user?.is_deactivate ? "Activate" : "Deactivate"
             } this coach`}

@@ -1,11 +1,12 @@
 import { ISessions } from "@/lib/types"
 import { useState } from "react";
 import SessionCard from "../ui/session-card";
+import Image from "next/image";
 
 const tabOptions = ['public', 'private', 'custom'] as const;
 type TabType = typeof tabOptions[number];
 
-const Sessions = ({sessions}:{sessions:ISessions}) => {
+const Sessions = ({sessions , coachId}:{sessions:ISessions , coachId:string}) => {
       const [activeTab, setActiveTab] = useState<TabType>('public');
 
   const currentData = sessions[activeTab];
@@ -27,11 +28,15 @@ const Sessions = ({sessions}:{sessions:ISessions}) => {
         <div className="mt-12 p-4 rounded bg-secondary text-white shadow">
       
         {currentData.data.length === 0 ? (
-          <p className="text-gray-500 mt-2">No sessions found.</p>
+          <div className="text-gray-500 mt-2 flex justify-center flex-col items-center">
+            <Image src={`/images/no-session.png`} alt="no" width={300} height={300} />
+            <h1 className="text-white">No sessions available</h1>
+            <h3 className="text-xs">The user will be able to create sessions once you approve their profile</h3>
+          </div>
         ) : (
           <ul className="mt-2 space-y-2">
             {currentData.data.map((session, index) => (
-             <SessionCard session={session} key={index}/>
+             <SessionCard session={session} key={index} coachId={coachId}/>
             ))}
           </ul>
         )}

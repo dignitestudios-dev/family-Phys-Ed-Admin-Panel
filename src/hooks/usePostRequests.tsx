@@ -101,6 +101,58 @@ const useForgotPassword = () => {
   return { loading, forgotPassword };
 };
 
+const useApproveCoach = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const toggleApproveCoach = async (id: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+    
+
+      const response = await api.approveCoach(id  );
+    
+      toast.success(response?.message);
+      router.push("/verification");
+      return true;
+    } catch (error) {
+      utils.handleError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, toggleApproveCoach };
+};
+
+
+const useRejectCoach = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const toggleRejectCoach = async (id: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+    
+
+      const response = await api.rejectCoach(id  );
+    
+      toast.success(response?.message);
+      router.push("/verification");
+      return true;
+    } catch (error) {
+      utils.handleError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, toggleRejectCoach };
+};
+
+
 const useVerifyOtp = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -216,6 +268,8 @@ const useCreateCommunity = () => {
 export const postHooks = {
   useLogin,
   useToggleSuspendUser,
+  useRejectCoach,
+  useApproveCoach,
   useForgotPassword,
   useVerifyOtp,
   useResetPassword,

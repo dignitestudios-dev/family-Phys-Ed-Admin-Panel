@@ -9,22 +9,22 @@ const PUBLIC_ROUTES = [
 ];
 
 export function middleware(request: NextRequest) {
-  // const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl;
 
-  // if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
-  //   return NextResponse.next();
-  // }
+  if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
+    return NextResponse.next();
+  }
 
-  // const token = request.cookies.get("token")?.value;
-  // console.log("cookie token:", token);
+  const token = request.cookies.get("token")?.value;
+  console.log("cookie token:", token);
 
-  // if (!token) {
-  //   // ✅ Simple redirect with No redirect= query param
-  //   const loginUrl = new URL("/login", request.url);
-  //   return NextResponse.redirect(loginUrl);
-  // }
+  if (!token) {
+    // ✅ Simple redirect with No redirect= query param
+    const loginUrl = new URL("/login", request.url);
+    return NextResponse.redirect(loginUrl);
+  }
 
-  // return NextResponse.next();
+  return NextResponse.next();
 }
 
 export const config = {

@@ -1,4 +1,5 @@
 import MerchandiseCard from "@/components/ui/merchandise-card";
+import Image from "next/image";
 
 function Merchandise({ products }: { products: any[] }) {
     return (
@@ -8,9 +9,11 @@ function Merchandise({ products }: { products: any[] }) {
                 <MerchandiseCard product={p} key={p.id} />
            
             </>)) :
-                <div className="flex justify-center items-center h-[100px]">
+                <div className="flex flex-col justify-center items-center w-full h-full">
 
-                    <h1 className="text-white">No Merchandise Found</h1>
+                  <Image src={"/images/illustration.png"} alt="no" width={300} height={300} />
+                  <h1 className="text-white">No Merchandise Requests Available</h1>
+                
                 </div>
             }
         </div>

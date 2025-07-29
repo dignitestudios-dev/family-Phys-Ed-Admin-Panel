@@ -23,6 +23,9 @@ import {
   User,
   CoachDetailsInterface,
   ApprovalRequests,
+  PublicSessionDetail,
+  PrivateSessionDetail,
+  // ApprovalRequests,
 } from "./types";
 
 // Create an Axios instance
@@ -171,6 +174,16 @@ const forgotPassword = (email: string) =>
     API.post(`/auth/forgetPassword`, { email })
   );
 
+const approveCoach = (id: string) =>
+  apiHandler<{ success: boolean; message: string }>(() =>
+    API.post(`/profile-approval-requests/${id}/approve`)
+  );
+
+const rejectCoach = (id: string) =>
+  apiHandler<{ success: boolean; message: string }>(() =>
+    API.post(`profile-approval-requests/${id}/reject`)
+  )
+
 const verifyOtp = (otp: string, email: string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
     API.post(`/auth/adminVerifyOtpForgetPassword`, { otp, email })
@@ -223,6 +236,11 @@ const getUserById = (id: string) =>
 
 const getCoachById = (id: string) =>
   apiHandler<CoachDetailsInterface>(() => API.get(`/coach-details/${id}`));
+
+const getPublicSessionById = (id: string , sessionId:string) =>
+  apiHandler<PublicSessionDetail>(() => API.get(`/coach/public-sessions?coach_id=${id}&session_id=${sessionId}`));
+const getRequestSessionById = (id: string , reqId:string) =>
+  apiHandler<PrivateSessionDetail>(() => API.get(`/coach/requests?coach_id=${id}&request_id=${reqId}`));
 
 // ########################### POST API's ###########################
 
@@ -520,6 +538,8 @@ const getUserGrowthAnalytics = (startYear: string, endYear: string) =>
 const api = {
   login,
   getAllUsers,
+  getPublicSessionById,
+  getRequestSessionById,
   getCoachById,
   getAllRequests,
   getUserById,
@@ -543,10 +563,12 @@ const api = {
   getReportedPosts,
   getReportedGroups,
   getAllGroups,
+  approveCoach,
   getGroupById,
   deleteGroupById,
   disableGroupById,
   getAllNotifications,
+  rejectCoach,
   createNotification,
   getUserGrowthAnalytics,
 };

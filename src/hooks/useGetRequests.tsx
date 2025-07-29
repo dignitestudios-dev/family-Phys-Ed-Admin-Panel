@@ -8,8 +8,11 @@ import {
   FollowingInterface,
   GroupDetailsInterface,
   GroupInterface,
+  PaginatedSessionData,
   PostDetailsInterface,
   PostInterface,
+  PrivateSessionDetail,
+  PublicSessionDetail,
   ReportedGroupsInterface,
   ReportedPostInterface,
   ReportedUsersInterface,
@@ -136,6 +139,46 @@ const useGetCoachDetails = () => {
   };
 
   return { loading, user, setUser, getUserById };
+};
+
+
+const useGetPublicSessionDetails = () => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState< PublicSessionDetail | null>(null);
+
+  const getPublicSessionById = async (id: string , sessionId:string ) => {
+    setLoading(true);
+    try {
+       const response = await api.getPublicSessionById(id , sessionId);
+        console.log("User details API call: ", response);
+        setData(response);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, data, setData, getPublicSessionById };
+};
+const useGetReqSessionDetails = () => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState< PrivateSessionDetail | null>(null);
+
+  const getRequestSessionById = async (id: string , reqId:string ) => {
+    setLoading(true);
+    try {
+       const response = await api.getRequestSessionById(id , reqId);
+        console.log("User details API call: ", response);
+        setData(response);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, data, setData, getRequestSessionById };
 };
 
 const useGetUserPostsById = () => {
@@ -488,6 +531,9 @@ const useGetGroupDetails = () => {
 
 export const getHooks = {
   useGetAllUsers,
+  useGetReqSessionDetails,
+  useGetPublicSessionDetails,
+
   useGetUsersDetails,
   useGetCoachDetails,
   useGetUserPostsById,

@@ -188,7 +188,7 @@ const CoachDetails = () => {
             ) : selectedTab === "1" ? (
               <Portfolio media={user?.portfolio!} />
             ) : selectedTab === "2" ? (
-              <Sessions sessions={user?.sessions!} />
+              <Sessions sessions={user?.sessions!} coachId={String(user?.coach_id)!} />
             ) : selectedTab === "3" ? (
               <Merchandise products={user?.products!} />
             ) : (
