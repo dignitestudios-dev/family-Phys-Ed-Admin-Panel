@@ -1,5 +1,6 @@
 import { ISessions } from "@/lib/types"
 import { useState } from "react";
+import SessionCard from "../ui/session-card";
 
 const tabOptions = ['public', 'private', 'custom'] as const;
 type TabType = typeof tabOptions[number];
@@ -30,9 +31,7 @@ const Sessions = ({sessions}:{sessions:ISessions}) => {
         ) : (
           <ul className="mt-2 space-y-2">
             {currentData.data.map((session, index) => (
-              <li key={index} className="p-2 border rounded">
-                {JSON.stringify(session)}
-              </li>
+             <SessionCard session={session} key={index}/>
             ))}
           </ul>
         )}

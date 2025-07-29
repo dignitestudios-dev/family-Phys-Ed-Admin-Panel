@@ -5,8 +5,8 @@ import ToastProvider from "@/components/ToastProvider";
 import MainLoader from "@/components/MainLoder";
 
 export const metadata: Metadata = {
-  title: "BioYap Admin",
-  description: "BioYap Admin",
+  title: "Phys-Ed Admin",
+  description: "Phys-Ed",
   icons: {
     icon: "/images/logo.png",
   },

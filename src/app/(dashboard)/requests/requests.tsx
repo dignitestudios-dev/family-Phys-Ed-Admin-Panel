@@ -1,5 +1,6 @@
 "use client";
 import CustomPagination from "@/components/CustomPagination";
+import MerchandiseCard from "@/components/ui/merchandise-card";
 import useDebounceSearch from "@/hooks/useDebounceSearch";
 import { getHooks } from "@/hooks/useGetRequests";
 import { Search } from "lucide-react";
@@ -160,7 +161,9 @@ const Requests = () => {
                     </tbody>
                 </table>
               : <>
-              Merchandise
+              {users?.merchandise_requests.data.map((p)=>(
+                <MerchandiseCard key={p.id} product={p} />
+              ))}
               </>  }
              
             </div>
