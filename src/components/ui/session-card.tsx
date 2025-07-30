@@ -73,7 +73,7 @@ function SessionCard({ session, coachId }: { session: Session, coachId: string }
                         <h1>{session.available_slots} Available Slots</h1>
 
                     </div >
-                    <Link href={`/user-management/session/${session.request_id ? session.request_id : session.session_id}?type=${session.session_type}&coach_id=${coachId}`} className="bg-primary p-3 rounded-md "><ChevronRight className="text-black" /></Link>
+                    <Link href={`session/${session.request_id ? session.request_id : session.session_id}?type=${session.session_type}&coach_id=${coachId}`} className="bg-primary p-3 rounded-md "><ChevronRight className="text-black" /></Link>
                 </div>
             </div>
         </div>

@@ -25,6 +25,7 @@ import {
   ApprovalRequests,
   PublicSessionDetail,
   PrivateSessionDetail,
+  Product,
   // ApprovalRequests,
 } from "./types";
 
@@ -206,14 +207,7 @@ const getAllUsers = (
   page: number = defaultPage,
   limit: number = defaultLimit
 ) =>
-  apiHandler<{
-    success: boolean;
-    message: string;
-  
-      users: PaginatedResponse<User>;
-      coaches: PaginatedResponse<Coach>;
-    
-  }>(() =>
+  apiHandler<UserInterface>(() =>
     API.get(
       // `/users?page=${page}&limit=${limit}&search=${search}${isSuspended}`
       `/users`
@@ -239,8 +233,13 @@ const getCoachById = (id: string) =>
 
 const getPublicSessionById = (id: string , sessionId:string) =>
   apiHandler<PublicSessionDetail>(() => API.get(`/coach/public-sessions?coach_id=${id}&session_id=${sessionId}`));
+
 const getRequestSessionById = (id: string , reqId:string) =>
   apiHandler<PrivateSessionDetail>(() => API.get(`/coach/requests?coach_id=${id}&request_id=${reqId}`));
+
+const getProductDetail = (id: string ) =>
+  apiHandler<Product>(() => API.get(`/products/${id}`));
+
 
 // ########################### POST API's ###########################
 
@@ -538,6 +537,7 @@ const getUserGrowthAnalytics = (startYear: string, endYear: string) =>
 const api = {
   login,
   getAllUsers,
+  getProductDetail,
   getPublicSessionById,
   getRequestSessionById,
   getCoachById,

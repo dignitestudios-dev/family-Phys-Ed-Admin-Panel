@@ -12,6 +12,7 @@ import {
   PostDetailsInterface,
   PostInterface,
   PrivateSessionDetail,
+  Product,
   PublicSessionDetail,
   ReportedGroupsInterface,
   ReportedPostInterface,
@@ -24,7 +25,7 @@ import { useState } from "react";
 
 const useGetAllUsers = () => {
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState<UserInterface | undefined>();
+  const [users, setUsers] = useState<UserInterface | null>(null);
   const [totalPages, setTotalPages] = useState<number>(1);
 
   const getAllUsers = async (
@@ -86,7 +87,7 @@ const useGetAllProfileReq = () => {
           : "";
 
       const response = await api.getAllRequests();
-      console.log(response)
+
       setUsers(response);
       // setTotalPages(response?.data?.pagination?.totalPages);
     } catch (error) {
@@ -108,7 +109,7 @@ const useGetUsersDetails = () => {
     try {
      
         const response = await api.getUserById(id);
-        console.log("User details API call: ", response);
+
         setUser(response);
 
     } catch (error) {
@@ -129,7 +130,7 @@ const useGetCoachDetails = () => {
     setLoading(true);
     try {
        const response = await api.getCoachById(id);
-        console.log("User details API call: ", response);
+
         setUser(response);
     } catch (error) {
       utils.handleError(error);
@@ -161,6 +162,28 @@ const useGetPublicSessionDetails = () => {
 
   return { loading, data, setData, getPublicSessionById };
 };
+
+
+const useGetProductDetails = () => {
+  const [loading, setLoading] = useState(true);
+  const [product, setProduct] = useState< Product | null>(null);
+
+  const getProductDetailById = async (id: string  ) => {
+    setLoading(true);
+    try {
+       const response = await api.getProductDetail(id );
+        console.log("User details API call: ", response);
+        setProduct(response);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, product, setProduct, getProductDetailById };
+};
+
 const useGetReqSessionDetails = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState< PrivateSessionDetail | null>(null);
@@ -533,7 +556,7 @@ export const getHooks = {
   useGetAllUsers,
   useGetReqSessionDetails,
   useGetPublicSessionDetails,
-
+useGetProductDetails,
   useGetUsersDetails,
   useGetCoachDetails,
   useGetUserPostsById,

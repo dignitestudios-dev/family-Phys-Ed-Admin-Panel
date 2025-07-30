@@ -567,3 +567,40 @@ export interface PrivateSessionDetail {
   request_cancellation_reason: string | null;
   booking_cancellation_reason: string | null;
 }
+
+
+export interface Product {
+  id: number;
+  name: string;
+  category: string;
+  price: number;
+  average_rating: string;
+  location: string;
+  description: string;
+  stock: number;
+  sizes: {
+    small?: number;
+    medium?: number;
+    large?: number;
+    [key: string]: number | undefined; // to allow dynamic size keys like "XL", "XXL" etc.
+  };
+  available_sizes: string[];
+  is_approved: boolean;
+  products_images: string[];
+  reviews: Review[];
+  coach: PCoach;
+}
+
+interface Review {
+  // You can expand this based on your actual review structure
+  [key: string]: any;
+}
+
+interface PCoach {
+  id: number;
+  uid: string;
+  name: string;
+  avatar: string;
+  rating: number;
+}
+

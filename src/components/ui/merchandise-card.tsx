@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ChevronRight, MapPin } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link";
 
 
 function MerchandiseCard({product}:{product:{
@@ -15,7 +16,7 @@ function MerchandiseCard({product}:{product:{
   return (
     <div className="bg-[#2C2C2E] p-2 w-[32.5%] text-white rounded-xl ">
         <div className="flex flex-col" >
-            <Image className="w-[500px] h-[100px] rounded-xl" src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${product.images[0]}`} alt="img" width={500} height={120} />
+            <Image className="w-[500px] h-[120px] rounded-xl object-cover" src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${product.images[0]}`} alt="img" width={500} height={120} />
             <div className="flex justify-between border-b py-2" >
            <div>
 
@@ -29,7 +30,7 @@ function MerchandiseCard({product}:{product:{
             </div>
             <div className="flex justify-between items-center mt-2">
                 <div className="flex text-sm"> <MapPin className="text-primary" size={20} /><span>{product.location}</span></div >
-                <button className="bg-primary p-3 rounded-md "><ChevronRight className="text-black" /></button>
+                <Link href={`product-detail/${product.id}`} className="bg-primary p-3 rounded-md "><ChevronRight className="text-black" /></Link>
             </div>
         </div>
     </div>
