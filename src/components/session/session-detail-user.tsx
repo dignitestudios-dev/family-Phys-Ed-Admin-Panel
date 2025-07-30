@@ -4,7 +4,55 @@ import { ArrowLeft, CalendarDays, Clock2, MapPin } from "lucide-react"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 
-function SessionDetail({ data }: { data: PublicSessionDetail | PrivateSessionDetail }) {
+interface BaseSession {
+  session_id: number;
+  title: string;
+  activity: string;
+  session_type: string;
+  number_of_slots: number;
+  amount: string;
+  distance: string;
+  date: string;
+  duration: string;
+  description: string;
+  status: string | null;
+  lat: number;
+  long: number;
+  city: string;
+  state: string;
+  location: string;
+  available_slots: number;
+  booked_slots: number;
+  booking_users: any[];
+  banner_images: string[];
+  use_external_address: boolean | null;
+  deleted_at: string | null;
+  started_at: string | null;
+  ended_at: string | null;
+  payment_method_id: string | number | null;
+  cancelled_booking_users: any[];
+    request_id: number;
+  requested_user: {
+    id: number;
+    uid: string;
+    name: string;
+    avatar: string;
+  };
+}
+
+interface PublicSession extends BaseSession {}
+
+interface PrivateSession extends BaseSession {
+  request_id: number;
+  requested_user: {
+    id: number;
+    uid: string;
+    name: string;
+    avatar: string;
+  };
+}
+
+function SessionDetail({ data }: { data: PrivateSession | PublicSession }) {
     const router = useRouter()
     const pathname = usePathname()
     return (
@@ -85,7 +133,7 @@ function SessionDetail({ data }: { data: PublicSessionDetail | PrivateSessionDet
                                 <h1>Remaining Slots</h1>
                                 <h3 className="text-primary">{data.available_slots}</h3>
                              </div> */}
-                            {data.booking_users.map((b, idx) => (
+                            {pathname.includes("public") &&  data.booking_users.map((b, idx) => (
                                 <div key={idx} className="space-y-2">
                                     <div className="bg-[#2c2c2e] flex justify-between items-center p-2 rounded-2xl px-4" >
                                         <div className="flex gap-2 items-center">
@@ -107,6 +155,28 @@ function SessionDetail({ data }: { data: PublicSessionDetail | PrivateSessionDet
                                         </div>
                                 </div>
                             ))}
+                              {pathname.includes("private") && 
+                                <div  className="space-y-2">
+                                    <div className="bg-[#2c2c2e] flex justify-between items-center p-2 rounded-2xl px-4" >
+                                        <div className="flex gap-2 items-center">
+                                            <Image className="rounded-full w-[50px] h-[50px]" src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${data.requested_user.avatar}`} alt="img" width={50} height={50} />
+
+                                            <div> <h1 className="text-sm">{data.requested_user.name}</h1>
+                                                {/* <h1 className="text-xs text-primary" >Customer</h1> */}
+                                            </div>
+                                        </div>
+                                      
+                                        {/* <div className="text-sm">
+                                        Total Members: {data.booking_users.length}
+                                    </div> */}
+                                    </div>
+                                      {/* <div className="flex  gap-2 items-center justify-between  bg-[#2c2c2e] p-2 rounded-2xl px-4">
+                                                <h1 className=" " >Booked Slots</h1>
+                                            <div> <h1 className=" text-primary">{b.booked_slots}</h1>
+                                            </div>
+                                        </div> */}
+                                </div>
+                            }
                         </div>
                         {/* <div className="py-4">
                                 <h1>Payment Details</h1>
