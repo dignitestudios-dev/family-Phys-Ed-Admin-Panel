@@ -242,7 +242,7 @@ const getUserPublicSessionById = (id: string , sessionId:string) =>
   apiHandler<PublicSessionDetail>(() => API.get(`/user/public-sessions?user_id=${id}&booking_id=${sessionId}`));
 
 const getUserPrivateSessionById = (id: string , sessionId:string) =>
-  apiHandler<PublicSessionDetail>(() => API.get(`/user/public-sessions?user_id=${id}&request_id=${sessionId}`));
+  apiHandler<PublicSessionDetail>(() => API.get(`/user/sessions/requests?user_id=${id}&request_id=${sessionId}`));
 
 const getRequestSessionById = (id: string , reqId:string) =>
   apiHandler<PrivateSessionDetail>(() => API.get(`/coach/requests?coach_id=${id}&request_id=${reqId}`));

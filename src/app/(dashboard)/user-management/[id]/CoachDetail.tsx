@@ -2,15 +2,12 @@
 import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-
 import BTab from "@/components/BTab";
-
 import DangerPopup from "@/components/DangerPopup";
 import { getHooks } from "@/hooks/useGetRequests";
 import PageLoader from "@/components/PageLoader";
 import { postHooks } from "@/hooks/usePostRequests";
 import { deleteHooks } from "@/hooks/useDeleteRequests";
-
 import { ArrowLeft, Mail, MapPin, Phone } from "lucide-react";
 import Details from "@/components/user-management/coach-details/details";
 import Portfolio from "@/components/user-management/coach-details/portfolio";
