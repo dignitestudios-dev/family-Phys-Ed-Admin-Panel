@@ -143,6 +143,46 @@ const useGetCoachDetails = () => {
 };
 
 
+const useGetUserPublicSessionDetails = () => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState< PublicSessionDetail | null>(null);
+
+  const getUserPublicSessionById = async (id: string , sessionId:string ) => {
+    setLoading(true);
+    try {
+       const response = await api.getUserPublicSessionById(id , sessionId);
+        console.log("User details API call: ", response);
+        setData(response);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, data, setData, getUserPublicSessionById };
+};
+
+const useGetUserPrivateSessionDetails = () => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState< PublicSessionDetail | null>(null);
+
+  const getUserPrivateSessionById = async (id: string , sessionId:string ) => {
+    setLoading(true);
+    try {
+       const response = await api.getUserPrivateSessionById(id , sessionId);
+        console.log("User details API call: ", response);
+        setData(response);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, data, setData, getUserPrivateSessionById };
+};
+
 const useGetPublicSessionDetails = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState< PublicSessionDetail | null>(null);
@@ -557,6 +597,7 @@ export const getHooks = {
   useGetReqSessionDetails,
   useGetPublicSessionDetails,
 useGetProductDetails,
+useGetUserPrivateSessionDetails,
   useGetUsersDetails,
   useGetCoachDetails,
   useGetUserPostsById,
@@ -571,4 +612,5 @@ useGetProductDetails,
   useGetReportedGroups,
   useGetAllGroups,
   useGetGroupDetails,
+  useGetUserPublicSessionDetails
 };

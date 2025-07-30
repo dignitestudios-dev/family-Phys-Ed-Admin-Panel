@@ -113,7 +113,7 @@ const useApproveCoach = () => {
       const response = await api.approveCoach(id  );
     
       toast.success(response?.message);
-      router.push("/verification");
+   router.push("/requests");
       return true;
     } catch (error) {
       utils.handleError(error);
@@ -131,15 +131,15 @@ const useRejectCoach = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const toggleRejectCoach = async (id: string): Promise<boolean> => {
+  const toggleRejectCoach = async (id: string , reason:string): Promise<boolean> => {
     setLoading(true);
     try {
     
 
-      const response = await api.rejectCoach(id  );
+      const response = await api.rejectCoach(id ,reason );
     
       toast.success(response?.message);
-      router.push("/verification");
+      router.push("/requests");
       return true;
     } catch (error) {
       utils.handleError(error);
@@ -150,6 +150,31 @@ const useRejectCoach = () => {
   };
 
   return { loading, toggleRejectCoach };
+};
+
+const useApproveCoachProduct = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const toggleApproveCoachProduct = async (id: string ): Promise<boolean> => {
+    setLoading(true);
+    try {
+    
+
+      const response = await api.approveCoachProduct(id );
+    
+      toast.success(response?.message);
+      router.push("/requests");
+      return true;
+    } catch (error) {
+      utils.handleError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, toggleApproveCoachProduct };
 };
 
 
@@ -274,4 +299,5 @@ export const postHooks = {
   useVerifyOtp,
   useResetPassword,
   useCreateCommunity,
+  useApproveCoachProduct
 };

@@ -3,8 +3,10 @@ import { Product } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { ArrowLeft, MapPin } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import Slider from '../slider/slider'
+import DangerPopup from '../DangerPopup'
+import { postHooks } from '@/hooks/usePostRequests'
 
 type Props = {
   product: Product
@@ -12,7 +14,12 @@ type Props = {
 
 function ProductDetails({ product }: Props) {
   const router = useRouter()
-
+  const [popup,setPopup] = useState(false)
+   const {toggleApproveCoachProduct} = postHooks.useApproveCoachProduct()
+ const handleApproveProduct = () =>{
+toggleApproveCoachProduct(String(product.id))
+setPopup(false)
+ }
   return (
     <div className='text-white'>
       <div className="flex items-center justify-between mb-6">
@@ -24,7 +31,7 @@ function ProductDetails({ product }: Props) {
           <div className={cn(product.is_approved ? "bg-green-700/20 text-[#00C369]" : "bg-yellow-500/20 text-yellow-500", "p-2 px-12 text-sm font-bold rounded-full ")} >{product.is_approved ? "Live" : "Pending"}</div>
         </div>
         { !product.is_approved &&
-        <button className='bg-primary p-2 px-6 text-black rounded-sm'>Live Merchandise</button>
+        <button onClick={()=>setPopup(true)} className='cursor-pointer bg-primary p-2 px-6 text-black rounded-sm'>Live Merchandise</button>
         }
       </div>
       <div className='bg-secondary flex gap-2 p-4 rounded-2xl' >
@@ -66,7 +73,15 @@ function ProductDetails({ product }: Props) {
         </div>
       </div>
 
-
+<DangerPopup
+title='Make Merchandise Live'
+desc='Are you sure you want to make this merchandise live? It will become visible to users immediately.'
+cancelTitle='No'
+doneTitle='Yes'
+show={popup}
+onClose={()=>setPopup(false)}
+onContinue={handleApproveProduct}
+/>
 
     </div>
   )

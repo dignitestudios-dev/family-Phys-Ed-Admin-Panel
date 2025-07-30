@@ -178,7 +178,7 @@ export interface FollowerInterface {
   phoneNumber: string;
 }
 
-export interface FollowingInterface extends FollowerInterface {}
+export interface FollowingInterface extends FollowerInterface { }
 
 export interface CommunityInterface {
   _id: string;
@@ -504,7 +504,15 @@ export interface PublicSessionDetail {
   location: string;
   available_slots: number;
   booked_slots: number;
-  booking_users: any[]; // replace `any` with appropriate user type if available
+  booking_users: {
+
+    id: number;
+    uid: string;
+    name: string;
+    avatar: string;
+    booked_slots: number;
+
+  }[]; // replace `any` with appropriate user type if available
   banner_images: string[];
   use_external_address: boolean;
   deleted_at: string | null;
@@ -513,6 +521,7 @@ export interface PublicSessionDetail {
   payment_method_id: string | number | null;
   cancelled_booking_users: any[]; // replace `any` with appropriate user type if available
   is_booked: boolean;
+  booking_id?: number
   coach: CoachInfo;
   session_cancellation_reason: string | null;
   payment_details: any; // update type if payment structure is known

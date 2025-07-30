@@ -2,10 +2,11 @@
 import { PrivateSessionDetail, PublicSessionDetail } from "@/lib/types"
 import { ArrowLeft, CalendarDays, Clock2, MapPin } from "lucide-react"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 function SessionDetail({ data }: { data: PublicSessionDetail | PrivateSessionDetail }) {
     const router = useRouter()
+    const pathname   = usePathname()
     return (
         <>
             <div className="flex items-center justify-between mb-6">
@@ -33,7 +34,7 @@ function SessionDetail({ data }: { data: PublicSessionDetail | PrivateSessionDet
                         <h1 className="mb-3 text-xl">Description</h1>
                         <p className="text-sm">{data.description}</p>
                     </div>
-                    {data.session_type == "public" ?
+                    {data.session_type == "public"  ?
                         <div className="bg-secondary p-3 rounded-2xl w-[40%]">
                             <h1 className="mb-3 text-xl">Other Details</h1>
                             <div className="text-xs border-b pb-2">

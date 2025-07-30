@@ -1,6 +1,6 @@
 "use client";
 
-import SessionDetail from "@/components/session/session-detail";
+import SessionDetail from "@/components/session/session-detail-coach";
 import { getHooks } from "@/hooks/useGetRequests";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";

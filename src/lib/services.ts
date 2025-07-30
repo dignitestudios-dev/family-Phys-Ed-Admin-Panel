@@ -180,9 +180,13 @@ const approveCoach = (id: string) =>
     API.post(`/profile-approval-requests/${id}/approve`)
   );
 
-const rejectCoach = (id: string) =>
+const rejectCoach = (id: string , reason:string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
-    API.post(`profile-approval-requests/${id}/reject`)
+    API.post(`profile-approval-requests/${id}/reject` , {reason})
+  )
+const approveCoachProduct = (id: string ) =>
+  apiHandler<{ success: boolean; message: string }>(() =>
+    API.post(`product-approval-requests/${id}/approve` )
   )
 
 const verifyOtp = (otp: string, email: string) =>
@@ -233,6 +237,12 @@ const getCoachById = (id: string) =>
 
 const getPublicSessionById = (id: string , sessionId:string) =>
   apiHandler<PublicSessionDetail>(() => API.get(`/coach/public-sessions?coach_id=${id}&session_id=${sessionId}`));
+
+const getUserPublicSessionById = (id: string , sessionId:string) =>
+  apiHandler<PublicSessionDetail>(() => API.get(`/user/public-sessions?user_id=${id}&booking_id=${sessionId}`));
+
+const getUserPrivateSessionById = (id: string , sessionId:string) =>
+  apiHandler<PublicSessionDetail>(() => API.get(`/user/public-sessions?user_id=${id}&request_id=${sessionId}`));
 
 const getRequestSessionById = (id: string , reqId:string) =>
   apiHandler<PrivateSessionDetail>(() => API.get(`/coach/requests?coach_id=${id}&request_id=${reqId}`));
@@ -537,6 +547,7 @@ const getUserGrowthAnalytics = (startYear: string, endYear: string) =>
 const api = {
   login,
   getAllUsers,
+  getUserPrivateSessionById,
   getProductDetail,
   getPublicSessionById,
   getRequestSessionById,
@@ -564,6 +575,7 @@ const api = {
   getReportedGroups,
   getAllGroups,
   approveCoach,
+  getUserPublicSessionById,
   getGroupById,
   deleteGroupById,
   disableGroupById,
@@ -571,5 +583,6 @@ const api = {
   rejectCoach,
   createNotification,
   getUserGrowthAnalytics,
+  approveCoachProduct
 };
 export default api;

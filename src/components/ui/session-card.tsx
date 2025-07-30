@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { CalendarDays, ChevronRight, Clock2, MapPin, Plus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export interface Session {
     session_id: number;
@@ -22,7 +23,13 @@ export interface Session {
     location: string;
     available_slots: number;
     booked_slots: number;
-    booking_users: any[];
+    booking_users: {
+        id: number;
+        uid: string;
+        name: string;
+        avatar: string;
+        booked_slots: number;
+    }[];
     banner_images: string[];
     use_external_address: boolean;
     deleted_at: string | null;
@@ -30,17 +37,20 @@ export interface Session {
     ended_at: string | null;
     payment_method_id: number | null;
     request_id?: number;
+    booking_id?: number;
     requested_user?: {
         id: number;
         uid: string;
         name: string;
         avatar: string;
     };
+
     cancelled_booking_users: any[];
 }
 
 
 function SessionCard({ session, coachId }: { session: Session, coachId: string }) {
+    const searchParams = useSearchParams();
     return (
         <div className="bg-[#2C2C2E] p-2 w-[32.5%] text-white rounded-xl ">
             <div className="flex flex-col" >
@@ -73,7 +83,14 @@ function SessionCard({ session, coachId }: { session: Session, coachId: string }
                         <h1>{session.available_slots} Available Slots</h1>
 
                     </div >
-                    <Link href={`session/${session.request_id ? session.request_id : session.session_id}?type=${session.session_type}&coach_id=${coachId}`} className="bg-primary p-3 rounded-md "><ChevronRight className="text-black" /></Link>
+
+                    <Link href={
+                        session.request_id && !session.booking_id
+                            ? `session/${searchParams.get("role")}/${session.request_id}?type=${session.session_type}&coach_id=${coachId}`
+                            : !session.request_id && session.booking_id
+                                ? `session/${searchParams.get("role")}/${session.booking_id}?type=${session.session_type}&coach_id=${coachId}`
+                                : `session/${searchParams.get("role")}/${session.session_id}?type=${session.session_type}&coach_id=${coachId}`
+                    } className="bg-primary p-3 rounded-md "><ChevronRight className="text-black" /></Link>
                 </div>
             </div>
         </div>

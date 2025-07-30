@@ -18,6 +18,7 @@ import Sessions from "@/components/user-management/sessions";
 
 import { cn } from "@/lib/utils";
 import Merchandise from "@/components/requests/coach-details/merchandise";
+import DangerRejectPopup from "@/components/DangerRejectPopup";
 
 type SelectedTabs = "" | "0" | "1" | "2" | "3";
 
@@ -28,7 +29,8 @@ const CoachDetails = () => {
   const { loading: suspendLoading, toggleSuspendUser } =
     postHooks.useToggleSuspendUser();
   const { loading: deleteLoading, toggleRejectCoach } = postHooks.useRejectCoach();
-
+  const { loading: approveLoading, toggleApproveCoach } = postHooks.useApproveCoach();
+const [reason,setReason] = useState("")
   const router = useRouter();
   const { id } = useParams();
   const searchParams = useSearchParams();
@@ -41,7 +43,8 @@ const CoachDetails = () => {
   const [showAlert, setShowAlert] = useState<{
     delete: boolean;
     disable: boolean;
-  }>({ delete: false, disable: false });
+    approve: boolean;
+  }>({ delete: false, disable: false , approve:false });
 
   const handleTabChange = (index: SelectedTabs) => {
     const newParams = new URLSearchParams(searchParams);
@@ -66,31 +69,26 @@ const CoachDetails = () => {
     }));
   };
 
-  const handleToggleDeletePopup = (value: boolean) => {
+  const handleToggleApprovePopup = (value: boolean) => {
     setShowAlert((prev) => ({
       ...prev,
-      delete: value,
+      approve: value,
     }));
   };
 
-  const handleToggleDisableUser = async () => {
-    // const suspendUser = !user?.isSuspended;
-    // const success = await toggleSuspendUser(id as string, suspendUser);
-    // if (success)
-    //   setUser((prev: any) => ({ ...prev, isSuspended: suspendUser }));
-
-    handleToggleDisablePopup(false);
+  const handleToggleRejectUser =  () => {
+ toggleRejectCoach(String(user?.coach_id) as string , reason);
+ setReason("")
+  handleToggleDisablePopup(false);
   };
 
-  const handleDeleteUser = () =>{
 
-  }
 
-  const handleRejectUser = async () => {
-    const success = await toggleRejectCoach(id as string);
-    if (success) router.push("/requests");
+  const handleToggleApproveUser =  () => {
+   toggleApproveCoach(String(user?.coach_id) as string);
 
-    handleToggleDeletePopup(false);
+ handleToggleApprovePopup(false);
+
   };
 
   return (
@@ -102,9 +100,9 @@ const CoachDetails = () => {
 
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 text-white">
-          <Link href="/user-management" className="outline-none">
+          <div onClick={()=>router.back()} className="outline-none">
            <ArrowLeft />
-          </Link>
+          </div>
             <h1 className="section-heading ">Coach Profile</h1>
 </div>
             <div className="flex gap-2 items-center">
@@ -118,7 +116,7 @@ const CoachDetails = () => {
               <button onClick={()=>handleToggleDisablePopup(true)} className={cn( "bg-[#FF363A]" , "p-2 px-8 rounded-lg text-white")} >
                 Reject
               </button>
-              <button onClick={()=>handleToggleDisablePopup(true)} className={cn("bg-[#00C369]" , "p-2 px-8 rounded-lg text-white")} >
+              <button onClick={()=>handleToggleApprovePopup(true)} className={cn("bg-[#00C369]" , "p-2 px-8 rounded-lg text-white")} >
                 Approve
               </button>
             </div>
@@ -204,25 +202,26 @@ const CoachDetails = () => {
             )}
           </div>
 
-          <DangerPopup
+          <DangerRejectPopup
             title={"Reject Profile"}
             desc={`Are you sure you want to
               ${user?.is_deactivate ? "Activate" : "Deactivate"
             } this coach`}
+             setReason={setReason}
             doneTitle={`Yes, ${user?.is_deactivate ? "Enable" : "Disable"} Now`}
             show={showAlert.disable}
             onClose={() => handleToggleDisablePopup(false)}
-            onContinue={handleToggleDisableUser}
+            onContinue={handleToggleRejectUser}
             loading={suspendLoading}
           />
 
           <DangerPopup
-            title="Delete User"
-            desc="Are you sure you want to delete this user?"
-            doneTitle="Yes, Delete Now"
-            show={showAlert.delete}
-            onClose={() => handleToggleDeletePopup(false)}
-            onContinue={handleDeleteUser}
+            title="Approve Profile"
+            desc="Are you sure you want to approve this profile?"
+            doneTitle="Yes"
+            show={showAlert.approve}
+            onClose={() => handleToggleApprovePopup(false)}
+            onContinue={handleToggleApproveUser}
             loading={deleteLoading}
           />
         </div>

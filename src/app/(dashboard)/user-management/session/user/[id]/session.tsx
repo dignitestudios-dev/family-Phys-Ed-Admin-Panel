@@ -1,6 +1,6 @@
 "use client";
 
-import SessionDetail from "@/components/session/session-detail-coach";
+import SessionDetail from "@/components/session/session-detail-user";
 import { getHooks } from "@/hooks/useGetRequests";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -49,21 +49,21 @@ interface PrivateSession extends BaseSession {
 function Session() {
   const { id } = useParams();
   const searchParams = useSearchParams();
-  const type = searchParams.get("type"); 
+  const type = searchParams.get("type"); // 'public' | 'private' | 'custom'
   const coachId = searchParams.get("coach_id");
 
   const [sessionData, setSessionData] = useState<PublicSession | PrivateSession| null>(null);
 
-  const { data: publicData, getPublicSessionById } = getHooks.useGetPublicSessionDetails();
-  const { data: privateData, getRequestSessionById } = getHooks.useGetReqSessionDetails();
+  const { data: publicData, getUserPublicSessionById } = getHooks.useGetUserPublicSessionDetails();
+  const { data: privateData, getUserPrivateSessionById } = getHooks.useGetUserPrivateSessionDetails();
 
   useEffect(() => {
     if (!id || !type) return;
 
     if (type === "public") {
-      getPublicSessionById( coachId!,id as string ,);
+      getUserPublicSessionById( coachId!,id as string ,);
     } else if (type === "private" || type === "custom") {
-      if (coachId) getRequestSessionById( coachId,id as string);
+      if (coachId) getUserPrivateSessionById( coachId,id as string);
     }
   }, [id, type, coachId]);
 
