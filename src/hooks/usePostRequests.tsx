@@ -152,6 +152,57 @@ const useRejectCoach = () => {
   return { loading, toggleRejectCoach };
 };
 
+const useActivate = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const activateUser = async (id: string ): Promise<boolean> => {
+    setLoading(true);
+    try {
+    
+
+      const response = await api.activateUser(id );
+    
+      toast.success(response?.message);
+      router.push("/user-management");
+      return true;
+    } catch (error) {
+      utils.handleError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, activateUser };
+};
+
+
+const useDeactivate = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const deactivateUser = async (id: string ): Promise<boolean> => {
+    setLoading(true);
+    try {
+    
+
+      const response = await api.deactivateUser(id);
+    
+      toast.success(response?.message);
+      router.push("/user-management");
+      return true;
+    } catch (error) {
+      utils.handleError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, deactivateUser };
+};
+
 const useApproveCoachProduct = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -299,5 +350,7 @@ export const postHooks = {
   useVerifyOtp,
   useResetPassword,
   useCreateCommunity,
-  useApproveCoachProduct
+  useApproveCoachProduct,
+  useActivate,
+  useDeactivate
 };

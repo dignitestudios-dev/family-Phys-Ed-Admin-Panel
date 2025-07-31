@@ -24,7 +24,8 @@ const UserDetails = () => {
   const { loading: suspendLoading, toggleSuspendUser } =
     postHooks.useToggleSuspendUser();
   const { loading: deleteLoading, deleteUser } = deleteHooks.useDeleteUser();
-
+ const {activateUser} = postHooks.useActivate()
+const { deactivateUser } = postHooks.useDeactivate()
   const router = useRouter();
   const { id } = useParams();
   const searchParams = useSearchParams();
@@ -37,7 +38,8 @@ const UserDetails = () => {
   const [showAlert, setShowAlert] = useState<{
     delete: boolean;
     disable: boolean;
-  }>({ delete: false, disable: false });
+    activate:boolean;
+  }>({ delete: false, disable: false , activate:false });
 
   const handleTabChange = (index: SelectedTabs) => {
     const newParams = new URLSearchParams(searchParams);
@@ -55,12 +57,12 @@ const UserDetails = () => {
     id && getUserById(id as string);
   }, [id]);
 
-  const handleToggleDisablePopup = (value: boolean) => {
+  const handleToggleDeactivatePopup = (value: boolean) => {
     setShowAlert((prev) => ({
       ...prev,
       disable: value,
     }));
-  };
+  }
 
   const handleToggleDeletePopup = (value: boolean) => {
     setShowAlert((prev) => ({
@@ -69,21 +71,31 @@ const UserDetails = () => {
     }));
   };
 
-  const handleToggleDisableUser = async () => {
-    // const suspendUser = !user?.is_deactivate;
-    // const success = await toggleSuspendUser(id as string, suspendUser);
-    // if (success)
-    //   setUser((prev: any) => ({ ...prev, is_deactivate: suspendUser }));
+ const handleToggleDisableUser = async () => {
+   deactivateUser(String(user?.user_id))
 
-    handleToggleDisablePopup(false);
+    handleToggleDeactivatePopup(false);
   };
-
   const handleDeleteUser = async () => {
     const success = await deleteUser(id as string);
     if (success) router.push("/user-management");
 
     handleToggleDeletePopup(false);
   };
+
+  
+  const handleToggleActivatePopup = (value: boolean) => {
+    setShowAlert((prev) => ({
+      ...prev,
+      activate: value,
+    }));
+  };
+
+  const handleActivateUser = () =>{
+    activateUser(String(user?.user_id))
+    handleToggleActivatePopup(false)
+  }
+
 
   return (
     <>
@@ -108,9 +120,13 @@ const UserDetails = () => {
                 <Delete />
               </div> */}
 
-              <button onClick={() => handleToggleDisablePopup(true)} className={cn(user?.is_deactivate ? "bg-[#00C369]" : "bg-[#FF363A]", "p-2 px-8 rounded-lg text-white")} >
-                {user?.is_deactivate ? "Activate" : "Deactivate"}
-              </button>
+                     {user?.is_deactivate ?
+                          <button onClick={()=> handleToggleActivatePopup(true)} className={cn(user?.is_deactivate? "bg-[#00C369]": "bg-[#FF363A]" , "p-2 px-8 rounded-lg text-white")} >
+                             {"Active"}
+                           </button>
+                         :<button onClick={()=>handleToggleDeactivatePopup(true)} className={cn(user?.is_deactivate? "bg-[#00C369]": "bg-[#FF363A]" , "p-2 px-8 rounded-lg text-white")} >
+                             { "Deactivate" }
+                           </button> }
             </div>
           </div>
 
@@ -190,24 +206,25 @@ const UserDetails = () => {
             )}
           </div>
 
-          <DangerPopup
-            title={user?.is_deactivate ? "Enable User" : "Disable User"}
-            desc={`Are you sure you want to ${user?.is_deactivate ? "enable" : "disable"
-              } this user?`}
+   <DangerPopup
+            title={user?.is_deactivate ? "Activate User" : "Deactivate Coach"}
+            desc={`Are you sure you want to
+              ${user?.is_deactivate ? "Activate" : "Deactivate"
+            } this coach`}
             doneTitle={`Yes, ${user?.is_deactivate ? "Enable" : "Disable"} Now`}
             show={showAlert.disable}
-            onClose={() => handleToggleDisablePopup(false)}
+            onClose={() => handleToggleDeactivatePopup(false)}
             onContinue={handleToggleDisableUser}
             loading={suspendLoading}
           />
 
           <DangerPopup
-            title="Delete User"
-            desc="Are you sure you want to delete this user?"
-            doneTitle="Yes, Delete Now"
-            show={showAlert.delete}
-            onClose={() => handleToggleDeletePopup(false)}
-            onContinue={handleDeleteUser}
+            title="Activate User"
+            desc="Are you sure you want to activate this user?"
+            doneTitle="Yes"
+            show={showAlert.activate}
+            onClose={() => handleToggleActivatePopup(false)}
+            onContinue={handleActivateUser}
             loading={deleteLoading}
           />
         </>

@@ -189,6 +189,15 @@ const approveCoachProduct = (id: string ) =>
     API.post(`product-approval-requests/${id}/approve` )
   )
 
+const activateUser = (id: string ) =>
+  apiHandler<{ success: boolean; message: string }>(() =>
+    API.post(`reactive-user/${id}` )
+  )
+
+  const deactivateUser = (id: string ) =>
+  apiHandler<{ success: boolean; message: string }>(() =>
+    API.post(`deactivate-user/${id}` )
+  )
 const verifyOtp = (otp: string, email: string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
     API.post(`/auth/adminVerifyOtpForgetPassword`, { otp, email })
@@ -583,6 +592,8 @@ const api = {
   rejectCoach,
   createNotification,
   getUserGrowthAnalytics,
-  approveCoachProduct
+  approveCoachProduct,
+  activateUser,
+  deactivateUser
 };
 export default api;
