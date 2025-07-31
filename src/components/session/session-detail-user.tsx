@@ -2,7 +2,7 @@
 import { PrivateSessionDetail, PublicSessionDetail } from "@/lib/types"
 import { ArrowLeft, CalendarDays, Clock2, MapPin } from "lucide-react"
 import Image from "next/image"
-import { usePathname, useRouter } from "next/navigation"
+import {  useRouter, useSearchParams } from "next/navigation"
 
 interface BaseSession {
   session_id: number;
@@ -54,7 +54,8 @@ interface PrivateSession extends BaseSession {
 
 function SessionDetail({ data }: { data: PrivateSession | PublicSession }) {
     const router = useRouter()
-    const pathname = usePathname()
+    const searchParams = useSearchParams()
+    const type = searchParams.get("type")
     return (
         <>
             <div className="flex items-center justify-between mb-6">
@@ -133,7 +134,7 @@ function SessionDetail({ data }: { data: PrivateSession | PublicSession }) {
                                 <h1>Remaining Slots</h1>
                                 <h3 className="text-primary">{data.available_slots}</h3>
                              </div> */}
-                            {pathname.includes("public") &&  data.booking_users.map((b, idx) => (
+                            {type == "public" &&  data.booking_users.map((b, idx) => (
                                 <div key={idx} className="space-y-2">
                                     <div className="bg-[#2c2c2e] flex justify-between items-center p-2 rounded-2xl px-4" >
                                         <div className="flex gap-2 items-center">
@@ -155,7 +156,7 @@ function SessionDetail({ data }: { data: PrivateSession | PublicSession }) {
                                         </div>
                                 </div>
                             ))}
-                              {pathname.includes("private") && 
+                              {type == "private"  && 
                                 <div  className="space-y-2">
                                     <div className="bg-[#2c2c2e] flex justify-between items-center p-2 rounded-2xl px-4" >
                                         <div className="flex gap-2 items-center">
