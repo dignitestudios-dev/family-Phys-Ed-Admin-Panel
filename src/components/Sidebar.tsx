@@ -23,6 +23,12 @@ import PushNotificationsSelected from "./icons/sidebar/PushNotificationsSelected
 import GroupManagement from "./icons/sidebar/GroupManagement";
 import GroupManagementSelected from "./icons/sidebar/GroupManagementSelected";
 import RequestIcon from "./icons/sidebar/Request-icon";
+import MerchandiseSelected from "./icons/sidebar/MerchandiseSelected";
+import Merchandise from "./icons/sidebar/Merchandise";
+import Order from "./icons/sidebar/Order";
+import OrderSelected from "./icons/sidebar/OrderSelected";
+import ReportedIssues from "./icons/sidebar/ReportedIssues";
+import ReportedIssuesSelected from "./icons/sidebar/ReportedIssuesSelected";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -41,48 +47,36 @@ const Sidebar = () => {
       icon: <UserManagement />,
       iconSelected: <UserManagementSelected />,
     },
-       {
+    {
       title: "Requests",
       path: "/requests ",
-      icon: <RequestIcon/>,
-      iconSelected: <UserManagementSelected />,
+      icon: <RequestIcon />,
+      iconSelected: <RequestIcon />,
     },
-    // {
-    //   title: "Community Management",
-    //   path: "/community-management",
-    //   icon: <CommunityManagement />,
-    //   iconSelected: <CommunityManagementSelected />,
-    // },
-    // {
-    //   title: "Group Management",
-    //   path: "/group-management",
-    //   icon: <GroupManagement />,
-    //   iconSelected: <GroupManagementSelected />,
-    // },
-    // {
-    //   title: "Badge Management",
-    //   path: "/badge-management",
-    //   icon: <BadgesManagement />,
-    //   iconSelected: <BadgesManagementSelected />,
-    // },
-    // {
-    //   title: "Reported Content",
-    //   path: "/reported-content",
-    //   icon: <ReportedContent />,
-    //   iconSelected: <ReportedContentSelected />,
-    // },
-    // {
-    //   title: "Subscription Plans",
-    //   path: "/subscription-plans",
-    //   icon: <SubscriptionPlans />,
-    //   iconSelected: <SubscriptionPlansSelected />,
-    // },
-    // {
-    //   title: "Push Notifications",
-    //   path: "/push-notifications",
-    //   icon: <PushNotifications />,
-    //   iconSelected: <PushNotificationsSelected />,
-    // },
+    {
+      title: "Orders",
+      path: "/orders",
+      icon: <Order />,
+      iconSelected: <OrderSelected />,
+    },
+    {
+      title: "Merchandise",
+      path: "/merchandise",
+      icon: <Merchandise />,
+      iconSelected: <MerchandiseSelected />,
+    },
+    {
+      title: "Reported Issues",
+      path: "/reported-issues",
+      icon: <ReportedIssues />,
+      iconSelected: <ReportedIssuesSelected />,
+    },
+    {
+      title: "Push Notifications",
+      path: "/push-notifications",
+      icon: <PushNotifications />,
+      iconSelected: <PushNotificationsSelected />,
+    },
   ];
 
   const isActiveRoute = useCallback(
@@ -114,9 +108,9 @@ const Sidebar = () => {
             <li key={index}>
               <Link
                 href={navLink.path}
-                className={`p-3 flex items-center gap-3   font-general-medium ${
+                className={`p-3 flex items-center gap-3 font-general-medium ${
                   isActive ? "bg-primary text-black" : " text-white"
-                } hover:bg-primary hover:text-dark rounded-xl cursor-pointer`}
+                } hover:bg-primary hover:text-dark rounded-full cursor-pointer`}
               >
                 {isActive ? navLink.iconSelected : navLink.icon}
                 {navLink.title}
@@ -127,7 +121,7 @@ const Sidebar = () => {
 
         <li>
           <button
-            className={`p-3 w-full flex items-center gap-3 text-white font-general-medium rounded-xl cursor-pointer`}
+            className={`p-3 w-full flex items-center gap-3 text-[#FF363A] font-general-medium rounded-xl cursor-pointer`}
             onClick={handleLogout}
           >
             <LogOut />

@@ -82,17 +82,17 @@ const CreateNotificationForm: React.FC<CreateNotificationFormProps> = ({
 
   return (
     <div
-      className={`fixed top-0 left-0 z-50 w-full h-screen bg-[#00000041] backdrop-blur-xs flex justify-center items-center ${
+      className={`fixed top-0 left-0 z-50 w-full h-screen bg-black/50 flex justify-center items-center ${
         show ? "animate-fadeIn" : "animate-fadeOut"
       }`}
     >
       <div
-        className={`relative bg-white rounded-[20px] w-[550px] max-w-full flex flex-col justify-center items-center gap-3 ${
+        className={`relative bg-secondary rounded-[20px] w-[550px] max-w-full flex flex-col justify-center items-center gap-3 ${
           show ? "animate-popupIn" : "animate-popupOut"
         }`}
       >
-        <div className="w-full flex justify-between separator p-10 !pb-2">
-          <p className="text-xl font-general-semibold">
+        <div className="w-full flex justify-between p-10 !pb-2">
+          <p className="text-xl font-semibold">
             Create New Notification
           </p>
 
@@ -144,14 +144,14 @@ const CreateNotificationForm: React.FC<CreateNotificationFormProps> = ({
             <label htmlFor={"desc"} className="font-general-semibold mb-3">
               Description
             </label>
-            <div className="flex justify-center items-center h-[140px] w-[280px] sm:w-[448px] bg-white border-2 border-[#00000030] rounded-[12px]">
+            <div className="flex justify-center items-center h-[140px] w-[280px] sm:w-[448px] bg-[#2C2C2E] rounded-[12px]">
               <textarea
                 name="desc"
                 id="desc"
                 onChange={handleInputChange}
                 disabled={loading}
                 placeholder="Description of notification"
-                className="p-[15px] w-full h-full rounded-[12px] outline-none"
+                className="p-[15px] w-full h-full max-h-full min-h-full rounded-[12px] outline-none"
               />
             </div>
           </div>

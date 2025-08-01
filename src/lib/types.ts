@@ -62,8 +62,6 @@ export interface UserInterface {
   users: PaginatedResponse<User>;
 }
 
-
-
 export interface SessionPagination<T = any> {
   current_page: number;
   data: T[];
@@ -103,8 +101,6 @@ export interface UserDetailsInterface {
   };
 }
 
-
-
 export interface IdentityVerificationDocs {
   driving_front: string;
   driving_back: string;
@@ -136,7 +132,6 @@ export interface CoachDetailsInterface {
   };
   products: any[]; // Replace `any` with a proper type if known
 }
-
 
 export interface PostInterface {
   id: string;
@@ -178,7 +173,7 @@ export interface FollowerInterface {
   phoneNumber: string;
 }
 
-export interface FollowingInterface extends FollowerInterface { }
+export interface FollowingInterface extends FollowerInterface {}
 
 export interface CommunityInterface {
   _id: string;
@@ -406,7 +401,6 @@ export interface SubscriptionPlan {
   startDate: string;
 }
 
-
 export interface PaginationLink {
   url: string | null;
   label: string;
@@ -434,7 +428,6 @@ export interface ISessions {
   private: PaginatedSessionData;
   custom: PaginatedSessionData;
 }
-
 
 export interface RequestItem {
   id: number;
@@ -505,13 +498,11 @@ export interface PublicSessionDetail {
   available_slots: number;
   booked_slots: number;
   booking_users: {
-
     id: number;
     uid: string;
     name: string;
     avatar: string;
     booked_slots: number;
-
   }[]; // replace `any` with appropriate user type if available
   banner_images: string[];
   use_external_address: boolean;
@@ -521,7 +512,7 @@ export interface PublicSessionDetail {
   payment_method_id: string | number | null;
   cancelled_booking_users: any[]; // replace `any` with appropriate user type if available
   is_booked: boolean;
-  booking_id?: number
+  booking_id?: number;
   coach: CoachInfo;
   session_cancellation_reason: string | null;
   payment_details: any; // update type if payment structure is known
@@ -577,7 +568,6 @@ export interface PrivateSessionDetail {
   booking_cancellation_reason: string | null;
 }
 
-
 export interface Product {
   id: number;
   name: string;
@@ -613,3 +603,67 @@ interface PCoach {
   rating: number;
 }
 
+export interface MerchandiseProduct {
+  id: number;
+  name: string;
+  category: string;
+  price: string; // or `number` if you parse it
+  is_approved: boolean;
+  location: string;
+  products_images: string[];
+}
+
+export type OrderTrackingStatus =
+  | "confirmed"
+  | "shipped"
+  | "out for delivery"
+  | "delivered"
+  | "cancelled";
+
+export interface Order {
+  order_id: number;
+  order_placed: string;
+  delivery_address: string;
+  payment_method_id: string;
+  payment_method_last_digits: string;
+  status: "in-progress" | "completed" | "cancelled";
+  tracking_status: OrderTrackingStatus;
+  cancellation_reason: string | null;
+  order_items: OrderItem[];
+}
+
+export interface OrderItem {
+  product_id: 1;
+  product_name: "Testing Product";
+  category: "T-shirt";
+  price: "250.00";
+  sizes: {
+    [key: string]: number | undefined;
+  };
+  product_images: string[];
+}
+
+export interface OrderDetails extends Order {
+  order_summary: {
+    subtotal: string;
+    total: string;
+  };
+  user: {
+    id: number;
+    uid: string;
+    name: string;
+    phone_number: string;
+    avatar: string | null;
+  };
+}
+
+export interface ReportedIssue {
+  report_id: number;
+  user_id: number;
+  name: string;
+  reason: string;
+  other_reason: string | null;
+  reported_by: string;
+  date: string;
+  time: string;
+}

@@ -8,6 +8,9 @@ import {
   FollowingInterface,
   GroupDetailsInterface,
   GroupInterface,
+  MerchandiseProduct,
+  Order,
+  OrderDetails,
   PaginatedSessionData,
   PostDetailsInterface,
   PostInterface,
@@ -15,13 +18,14 @@ import {
   Product,
   PublicSessionDetail,
   ReportedGroupsInterface,
+  ReportedIssue,
   ReportedPostInterface,
   ReportedUsersInterface,
   UserDetailsInterface,
   UserInterface,
 } from "@/lib/types";
 import { utils } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useGetAllUsers = () => {
   const [loading, setLoading] = useState(true);
@@ -51,7 +55,7 @@ const useGetAllUsers = () => {
         page,
         limit
       );
-      console.log(response)
+      console.log(response);
       setUsers(response);
       // setTotalPages(response?.data?.pagination?.totalPages);
     } catch (error) {
@@ -107,11 +111,9 @@ const useGetUsersDetails = () => {
   const getUserById = async (id: string) => {
     setLoading(true);
     try {
-     
-        const response = await api.getUserById(id);
+      const response = await api.getUserById(id);
 
-        setUser(response);
-
+      setUser(response);
     } catch (error) {
       utils.handleError(error);
     } finally {
@@ -124,14 +126,14 @@ const useGetUsersDetails = () => {
 
 const useGetCoachDetails = () => {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState< CoachDetailsInterface | null>(null);
+  const [user, setUser] = useState<CoachDetailsInterface | null>(null);
 
-  const getUserById = async (id: string ) => {
+  const getUserById = async (id: string) => {
     setLoading(true);
     try {
-       const response = await api.getCoachById(id);
+      const response = await api.getCoachById(id);
 
-        setUser(response);
+      setUser(response);
     } catch (error) {
       utils.handleError(error);
     } finally {
@@ -142,17 +144,16 @@ const useGetCoachDetails = () => {
   return { loading, user, setUser, getUserById };
 };
 
-
 const useGetUserPublicSessionDetails = () => {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState< PublicSessionDetail | null>(null);
+  const [data, setData] = useState<PublicSessionDetail | null>(null);
 
-  const getUserPublicSessionById = async (id: string , sessionId:string ) => {
+  const getUserPublicSessionById = async (id: string, sessionId: string) => {
     setLoading(true);
     try {
-       const response = await api.getUserPublicSessionById(id , sessionId);
-        console.log("User details API call: ", response);
-        setData(response);
+      const response = await api.getUserPublicSessionById(id, sessionId);
+      console.log("User details API call: ", response);
+      setData(response);
     } catch (error) {
       utils.handleError(error);
     } finally {
@@ -165,14 +166,14 @@ const useGetUserPublicSessionDetails = () => {
 
 const useGetUserPrivateSessionDetails = () => {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState< PublicSessionDetail | null>(null);
+  const [data, setData] = useState<PublicSessionDetail | null>(null);
 
-  const getUserPrivateSessionById = async (id: string , sessionId:string ) => {
+  const getUserPrivateSessionById = async (id: string, sessionId: string) => {
     setLoading(true);
     try {
-       const response = await api.getUserPrivateSessionById(id , sessionId);
-        console.log("User details API call: ", response);
-        setData(response);
+      const response = await api.getUserPrivateSessionById(id, sessionId);
+      console.log("User details API call: ", response);
+      setData(response);
     } catch (error) {
       utils.handleError(error);
     } finally {
@@ -185,14 +186,14 @@ const useGetUserPrivateSessionDetails = () => {
 
 const useGetPublicSessionDetails = () => {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState< PublicSessionDetail | null>(null);
+  const [data, setData] = useState<PublicSessionDetail | null>(null);
 
-  const getPublicSessionById = async (id: string , sessionId:string ) => {
+  const getPublicSessionById = async (id: string, sessionId: string) => {
     setLoading(true);
     try {
-       const response = await api.getPublicSessionById(id , sessionId);
-        console.log("User details API call: ", response);
-        setData(response);
+      const response = await api.getPublicSessionById(id, sessionId);
+      console.log("User details API call: ", response);
+      setData(response);
     } catch (error) {
       utils.handleError(error);
     } finally {
@@ -203,17 +204,16 @@ const useGetPublicSessionDetails = () => {
   return { loading, data, setData, getPublicSessionById };
 };
 
-
 const useGetProductDetails = () => {
   const [loading, setLoading] = useState(true);
-  const [product, setProduct] = useState< Product | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
 
-  const getProductDetailById = async (id: string  ) => {
+  const getProductDetailById = async (id: string) => {
     setLoading(true);
     try {
-       const response = await api.getProductDetail(id );
-        console.log("User details API call: ", response);
-        setProduct(response);
+      const response = await api.getProductDetail(id);
+      console.log("User details API call: ", response);
+      setProduct(response);
     } catch (error) {
       utils.handleError(error);
     } finally {
@@ -226,14 +226,14 @@ const useGetProductDetails = () => {
 
 const useGetReqSessionDetails = () => {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState< PrivateSessionDetail | null>(null);
+  const [data, setData] = useState<PrivateSessionDetail | null>(null);
 
-  const getRequestSessionById = async (id: string , reqId:string ) => {
+  const getRequestSessionById = async (id: string, reqId: string) => {
     setLoading(true);
     try {
-       const response = await api.getRequestSessionById(id , reqId);
-        console.log("User details API call: ", response);
-        setData(response);
+      const response = await api.getRequestSessionById(id, reqId);
+      console.log("User details API call: ", response);
+      setData(response);
     } catch (error) {
       utils.handleError(error);
     } finally {
@@ -592,12 +592,153 @@ const useGetGroupDetails = () => {
   return { loading, group, getGroupById };
 };
 
+const useGetAllMerchandiseProducts = (page: number) => {
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<MerchandiseProduct[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(1);
+
+  const getMerchandiseProducts = async () => {
+    setLoading(true);
+    try {
+      const response = await api.getMerchandiseProducts(page);
+      console.log("Merchandise products API call: ", response);
+      setProducts(response);
+      // setTotalPages(response?.data?.totalPages || 1);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getMerchandiseProducts();
+  }, [page]);
+
+  return { loading, products, totalPages, getMerchandiseProducts };
+};
+
+const useGetAllOrders = () => {
+  const [loading, setLoading] = useState(true);
+  const [newOrders, setNewOrders] = useState<Order[]>([]);
+  const [orderHistory, setOrderHistory] = useState<Order[]>([]);
+  const [totalNewOrderPages, setTotalNewOrderPages] = useState<number>(1);
+  const [totalOrderHistoryPages, setTotalOrderHistoryPages] =
+    useState<number>(1);
+
+  const getAllOrders = async (page?: number) => {
+    setLoading(true);
+    try {
+      const response = await api.getAllOrders(page);
+      console.log("Orders API call: ", response);
+      setNewOrders(response?.new_orders?.data || []);
+      setOrderHistory(response?.order_history?.data || []);
+      const newOrdersTotalPages = Math.ceil(
+        response?.new_orders?.total / response?.new_orders?.per_page
+      );
+      const orderHistoryTotalPages = Math.ceil(
+        response?.order_history?.total / response?.order_history?.per_page
+      );
+      setTotalNewOrderPages(newOrdersTotalPages);
+      setTotalOrderHistoryPages(orderHistoryTotalPages);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllOrders(1);
+  }, []);
+
+  return {
+    loading,
+    newOrders,
+    orderHistory,
+    totalNewOrderPages,
+    totalOrderHistoryPages,
+    getAllOrders,
+  };
+};
+
+const useGetOrderDetails = (orderId: string) => {
+  const [loading, setLoading] = useState(true);
+  const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
+
+  const getOrderDetailsById = async () => {
+    if (!orderId) return;
+    setLoading(true);
+    try {
+      const response = await api.getOrdersDetails(orderId);
+      console.log("Order details API call: ", response);
+      setOrderDetails(response);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getOrderDetailsById();
+  }, [orderId]);
+
+  return { loading, orderDetails, getOrderDetailsById };
+};
+
+const useGetAllReportedIssues = (page?: number) => {
+  const [loading, setLoading] = useState(true);
+  const [reportedByCoach, setReportedByCoach] = useState<ReportedIssue[]>([]);
+  const [reportedByUser, setReportedByUser] = useState<ReportedIssue[]>([]);
+  const [totalReportedByCoachPages, setTotalReportedByCoachPages] =
+    useState<number>(1);
+  const [totalReportedByUserPages, setTotalReportedByUserPages] =
+    useState<number>(1);
+
+  const getAllReportedIssues = async () => {
+    setLoading(true);
+    try {
+      const response = await api.getAllReportedIssues(page);
+      console.log("Reported Issues API call: ", response);
+      setReportedByCoach(response?.reported_by_coach?.data || []);
+      setReportedByUser(response?.reported_by_user?.data || []);
+      const reportedByCoachTotalPages = Math.ceil(
+        response?.reported_by_coach?.total /
+          response?.reported_by_coach?.per_page
+      );
+      const reportedByUserTotalPages = Math.ceil(
+        response?.reported_by_user?.total / response?.reported_by_user?.per_page
+      );
+      setTotalReportedByCoachPages(reportedByCoachTotalPages);
+      setTotalReportedByUserPages(reportedByUserTotalPages);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllReportedIssues();
+  }, [page]);
+
+  return {
+    loading,
+    reportedByCoach,
+    reportedByUser,
+    totalReportedByCoachPages,
+    totalReportedByUserPages,
+    getAllReportedIssues,
+  };
+};
+
 export const getHooks = {
   useGetAllUsers,
   useGetReqSessionDetails,
   useGetPublicSessionDetails,
-useGetProductDetails,
-useGetUserPrivateSessionDetails,
+  useGetProductDetails,
+  useGetUserPrivateSessionDetails,
   useGetUsersDetails,
   useGetCoachDetails,
   useGetUserPostsById,
@@ -612,5 +753,9 @@ useGetUserPrivateSessionDetails,
   useGetReportedGroups,
   useGetAllGroups,
   useGetGroupDetails,
-  useGetUserPublicSessionDetails
+  useGetUserPublicSessionDetails,
+  useGetAllMerchandiseProducts,
+  useGetAllOrders,
+  useGetOrderDetails,
+  useGetAllReportedIssues,
 };

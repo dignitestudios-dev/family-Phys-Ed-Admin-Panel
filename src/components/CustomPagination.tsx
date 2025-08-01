@@ -21,7 +21,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
   const preventPrevious = useMemo(() => page === 1, [page, totalPages]);
   const preventNext = useMemo(() => page >= totalPages, [page, totalPages]);
 
-  console.log("preventNext: ",preventNext)
+  console.log("preventNext: ", preventNext);
 
   const goNext = () => {
     if (preventNext) return;
@@ -40,7 +40,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
   };
 
   console.log(totalPages, "Total Pages in Custom Pagination");
-  
+
   return (
     <>
       {loading && page <= 1 ? (
@@ -57,9 +57,9 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
                   loading || preventPrevious ? "opacity-55" : "cursor-pointer"
                 }`}
               >
-                <IoChevronBack size={24} />
+                <IoChevronBack size={24} color="#1C1C1E" />
               </button>
-              <p className="font-semibold text-gray-600">
+              <p className="font-semibold text-white/80">
                 Page {page} of {totalPages || 1}
               </p>
               <button
@@ -69,7 +69,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
                   loading || preventNext ? "opacity-55" : "cursor-pointer"
                 }`}
               >
-                <IoChevronForward size={24} />
+                <IoChevronForward size={24} color="#1C1C1E" />
               </button>
             </div>
           </div>

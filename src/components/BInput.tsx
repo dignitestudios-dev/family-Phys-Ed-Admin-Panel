@@ -34,7 +34,7 @@ const BInput: React.FC<BInputProps> = ({
       <label htmlFor={id} className="font-general-semibold mb-3">
         {label} {required && <ReqStar />}
       </label>
-      <div className="flex justify-center items-center h-[49px] w-[280px] sm:w-[448px] bg-black border-2 border-white/30 rounded-[12px]">
+      <div className="flex justify-center items-center h-[49px] w-[280px] sm:w-[448px] bg-[#2C2C2E] rounded-[12px]">
         <input
           type={
             inputType

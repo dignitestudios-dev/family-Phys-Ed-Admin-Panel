@@ -33,7 +33,7 @@ const BButton: React.FC<BButtonProps> = ({
             : "px-4 min-w-40"
         }
          flex items-center justify-center gap-2 px-8 select-none  h-[49px] max-w-full rounded-[12px] transition-all ${
-           varient === "secondary" ? "bg-[#D8D8D8]" : "bg-red-500 text-white"
+           varient === "secondary" ? "bg-[#D8D8D8]" : "bg-gradient text-black"
          } text-black font-bold ${
         loading || disabled
           ? "cursor-not-allowed opacity-75"

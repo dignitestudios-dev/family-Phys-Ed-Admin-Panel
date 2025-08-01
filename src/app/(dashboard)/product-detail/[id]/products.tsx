@@ -1,26 +1,30 @@
-"use client"
-import ProductDetails from '@/components/merchandise/product-detail'
-import { getHooks } from '@/hooks/useGetRequests'
-import { Loader } from 'lucide-react'
-import { useParams } from 'next/navigation'
-import React, { useEffect } from 'react'
+"use client";
+import ProductDetails from "@/components/merchandise/product-detail";
+import PageLoader from "@/components/PageLoader";
+import { getHooks } from "@/hooks/useGetRequests";
+import { Loader } from "lucide-react";
+import { useParams } from "next/navigation";
+import React, { useEffect } from "react";
 
-type Props = {}
+type Props = {};
 
 function Products({}: Props) {
-    const {id} = useParams()
-   const {loading, product , getProductDetailById} = getHooks.useGetProductDetails()
+  const { id } = useParams();
+  const { loading, product, getProductDetailById } =
+    getHooks.useGetProductDetails();
 
-    useEffect(()=>{
-        if(id){
- getProductDetailById(id as string)
-        }
-    },[])
+  useEffect(() => {
+    if (id) {
+      getProductDetailById(id as string);
+    }
+  }, []);
 
-    if(loading) return <Loader/>
+  if (loading) return <PageLoader />;
   return (
-    <div><ProductDetails product={product!} /></div>
-  )
+    <>
+      <ProductDetails product={product!} />
+    </>
+  );
 }
 
-export default Products
+export default Products;

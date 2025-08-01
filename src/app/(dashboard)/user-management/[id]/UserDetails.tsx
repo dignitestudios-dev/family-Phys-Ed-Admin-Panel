@@ -18,14 +18,13 @@ import Sessions from "@/components/user-management/sessions";
 type SelectedTabs = "" | "0" | "1" | "2" | "3";
 
 const UserDetails = () => {
-
-  const tabs = ["Detail",  "Sessions"];
+  const tabs = ["Detail", "Sessions"];
   const { loading, user, setUser, getUserById } = getHooks.useGetUsersDetails();
   const { loading: suspendLoading, toggleSuspendUser } =
     postHooks.useToggleSuspendUser();
   const { loading: deleteLoading, deleteUser } = deleteHooks.useDeleteUser();
- const {activateUser} = postHooks.useActivate()
-const { deactivateUser } = postHooks.useDeactivate()
+  const { activateUser } = postHooks.useActivate();
+  const { deactivateUser } = postHooks.useDeactivate();
   const router = useRouter();
   const { id } = useParams();
   const searchParams = useSearchParams();
@@ -38,8 +37,8 @@ const { deactivateUser } = postHooks.useDeactivate()
   const [showAlert, setShowAlert] = useState<{
     delete: boolean;
     disable: boolean;
-    activate:boolean;
-  }>({ delete: false, disable: false , activate:false });
+    activate: boolean;
+  }>({ delete: false, disable: false, activate: false });
 
   const handleTabChange = (index: SelectedTabs) => {
     const newParams = new URLSearchParams(searchParams);
@@ -62,7 +61,7 @@ const { deactivateUser } = postHooks.useDeactivate()
       ...prev,
       disable: value,
     }));
-  }
+  };
 
   const handleToggleDeletePopup = (value: boolean) => {
     setShowAlert((prev) => ({
@@ -71,8 +70,8 @@ const { deactivateUser } = postHooks.useDeactivate()
     }));
   };
 
- const handleToggleDisableUser = async () => {
-   deactivateUser(String(user?.user_id))
+  const handleToggleDisableUser = async () => {
+    deactivateUser(String(user?.user_id));
 
     handleToggleDeactivatePopup(false);
   };
@@ -83,7 +82,6 @@ const { deactivateUser } = postHooks.useDeactivate()
     handleToggleDeletePopup(false);
   };
 
-  
   const handleToggleActivatePopup = (value: boolean) => {
     setShowAlert((prev) => ({
       ...prev,
@@ -91,11 +89,10 @@ const { deactivateUser } = postHooks.useDeactivate()
     }));
   };
 
-  const handleActivateUser = () =>{
-    activateUser(String(user?.user_id))
-    handleToggleActivatePopup(false)
-  }
-
+  const handleActivateUser = () => {
+    activateUser(String(user?.user_id));
+    handleToggleActivatePopup(false);
+  };
 
   return (
     <>
@@ -103,14 +100,13 @@ const { deactivateUser } = postHooks.useDeactivate()
         <PageLoader />
       ) : (
         <>
-              <div className="flex items-center justify-between text-white">
-                <div className="flex items-center gap-2">
-          <Link href="/user-management" className="outline-none">
-           <ArrowLeft />
-          </Link>
-            <h1 className="section-heading ">User Profile</h1>
-
-         </div>
+          <div className="flex items-center justify-between text-white">
+            <div className="flex items-center gap-2">
+              <Link href="/user-management" className="outline-none">
+                <ArrowLeft />
+              </Link>
+              <h1 className="section-heading ">User Profile</h1>
+            </div>
 
             <div className="flex gap-2 items-center">
               {/* <div
@@ -120,13 +116,27 @@ const { deactivateUser } = postHooks.useDeactivate()
                 <Delete />
               </div> */}
 
-                     {user?.is_deactivate ?
-                          <button onClick={()=> handleToggleActivatePopup(true)} className={cn(user?.is_deactivate? "bg-[#00C369]": "bg-[#FF363A]" , "p-2 px-8 rounded-lg text-white")} >
-                             {"Active"}
-                           </button>
-                         :<button onClick={()=>handleToggleDeactivatePopup(true)} className={cn(user?.is_deactivate? "bg-[#00C369]": "bg-[#FF363A]" , "p-2 px-8 rounded-lg text-white")} >
-                             { "Deactivate" }
-                           </button> }
+              {user?.is_deactivate ? (
+                <button
+                  onClick={() => handleToggleActivatePopup(true)}
+                  className={cn(
+                    user?.is_deactivate ? "bg-[#00C369]" : "bg-[#FF363A]",
+                    "p-2 px-8 rounded-lg text-white"
+                  )}
+                >
+                  {"Active"}
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleToggleDeactivatePopup(true)}
+                  className={cn(
+                    user?.is_deactivate ? "bg-[#00C369]" : "bg-[#FF363A]",
+                    "p-2 px-8 rounded-lg text-white"
+                  )}
+                >
+                  {"Deactivate"}
+                </button>
+              )}
             </div>
           </div>
 
@@ -162,22 +172,23 @@ const { deactivateUser } = postHooks.useDeactivate()
               </div>
 
               {/* <p className="text-sm text-white">@{user?.name}</p> */}
-              <h4 className="text-white text-sm" >{user?.fitness_level}</h4>
+              <h4 className="text-white text-sm">{user?.fitness_level}</h4>
 
               <div className="flex items-center gap-2 text-white">
                 <div className="flex items-center gap-1 text-sm ">
-                         <Phone size={20} className="text-primary" />
+                  <Phone size={20} className="text-primary" />
                   <p className="text-white"> {user?.phone_number}</p>
                 </div>
-            
+
                 <div className="flex items-center gap-1 text-sm ">
-                      <Mail size={20} className="text-primary" />
+                  <Mail size={20} className="text-primary" />
                   <p className="text-white"> {user?.email}</p>
                 </div>
               </div>
-                  <div className="flex items-center gap-2 text-xs text-white">
+              <div className="flex items-center gap-2 text-xs text-white">
                 <MapPin size={20} className="text-primary" />
-                {user?.location}</div>
+                {user?.location}
+              </div>
 
               {/* <p className="text-desc text-sm">{user?.fitness_level}</p> */}
             </div>
@@ -198,19 +209,25 @@ const { deactivateUser } = postHooks.useDeactivate()
 
           <div className=" h-full min-h-[500px] overflow-y-auto">
             {selectedTab === "0" ? (
-              <Details activity_preferences={user?.activity_preferences!} fitness_goal={user?.fitness_goal!} fitness_level={user?.fitness_level!} />
+              <Details
+                activity_preferences={user?.activity_preferences!}
+                fitness_goal={user?.fitness_goal!}
+                fitness_level={user?.fitness_level!}
+              />
             ) : selectedTab === "1" ? (
-              <Sessions sessions={user?.sessions!} coachId={String(user?.user_id)!} />
+              <Sessions
+                sessions={user?.sessions!}
+                coachId={String(user?.user_id)!}
+              />
             ) : (
               ""
             )}
           </div>
 
-   <DangerPopup
+          <DangerPopup
             title={user?.is_deactivate ? "Activate User" : "Deactivate Coach"}
             desc={`Are you sure you want to
-              ${user?.is_deactivate ? "Activate" : "Deactivate"
-            } this coach`}
+              ${user?.is_deactivate ? "Activate" : "Deactivate"} this coach`}
             doneTitle={`Yes, ${user?.is_deactivate ? "Enable" : "Disable"} Now`}
             show={showAlert.disable}
             onClose={() => handleToggleDeactivatePopup(false)}

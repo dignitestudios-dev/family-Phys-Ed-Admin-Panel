@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body className={`antialiased bg-[#2c2c2e]`}>
         {false ? <MainLoader /> : children}
         <ToastProvider />
       </body>

@@ -54,9 +54,7 @@ const Dashboard = () => {
       {/* <div className="p-4 bg-white rounded-2xl">
         <SubscriptionSalesChart />
       </div> */}
-  <h2 className="text-dark text-2xl font-general-semibold">
-          Sales
-        </h2>
+      <h2 className="text-dark text-2xl font-general-semibold">Sales</h2>
       <div className="p-4 bg-secondary rounded-2xl">
         <TotalUsersChart
           loading={loading}

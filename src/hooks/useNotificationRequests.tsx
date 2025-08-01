@@ -21,9 +21,44 @@ const useGetNotifications = () => {
   ): Promise<void> => {
     setLoading(true);
     try {
-      const response = await api.getAllNotifications(search, page, limit);
-      setNotifications(response.notifications);
-      setTotalPages(response.pagination.totalPages || 1);
+      // Static array of NotificationInterface objects
+      const staticNotifications: NotificationInterface[] = [
+        {
+          _id: "1",
+          title: "Welcome Notification",
+          description: "Welcome to the platform!",
+          date: "2024-06-01",
+          time: "09:00",
+          scheduledTime: "2024-06-01T09:00:00.000Z",
+          isSent: true,
+          type: "info",
+          image: null,
+          byAdmin: true,
+          receivers: ["user1", "user2"],
+          createdAt: "2024-06-01T08:00:00.000Z",
+          updatedAt: "2024-06-01T08:00:00.000Z",
+        },
+        {
+          _id: "2",
+          title: "System Update",
+          description: "System will be down for maintenance.",
+          date: "2024-06-05",
+          time: "22:00",
+          scheduledTime: "2024-06-05T22:00:00.000Z",
+          isSent: false,
+          type: "alert",
+          image: null,
+          byAdmin: true,
+          receivers: ["user3"],
+          createdAt: "2024-06-02T10:00:00.000Z",
+          updatedAt: "2024-06-02T10:00:00.000Z",
+        },
+      ];
+
+      // const response = await api.getAllNotifications(search, page, limit);
+      setNotifications(staticNotifications);
+      // setTotalPages(response.pagination.totalPages || 1);
+      setTotalPages(1);
     } catch (error) {
       utils.handleError(error);
     } finally {

@@ -1,28 +1,24 @@
 import api from "@/lib/services";
+import { OrderTrackingStatus } from "@/lib/types";
 import { utils } from "@/lib/utils";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const useUpdateCommunity = () => {
+const updateTrackingStatus = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const updateCommunity = async (
-    id: string,
-    title: string,
-    description: string
+  const updateTrackingStatus = async (
+    orderId: string,
+    status: OrderTrackingStatus
   ): Promise<boolean> => {
     setLoading(true);
     try {
-      if (!title) {
-        toast.error("Community name is required");
-        return false;
-      }
-      if (!description) {
-        toast.error("Community description is required");
+      if (!status) {
+        toast.error("Order tracking status is required");
         return false;
       }
 
-      const response = await api.updateCommunity(id, title, description);
+      const response = await api.updateTrackingStatus(orderId, status);
       toast.success(response?.message);
       return true;
     } catch (error) {
@@ -33,54 +29,9 @@ const useUpdateCommunity = () => {
     }
   };
 
-  return { loading, updateCommunity };
-};
-
-const useDisableCommunity = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const disableCommunity = async (
-    id: string,
-    status: boolean
-  ): Promise<boolean> => {
-    setLoading(true);
-    try {
-      const response = await api.disableCommunity(id, status);
-      toast.success(response?.message);
-      return true;
-    } catch (error) {
-      utils.handleError(error);
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { loading, disableCommunity };
-};
-
-const useDisableGroup = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const disableGroup = async (id: string, status: boolean): Promise<boolean> => {
-    setLoading(true);
-    try {
-      const response = await api.disableGroupById(id, status);
-      toast.success(response?.message);
-      return true;
-    } catch (error) {
-      utils.handleError(error);
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { loading, disableGroup };
+  return { loading, updateTrackingStatus };
 };
 
 export const updateHooks = {
-  useUpdateCommunity,
-  useDisableCommunity,
-  useDisableGroup,
+  updateTrackingStatus,
 };

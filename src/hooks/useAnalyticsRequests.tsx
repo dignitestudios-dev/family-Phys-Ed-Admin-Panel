@@ -13,8 +13,32 @@ const useUserGrowthAnalytics = () => {
   const getUserGrowthAnalytics = async (startYear: string, endYear: string) => {
     setLoading(true);
     try {
-      const response = await api.getUserGrowthAnalytics(startYear, endYear);
-      setAnalytics(response.data);
+      // const response = await api.getUserGrowthAnalytics(startYear, endYear);
+      setAnalytics({
+        totalActiveUsers: 1001 + 1221 + 1121 + 1322 + 1456,
+        userGrowthData: [
+          {
+            year: "2021",
+            users: 1001,
+          },
+          {
+            year: "2022",
+            users: 1221,
+          },
+          {
+            year: "2023",
+            users: 1121,
+          },
+          {
+            year: "2024",
+            users: 1322,
+          },
+          {
+            year: "2025",
+            users: 1456,
+          },
+        ],
+      });
     } catch (error) {
       utils.handleError(error);
     } finally {

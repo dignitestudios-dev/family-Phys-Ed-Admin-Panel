@@ -17,7 +17,7 @@ const NotFound = () => {
         404
       </h1>
       <p className="font-general-semibold text-5xl text-desc">Page Not Found</p>
-      <p className="text-xl mb-5">The page you’re looking for doesn’t exist.</p>
+      <p className="text-xl mb-5 text-gray-400">The page you’re looking for doesn’t exist.</p>
       <Link href={"/"}>
         <BButton title="Go Home" />
       </Link>

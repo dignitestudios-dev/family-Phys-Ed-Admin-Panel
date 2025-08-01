@@ -33,7 +33,7 @@ const BTab: React.FC<BTabProps> = ({
             : "px-4 min-w-40"
         }
          flex items-center justify-center gap-2 select-none px-[15px] h-[49px] max-w-full rounded-lg transition-all ${
-           active ? "bg-primary" : "bg-secondary text-white"
+           active ? "bg-gradient" : "bg-secondary text-white"
          } text-black font-medium ${
         loading || disabled
           ? "cursor-not-allowed opacity-75"

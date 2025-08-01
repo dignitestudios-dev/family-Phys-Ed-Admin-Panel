@@ -26,6 +26,11 @@ import {
   PublicSessionDetail,
   PrivateSessionDetail,
   Product,
+  MerchandiseProduct,
+  Order,
+  OrderDetails,
+  OrderTrackingStatus,
+  ReportedIssue,
   // ApprovalRequests,
 } from "./types";
 
@@ -43,7 +48,7 @@ const API = axios.create({
 API.interceptors.request.use(
   (config) => {
     const token = Cookies.get("token");
-    console.log(token) // Retrieve token from storage
+    console.log(token); // Retrieve token from storage
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -162,9 +167,9 @@ const login = (payload: LoginInterface) =>
   apiHandler<{
     success: boolean;
     admin_details: {
-     id: number,
-        name: string,
-        avatar: string | null
+      id: number;
+      name: string;
+      avatar: string | null;
     };
     token: string;
     message: string;
@@ -180,24 +185,24 @@ const approveCoach = (id: string) =>
     API.post(`/profile-approval-requests/${id}/approve`)
   );
 
-const rejectCoach = (id: string , reason:string) =>
+const rejectCoach = (id: string, reason: string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
-    API.post(`profile-approval-requests/${id}/reject` , {reason})
-  )
-const approveCoachProduct = (id: string ) =>
+    API.post(`profile-approval-requests/${id}/reject`, { reason })
+  );
+const approveCoachProduct = (id: string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
-    API.post(`product-approval-requests/${id}/approve` )
-  )
+    API.post(`product-approval-requests/${id}/approve`)
+  );
 
-const activateUser = (id: string ) =>
+const activateUser = (id: string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
-    API.post(`reactive-user/${id}` )
-  )
+    API.post(`reactive-user/${id}`)
+  );
 
-  const deactivateUser = (id: string ) =>
+const deactivateUser = (id: string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
-    API.post(`deactivate-user/${id}` )
-  )
+    API.post(`deactivate-user/${id}`)
+  );
 const verifyOtp = (otp: string, email: string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
     API.post(`/auth/adminVerifyOtpForgetPassword`, { otp, email })
@@ -227,9 +232,7 @@ const getAllUsers = (
     )
   );
 
-const getAllRequests = (
- 
-) =>
+const getAllRequests = () =>
   apiHandler<ApprovalRequests>(() =>
     API.get(
       // `/users?page=${page}&limit=${limit}&search=${search}${isSuspended}`
@@ -237,28 +240,34 @@ const getAllRequests = (
     )
   );
 
-
 const getUserById = (id: string) =>
   apiHandler<UserDetailsInterface>(() => API.get(`/user-details/${id}`));
 
 const getCoachById = (id: string) =>
   apiHandler<CoachDetailsInterface>(() => API.get(`/coach-details/${id}`));
 
-const getPublicSessionById = (id: string , sessionId:string) =>
-  apiHandler<PublicSessionDetail>(() => API.get(`/coach/public-sessions?coach_id=${id}&session_id=${sessionId}`));
+const getPublicSessionById = (id: string, sessionId: string) =>
+  apiHandler<PublicSessionDetail>(() =>
+    API.get(`/coach/public-sessions?coach_id=${id}&session_id=${sessionId}`)
+  );
 
-const getUserPublicSessionById = (id: string , sessionId:string) =>
-  apiHandler<PublicSessionDetail>(() => API.get(`/user/public-sessions?user_id=${id}&booking_id=${sessionId}`));
+const getUserPublicSessionById = (id: string, sessionId: string) =>
+  apiHandler<PublicSessionDetail>(() =>
+    API.get(`/user/public-sessions?user_id=${id}&booking_id=${sessionId}`)
+  );
 
-const getUserPrivateSessionById = (id: string , sessionId:string) =>
-  apiHandler<PublicSessionDetail>(() => API.get(`/user/sessions/requests?user_id=${id}&request_id=${sessionId}`));
+const getUserPrivateSessionById = (id: string, sessionId: string) =>
+  apiHandler<PublicSessionDetail>(() =>
+    API.get(`/user/sessions/requests?user_id=${id}&request_id=${sessionId}`)
+  );
 
-const getRequestSessionById = (id: string , reqId:string) =>
-  apiHandler<PrivateSessionDetail>(() => API.get(`/coach/requests?coach_id=${id}&request_id=${reqId}`));
+const getRequestSessionById = (id: string, reqId: string) =>
+  apiHandler<PrivateSessionDetail>(() =>
+    API.get(`/coach/requests?coach_id=${id}&request_id=${reqId}`)
+  );
 
-const getProductDetail = (id: string ) =>
+const getProductDetail = (id: string) =>
   apiHandler<Product>(() => API.get(`/products/${id}`));
-
 
 // ########################### POST API's ###########################
 
@@ -553,6 +562,55 @@ const getUserGrowthAnalytics = (startYear: string, endYear: string) =>
     API.get(`/analytics/user-growth?startYear=${startYear}&endYear=${endYear}`)
   );
 
+// ########################### MERCHANDISE API's ###########################
+
+const getMerchandiseProducts = (page: number = defaultPage) =>
+  apiHandler<MerchandiseProduct[]>(() => API.get(`/products?page=${page}`));
+
+const getAllOrders = (page: number = defaultPage) =>
+  apiHandler<{
+    new_orders: {
+      current_page: number;
+      total: number;
+      per_page: number;
+      data: Order[];
+    };
+    order_history: {
+      current_page: number;
+      total: number;
+      per_page: number;
+      data: Order[];
+    };
+  }>(() => API.get(`/orders?page=${page}`));
+
+const getOrdersDetails = (orderId: string) =>
+  apiHandler<OrderDetails>(() => API.get(`/orders/${orderId}`));
+
+const updateTrackingStatus = (orderId: string, status: OrderTrackingStatus) =>
+  apiHandler<{
+    success: boolean;
+    message: string;
+    order: OrderDetails;
+  }>(() =>
+    API.post(`/orders/${orderId}/tracking-status`, { tracking_status: status })
+  );
+
+const getAllReportedIssues = (page: number = defaultPage) =>
+  apiHandler<{
+    reported_by_coach: {
+      current_page: number;
+      total: number;
+      per_page: number;
+      data: ReportedIssue[];
+    };
+    reported_by_user: {
+      current_page: number;
+      total: number;
+      per_page: number;
+      data: ReportedIssue[];
+    };
+  }>(() => API.get(`/reports?page=${page}`));
+
 const api = {
   login,
   getAllUsers,
@@ -594,6 +652,11 @@ const api = {
   getUserGrowthAnalytics,
   approveCoachProduct,
   activateUser,
-  deactivateUser
+  deactivateUser,
+  getMerchandiseProducts,
+  getAllOrders,
+  getOrdersDetails,
+  updateTrackingStatus,
+  getAllReportedIssues,
 };
 export default api;
