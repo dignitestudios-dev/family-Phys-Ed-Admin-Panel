@@ -21,6 +21,8 @@ import {
   ReportedIssue,
   ReportedPostInterface,
   ReportedUsersInterface,
+  RevenueMerchandise,
+  RevenueUser,
   UserDetailsInterface,
   UserInterface,
 } from "@/lib/types";
@@ -733,6 +735,51 @@ const useGetAllReportedIssues = (page?: number) => {
   };
 };
 
+const useGetRevenue = () => {
+  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<RevenueUser[]>([]);
+  const [merchandises, setMerchandises] = useState<RevenueMerchandise[]>([]);
+  const [totalUsersPages, setTotalUsersPages] = useState<number>(1);
+  const [totalMerchandisesPages, setTotalMerchandisesPages] = useState<number>(1);
+
+  const getRevenue = async (page?: number) => {
+    setLoading(true);
+    try {
+      const response = await api.getRevenue(page);
+      console.log("Revenue API call: ", response);
+      setUsers(response?.users || []);
+      setMerchandises(response?.merchandise || []);
+      const usersTotalPages = 1;
+      //  Math.ceil(
+      //   response?.new_orders?.total / response?.new_orders?.per_page
+      // );
+      const coachesTotalPages = 1;
+      // Math.ceil(
+      //   response?.order_history?.total / response?.order_history?.per_page
+      // );
+      setTotalUsersPages(usersTotalPages);
+      setTotalMerchandisesPages(coachesTotalPages);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getRevenue(1);
+  }, []);
+
+  return {
+    loading,
+    users,
+    merchandises,
+    totalUsersPages,
+    totalMerchandisesPages,
+    getRevenue,
+  };
+};
+
 export const getHooks = {
   useGetAllUsers,
   useGetReqSessionDetails,
@@ -758,4 +805,5 @@ export const getHooks = {
   useGetAllOrders,
   useGetOrderDetails,
   useGetAllReportedIssues,
+  useGetRevenue,
 };

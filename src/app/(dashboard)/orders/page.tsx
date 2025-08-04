@@ -96,7 +96,7 @@ const Orders = () => {
           </CustomPagination>
         </>
       ) : (
-        <p></p>
+        <></>
       )}
     </>
   );

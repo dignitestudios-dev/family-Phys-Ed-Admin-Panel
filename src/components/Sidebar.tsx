@@ -29,6 +29,10 @@ import Order from "./icons/sidebar/Order";
 import OrderSelected from "./icons/sidebar/OrderSelected";
 import ReportedIssues from "./icons/sidebar/ReportedIssues";
 import ReportedIssuesSelected from "./icons/sidebar/ReportedIssuesSelected";
+import ChatSupport from "./icons/sidebar/ChatSupport";
+import ChatSupportSelected from "./icons/sidebar/ChatSupportSelected";
+import RevenueReport from "./icons/sidebar/RevenueReport";
+import RevenueReportSelected from "./icons/sidebar/RevenueReportSelected";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -66,10 +70,22 @@ const Sidebar = () => {
       iconSelected: <MerchandiseSelected />,
     },
     {
+      title: "Revenue Report",
+      path: "/revenue-report",
+      icon: <RevenueReport />,
+      iconSelected: <RevenueReportSelected />,
+    },
+    {
       title: "Reported Issues",
       path: "/reported-issues",
       icon: <ReportedIssues />,
       iconSelected: <ReportedIssuesSelected />,
+    },
+    {
+      title: "Chat Support",
+      path: "/chat-support",
+      icon: <ChatSupport />,
+      iconSelected: <ChatSupportSelected />,
     },
     {
       title: "Push Notifications",

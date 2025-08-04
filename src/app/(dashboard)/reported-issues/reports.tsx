@@ -1,8 +1,11 @@
 "use client";
 import BTab from "@/components/BTab";
 import CustomPagination from "@/components/CustomPagination";
+import PPopup from "@/components/PPopup";
 import MerchandiseCard from "@/components/ui/merchandise-card";
 import { getHooks } from "@/hooks/useGetRequests";
+import { updateHooks } from "@/hooks/useUpdateRequests";
+import { utils } from "@/lib/utils";
 import React, { useState } from "react";
 
 type SelectedTabs = 0 | 1; // 0: Coaches, 1: Users
@@ -17,10 +20,44 @@ const ReportedIssues = () => {
     totalReportedByCoachPages,
     reportedByUser,
     totalReportedByUserPages,
+    getAllReportedIssues,
   } = getHooks.useGetAllReportedIssues(page);
+
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [updatedUserStatus, setUpdatedUserStatus] = useState<
+    "activate" | "deactivate" | null
+  >(null);
+  const { loadingActivate, activateUser, loadingDeactivate, deactivateUser } =
+    updateHooks.useUpdateUserStatus();
 
   const onPageChange = (page: number) => {
     setPage(page);
+  };
+
+  const handleSetUserToUpdateStatus = (
+    userId: number,
+    updatedStatus: "activate" | "deactivate"
+  ) => {
+    setSelectedUserId(userId);
+    setUpdatedUserStatus(updatedStatus);
+  };
+
+  const handleCloseStatusPopup = async (show: boolean) => {
+    if (!show) {
+      setSelectedUserId(null);
+      setUpdatedUserStatus(null);
+    }
+  };
+
+  const handleUpdateUserStatus = async () => {
+    if (!updatedUserStatus || !selectedUserId) return;
+    if (updatedUserStatus === "deactivate") {
+      await deactivateUser(selectedUserId);
+    } else {
+      await activateUser(selectedUserId);
+    }
+
+    getAllReportedIssues();
   };
 
   return (
@@ -90,7 +127,15 @@ const ReportedIssues = () => {
 
                     <td className="px-4 py-6">{user?.time || 0}</td>
                     <td className="px-4 py-6 space-x-6">
-                      <button className="border-b text-red-500 cursor-pointer">
+                      <button
+                        className="border-b text-red-500 cursor-pointer"
+                        onClick={() =>
+                          handleSetUserToUpdateStatus(
+                            user.user_id,
+                            "deactivate" // later update this condition according to the user's current status currently the activate key is not coming with the get all reports API data
+                          )
+                        }
+                      >
                         Deactivate
                       </button>
                       <button className="border-b text-green-600 cursor-pointer">
@@ -137,8 +182,16 @@ const ReportedIssues = () => {
                     <td className="px-4 py-6">{user?.date || "N/A"}</td>
 
                     <td className="px-4 py-6">{user?.time || 0}</td>
-                    <td className="px-4 py-6 space-x-6">
-                      <button className="border-b text-red-500 cursor-pointer">
+                    <td className="px-4 py-6 space-x-6 space-y-3">
+                      <button
+                        className="border-b text-red-500 cursor-pointer"
+                        onClick={() =>
+                          handleSetUserToUpdateStatus(
+                            user.user_id,
+                            "activate" // later update this condition according to the user's current status currently the activate key is not coming with the get all reports API data
+                          )
+                        }
+                      >
                         Deactivate
                       </button>
                       <button className="border-b text-green-600 cursor-pointer">
@@ -154,6 +207,15 @@ const ReportedIssues = () => {
           )}
         </div>
       </CustomPagination>
+
+      {/* Deactivate User Popup */}
+      <PPopup
+        title={`${utils.toTitleCase(updatedUserStatus || "")} User`}
+        description={`Are you sure you want to ${updatedUserStatus} this user?`}
+        show={updatedUserStatus !== null && selectedUserId !== null}
+        setShow={handleCloseStatusPopup}
+        onConfirm={() => handleUpdateUserStatus()}
+      />
     </>
   );
 };

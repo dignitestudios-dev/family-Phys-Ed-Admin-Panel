@@ -667,3 +667,28 @@ export interface ReportedIssue {
   date: string;
   time: string;
 }
+
+export interface RevenueUser {
+  id: number;
+  name: string;
+  avatar: string;
+  user_type: "user" | "coach";
+  attended_sessions: number;
+  requests_posted: number;
+  spent_amount: number;
+  refunded_amount: number;
+  total_revenue: number;
+}
+
+export interface RevenueMerchandise {
+  id: number;
+  image: string;
+  product_name: string;
+  coach_name: string;
+  price_per_unit: string;
+  total_stock: number;
+  units_sold: number;
+  stock_left: number;
+  revenue_earned: number;
+  status: "Active" | "Inactive";
+}

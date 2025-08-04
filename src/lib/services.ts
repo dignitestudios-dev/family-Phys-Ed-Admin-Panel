@@ -194,14 +194,12 @@ const approveCoachProduct = (id: string) =>
     API.post(`product-approval-requests/${id}/approve`)
   );
 
-const activateUser = (id: string) =>
-  apiHandler<{ success: boolean; message: string }>(() =>
-    API.post(`reactive-user/${id}`)
-  );
+const activateUser = (id: number | string) =>
+  apiHandler<{ message: string }>(() => API.post(`/reactive-user/${id}`));
 
-const deactivateUser = (id: string) =>
+const deactivateUser = (id: number | string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
-    API.post(`deactivate-user/${id}`)
+    API.post(`/deactivate-user/${id}`)
   );
 const verifyOtp = (otp: string, email: string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
@@ -611,6 +609,39 @@ const getAllReportedIssues = (page: number = defaultPage) =>
     };
   }>(() => API.get(`/reports?page=${page}`));
 
+const getRevenue = (page: number = defaultPage) =>
+  apiHandler<{
+    users: {
+      // current_page: number;
+      // total: number;
+      // per_page: number;
+      id: number;
+      name: string;
+      avatar: string;
+      user_type: "user" | "coach";
+      attended_sessions: number;
+      requests_posted: number;
+      spent_amount: number;
+      refunded_amount: number;
+      total_revenue: number;
+    }[];
+    merchandise: {
+      // current_page: number;
+      // total: number;
+      // per_page: number;
+      id: number;
+      image: string;
+      product_name: string;
+      coach_name: string;
+      price_per_unit: string;
+      total_stock: number;
+      units_sold: number;
+      stock_left: number;
+      revenue_earned: number;
+      status: "Active" | "Inactive";
+    }[];
+  }>(() => API.get(`/revenue?page=${page}`));
+
 const api = {
   login,
   getAllUsers,
@@ -658,5 +689,6 @@ const api = {
   getOrdersDetails,
   updateTrackingStatus,
   getAllReportedIssues,
+  getRevenue,
 };
 export default api;

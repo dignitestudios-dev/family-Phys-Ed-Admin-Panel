@@ -136,7 +136,7 @@ function ProductDetails({ product }: Props) {
                 </div>
 
                 <Link
-                  href={`/user-management/${product.coach.uid}`}
+                  href={`/user-management/${product.coach.uid}?role=coach`}
                   className="bg-primary p-1 rounded-md "
                 >
                   <ChevronRight className="text-black" />

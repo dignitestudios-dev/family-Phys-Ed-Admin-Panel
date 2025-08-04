@@ -6,18 +6,11 @@ import UserDetails from "./UserDetails";
 import CoachDetails from "./CoachDetail";
 import { useSearchParams } from "next/navigation";
 
-
-
 const Details = () => {
-    const searchParams = useSearchParams()
-const role = searchParams.get("role")
+  const searchParams = useSearchParams();
+  const role = searchParams.get("role");
 
- return (
-    <>
-    {
-        role == "user" ? <UserDetails/> : <CoachDetails/>
-    }</>
- )
+  return <>{role == "user" ? <UserDetails /> : <CoachDetails />}</>;
 };
 
 export default Details;

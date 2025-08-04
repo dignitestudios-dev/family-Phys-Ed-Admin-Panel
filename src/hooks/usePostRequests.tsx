@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import { toast } from "react-hot-toast";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import api from "../lib/services";
-import { CommunityInterface, LoginInterface } from "../lib/types";
+import { LoginInterface } from "../lib/types";
 import { useRouter } from "next/navigation";
 import { utils } from "@/lib/utils";
 
@@ -31,15 +31,15 @@ const useLogin = () => {
       console.log("Login API goes");
 
       const data = await api.login(payload);
-      console.log("here we go")
-console.log(data)
+      console.log("here we go");
+      console.log(data);
       toast.success(data?.message);
 
       Cookies.set("token", data?.token);
       Cookies.set("admin", JSON.stringify(data?.admin_details.name));
       router.push("/");
     } catch (error: any) {
-      console.log(error)
+      console.log(error);
       utils.handleError(error);
     } finally {
       setLoading(false);
@@ -108,12 +108,10 @@ const useApproveCoach = () => {
   const toggleApproveCoach = async (id: string): Promise<boolean> => {
     setLoading(true);
     try {
-    
+      const response = await api.approveCoach(id);
 
-      const response = await api.approveCoach(id  );
-    
       toast.success(response?.message);
-   router.push("/requests");
+      router.push("/requests");
       return true;
     } catch (error) {
       utils.handleError(error);
@@ -126,18 +124,18 @@ const useApproveCoach = () => {
   return { loading, toggleApproveCoach };
 };
 
-
 const useRejectCoach = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const toggleRejectCoach = async (id: string , reason:string): Promise<boolean> => {
+  const toggleRejectCoach = async (
+    id: string,
+    reason: string
+  ): Promise<boolean> => {
     setLoading(true);
     try {
-    
+      const response = await api.rejectCoach(id, reason);
 
-      const response = await api.rejectCoach(id ,reason );
-    
       toast.success(response?.message);
       router.push("/requests");
       return true;
@@ -156,13 +154,11 @@ const useActivate = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const activateUser = async (id: string ): Promise<boolean> => {
+  const activateUser = async (id: string): Promise<boolean> => {
     setLoading(true);
     try {
-    
+      const response = await api.activateUser(id);
 
-      const response = await api.activateUser(id );
-    
       toast.success(response?.message);
       router.push("/user-management");
       return true;
@@ -177,18 +173,15 @@ const useActivate = () => {
   return { loading, activateUser };
 };
 
-
 const useDeactivate = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const deactivateUser = async (id: string ): Promise<boolean> => {
+  const deactivateUser = async (id: string): Promise<boolean> => {
     setLoading(true);
     try {
-    
-
       const response = await api.deactivateUser(id);
-    
+
       toast.success(response?.message);
       router.push("/user-management");
       return true;
@@ -207,13 +200,11 @@ const useApproveCoachProduct = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const toggleApproveCoachProduct = async (id: string ): Promise<boolean> => {
+  const toggleApproveCoachProduct = async (id: string): Promise<boolean> => {
     setLoading(true);
     try {
-    
+      const response = await api.approveCoachProduct(id);
 
-      const response = await api.approveCoachProduct(id );
-    
       toast.success(response?.message);
       router.push("/requests");
       return true;
@@ -227,7 +218,6 @@ const useApproveCoachProduct = () => {
 
   return { loading, toggleApproveCoachProduct };
 };
-
 
 const useVerifyOtp = () => {
   const router = useRouter();
@@ -341,6 +331,17 @@ const useCreateCommunity = () => {
   return { loading, createCommunity };
 };
 
+const useSendMessage = () => {
+  const [message, setMessage] = useState<string>("");
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Message: ", message);
+  };
+
+  return { message, setMessage, handleSendMessage };
+};
+
 export const postHooks = {
   useLogin,
   useToggleSuspendUser,
@@ -352,5 +353,6 @@ export const postHooks = {
   useCreateCommunity,
   useApproveCoachProduct,
   useActivate,
-  useDeactivate
+  useDeactivate,
+  useSendMessage,
 };
