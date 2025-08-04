@@ -36,7 +36,7 @@ const useLogin = () => {
       toast.success(data?.message);
 
       Cookies.set("token", data?.token);
-      Cookies.set("admin", JSON.stringify(data?.admin_details.name));
+      Cookies.set("admin", JSON.stringify(data?.admin_details));
       router.push("/");
     } catch (error: any) {
       console.log(error);

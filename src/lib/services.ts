@@ -565,21 +565,24 @@ const getUserGrowthAnalytics = (startYear: string, endYear: string) =>
 const getMerchandiseProducts = (page: number = defaultPage) =>
   apiHandler<MerchandiseProduct[]>(() => API.get(`/products?page=${page}`));
 
-const getAllOrders = (page: number = defaultPage) =>
+const getAllNewOrders = (page: number = defaultPage) =>
   apiHandler<{
-    new_orders: {
-      current_page: number;
-      total: number;
-      per_page: number;
-      data: Order[];
-    };
-    order_history: {
-      current_page: number;
-      total: number;
-      per_page: number;
-      data: Order[];
-    };
-  }>(() => API.get(`/orders?page=${page}`));
+    current_page: number;
+    total: number;
+    per_page: number;
+    data: Order[];
+  }>(() => API.get(`/new-orders?page=${page}`));
+
+const getAllOrdersHistoy = (
+  page: number = defaultPage,
+  orderStatus: "in-progress" | "completed" | "cancelled"
+) =>
+  apiHandler<{
+    current_page: number;
+    total: number;
+    per_page: number;
+    data: Order[];
+  }>(() => API.get(`/order-history/${orderStatus}?page=${page}`));
 
 const getOrdersDetails = (orderId: string) =>
   apiHandler<OrderDetails>(() => API.get(`/orders/${orderId}`));
@@ -685,7 +688,8 @@ const api = {
   activateUser,
   deactivateUser,
   getMerchandiseProducts,
-  getAllOrders,
+  getAllNewOrders,
+  getAllOrdersHistoy,
   getOrdersDetails,
   updateTrackingStatus,
   getAllReportedIssues,

@@ -4,25 +4,46 @@ import CustomPagination from "@/components/CustomPagination";
 import OrderProduct from "@/components/orders/OrderProduct";
 import { getHooks } from "@/hooks/useGetRequests";
 import { utils } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Orders = () => {
   const tabs = ["New Orders", "Order History"];
   const orderOptions = ["in-progress", "completed", "cancelled"] as const;
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
   const [activeOrderTab, setActiveOrderTab] = useState<0 | 1 | 2>(0);
-  const {
-    loading,
-    newOrders,
-    orderHistory,
-    totalNewOrderPages,
-    totalOrderHistoryPages,
-    getAllOrders,
-  } = getHooks.useGetAllOrders();
 
-  const onPageChange = (page: number) => {
-    getAllOrders(page);
+  const { loadingNewOrders, newOrders, totalNewOrderPages, getAllNewOrders } =
+    getHooks.useGetAllNewOrders();
+
+  const {
+    loadingOrdersHistory,
+    orderHistory,
+    totalOrderHistoryPages,
+    getAllOrdersHistory,
+  } = getHooks.useGetAllOrdersHistory();
+
+  const onNewOrdersPageChange = (page: number) => {
+    getAllNewOrders(page);
   };
+
+  const onOrdersHistoryPageChange = (page: number) => {
+    getAllOrdersHistory(orderOptions[activeOrderTab], page);
+  };
+
+  const handleChangeOrderTab = (index: 0 | 1 | 2) => {
+    if (![0, 1, 2].includes(index)) return;
+
+    setActiveOrderTab(index);
+    getAllOrdersHistory(orderOptions[index]);
+  };
+
+  useEffect(() => {
+    if (activeTab === 0) {
+      getAllNewOrders(1);
+    } else if (activeTab === 1) {
+      getAllOrdersHistory("in-progress", 1);
+    }
+  }, [activeTab]);
 
   return (
     <>
@@ -43,8 +64,8 @@ const Orders = () => {
 
       {activeTab === 0 ? (
         <CustomPagination
-          loading={loading}
-          onPageChange={onPageChange}
+          loading={loadingNewOrders}
+          onPageChange={onNewOrdersPageChange}
           totalPages={totalNewOrderPages}
         >
           <div className="bg-secondary h-full w-full rounded-2xl p-4 overflow-y-auto">
@@ -63,8 +84,9 @@ const Orders = () => {
             {orderOptions.map((tab, index) => (
               <button
                 key={tab}
-                onClick={() => setActiveOrderTab(index as 0 | 1 | 2)}
-                className={`cursor-pointer px-4 py-2 rounded ${
+                disabled={loadingOrdersHistory}
+                onClick={() => handleChangeOrderTab(index as 0 | 1 | 2)}
+                className={`cursor-pointer disabled:cursor-not-allowed px-4 py-2 rounded ${
                   activeOrderTab === index
                     ? "border-b-[6px] text-primary"
                     : "text-white"
@@ -76,13 +98,13 @@ const Orders = () => {
           </div>
 
           <CustomPagination
-            loading={loading}
-            onPageChange={onPageChange}
+            loading={loadingOrdersHistory}
+            onPageChange={onOrdersHistoryPageChange}
             totalPages={totalOrderHistoryPages}
           >
             <div className="bg-secondary h-full w-full rounded-2xl p-4 overflow-y-auto">
               {!orderHistory.length ? (
-                <p className="text-white/50">No orders history found.</p>
+                <p className="text-white/50">No "{orderOptions[activeOrderTab]}" orders history found.</p>
               ) : (
                 orderHistory.map((order, index) => (
                   <OrderProduct

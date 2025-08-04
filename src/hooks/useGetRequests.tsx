@@ -620,28 +620,56 @@ const useGetAllMerchandiseProducts = (page: number) => {
   return { loading, products, totalPages, getMerchandiseProducts };
 };
 
-const useGetAllOrders = () => {
+const useGetAllNewOrders = () => {
   const [loading, setLoading] = useState(true);
   const [newOrders, setNewOrders] = useState<Order[]>([]);
-  const [orderHistory, setOrderHistory] = useState<Order[]>([]);
   const [totalNewOrderPages, setTotalNewOrderPages] = useState<number>(1);
+  useState<number>(1);
+
+  const getAllNewOrders = async (page?: number) => {
+    setLoading(true);
+    try {
+      const response = await api.getAllNewOrders(page);
+      console.log("Orders API call: ", response);
+      setNewOrders(response?.data || []);
+      const newOrdersTotalPages = Math.ceil(
+        response?.total / response?.per_page
+      );
+      setTotalNewOrderPages(newOrdersTotalPages);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    loadingNewOrders: loading,
+    newOrders,
+    totalNewOrderPages,
+    getAllNewOrders,
+  };
+};
+
+const useGetAllOrdersHistory = () => {
+  const [loading, setLoading] = useState(true);
+  const [orderHistory, setOrderHistory] = useState<Order[]>([]);
   const [totalOrderHistoryPages, setTotalOrderHistoryPages] =
     useState<number>(1);
 
-  const getAllOrders = async (page?: number) => {
+  const getAllOrdersHistory = async (
+    orderStatus: "in-progress" | "completed" | "cancelled",
+    page?: number
+  ) => {
     setLoading(true);
     try {
-      const response = await api.getAllOrders(page);
+      const response = await api.getAllOrdersHistoy(page, orderStatus);
       console.log("Orders API call: ", response);
-      setNewOrders(response?.new_orders?.data || []);
-      setOrderHistory(response?.order_history?.data || []);
-      const newOrdersTotalPages = Math.ceil(
-        response?.new_orders?.total / response?.new_orders?.per_page
-      );
+      setOrderHistory(response?.data || []);
+
       const orderHistoryTotalPages = Math.ceil(
-        response?.order_history?.total / response?.order_history?.per_page
+        response?.total / response?.per_page
       );
-      setTotalNewOrderPages(newOrdersTotalPages);
       setTotalOrderHistoryPages(orderHistoryTotalPages);
     } catch (error) {
       utils.handleError(error);
@@ -650,17 +678,11 @@ const useGetAllOrders = () => {
     }
   };
 
-  useEffect(() => {
-    getAllOrders(1);
-  }, []);
-
   return {
-    loading,
-    newOrders,
+    loadingOrdersHistory: loading,
     orderHistory,
-    totalNewOrderPages,
     totalOrderHistoryPages,
-    getAllOrders,
+    getAllOrdersHistory,
   };
 };
 
@@ -740,7 +762,8 @@ const useGetRevenue = () => {
   const [users, setUsers] = useState<RevenueUser[]>([]);
   const [merchandises, setMerchandises] = useState<RevenueMerchandise[]>([]);
   const [totalUsersPages, setTotalUsersPages] = useState<number>(1);
-  const [totalMerchandisesPages, setTotalMerchandisesPages] = useState<number>(1);
+  const [totalMerchandisesPages, setTotalMerchandisesPages] =
+    useState<number>(1);
 
   const getRevenue = async (page?: number) => {
     setLoading(true);
@@ -802,7 +825,8 @@ export const getHooks = {
   useGetGroupDetails,
   useGetUserPublicSessionDetails,
   useGetAllMerchandiseProducts,
-  useGetAllOrders,
+  useGetAllNewOrders,
+  useGetAllOrdersHistory,
   useGetOrderDetails,
   useGetAllReportedIssues,
   useGetRevenue,

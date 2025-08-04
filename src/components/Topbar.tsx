@@ -14,9 +14,10 @@ const Topbar = () => {
     const adminData = Cookies.get("admin");
     if (adminData) {
       const parsedAdmin = JSON.parse(adminData);
+      console.log("parsedAdmin: ",parsedAdmin)
       setAdmin({
         name: parsedAdmin.name || "Admin",
-        profileImage: parsedAdmin.profileImage || "/images/logo.png",
+        profileImage: parsedAdmin.avatar || "/images/logo.png",
       });
     }
   }, []);
