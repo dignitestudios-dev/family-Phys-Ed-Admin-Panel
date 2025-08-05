@@ -666,10 +666,13 @@ export interface ReportedIssue {
   reported_by: string;
   date: string;
   time: string;
+  is_deactivate: string;
+  is_marked: string;
 }
 
 export interface RevenueUser {
   id: number;
+  uid: string;
   name: string;
   avatar: string;
   user_type: "user" | "coach";
@@ -691,4 +694,14 @@ export interface RevenueMerchandise {
   stock_left: number;
   revenue_earned: number;
   status: "Active" | "Inactive";
+}
+
+export interface Notification {
+  notification_id: number;
+  title: string;
+  body: string;
+  date: string;
+  time: string;
+  status: "delivered" | "pending";
+  create_at: string;
 }

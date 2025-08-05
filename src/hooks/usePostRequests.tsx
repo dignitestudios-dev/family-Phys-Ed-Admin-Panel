@@ -331,6 +331,28 @@ const useCreateCommunity = () => {
   return { loading, createCommunity };
 };
 
+
+// Hook to mark a report as read
+const useMarkReportAsRead = () => {
+  const [loading, setLoading] = useState(false);
+
+  const markReportAsRead = async (reportId: number): Promise<boolean> => {
+    setLoading(true);
+    try {
+      const response = await api.markReportAsRead(reportId);
+      toast.success(response?.message || "Marked as read successfully");
+      return true;
+    } catch (error) {
+      utils.handleError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, markReportAsRead };
+};
+
 const useSendMessage = () => {
   const [message, setMessage] = useState<string>("");
 
@@ -354,5 +376,6 @@ export const postHooks = {
   useApproveCoachProduct,
   useActivate,
   useDeactivate,
+  useMarkReportAsRead,
   useSendMessage,
 };

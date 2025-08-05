@@ -803,6 +803,48 @@ const useGetRevenue = () => {
   };
 };
 
+const useDownloadRevenueReport = (activeTab: 0 | 1) => {
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const downloadRevenueReport = async () => {
+    setLoading(true);
+    try {
+      let response;
+      let filename;
+      if (activeTab === 0) {
+        response = await api.downloadUsersRevenueReport();
+        filename = `users-revenue-report-${utils.formatDate(
+          String(new Date())
+        )}.pdf`;
+      } else {
+        response = await api.downloadProductsRevenueReport();
+        filename = `products-revenue-report-${utils.formatDate(
+          String(new Date())
+        )}.pdf`;
+      }
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/pdf" })
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      utils.handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    loading,
+    downloadRevenueReport,
+  };
+};
+
 export const getHooks = {
   useGetAllUsers,
   useGetReqSessionDetails,
@@ -830,4 +872,5 @@ export const getHooks = {
   useGetOrderDetails,
   useGetAllReportedIssues,
   useGetRevenue,
+  useDownloadRevenueReport,
 };

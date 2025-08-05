@@ -20,6 +20,8 @@ const RevenueReport = () => {
     getRevenue,
   } = getHooks.useGetRevenue();
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
+  const { loading: downloadingReport, downloadRevenueReport } =
+    getHooks.useDownloadRevenueReport(activeTab);
 
   const onPageChange = (page: number) => {
     getRevenue(page);
@@ -30,7 +32,11 @@ const RevenueReport = () => {
       <div className="flex items-center justify-between">
         <h2 className="section-heading">Revenue</h2>
 
-        <BButton title="Download" />
+        <BButton
+          title="Download"
+          loading={downloadingReport}
+          onBtnClick={downloadRevenueReport}
+        />
       </div>
 
       <div className="bg-secondary rounded-2xl p-2 flex gap-4 items-center w-fit">
@@ -89,7 +95,11 @@ const RevenueReport = () => {
                     <tr
                       key={index}
                       className="border-b-1 border-[#D4D4D4] cursor-pointer"
-                      onClick={() => router.push(`/user-management/${user.id}?role=${user.user_type}`)}
+                      onClick={() =>
+                        router.push(
+                          `/user-management/${user.uid}?role=${user.user_type}`
+                        )
+                      }
                     >
                       <td className="px-4 py-6">{index + 1}</td>
                       <td className="px-4 py-6">

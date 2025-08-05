@@ -14,18 +14,18 @@ import { getHooks } from "@/hooks/useGetRequests";
 import { updateHooks } from "@/hooks/useUpdateRequests";
 import { OrderTrackingStatus } from "@/lib/types";
 import { utils } from "@/lib/utils";
-import {
-  ArrowLeft,
-  Loader2,
-  MessageCircle,
-  MessageCircleMore,
-} from "lucide-react";
+import { ArrowLeft, Loader2, MessageCircleMore } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { createOrGetSupportChat } from "@/lib/createSupportChat";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
+import Cookies from "js-cookie";
 
 const OrderDetails = () => {
   const { id } = useParams();
+  const router = useRouter();
 
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
   const [selectedStatus, setSelectedStatus] =
@@ -267,12 +267,42 @@ const OrderDetails = () => {
                 </div>
               </div>
 
-              <Link
-                href={`/chat-support`}
-                className="bg-gradient w-full p-3 rounded-lg flex gap-2 items-center justify-center mt-4 text-black"
+              <button
+                className="bg-gradient w-full p-3 rounded-lg flex gap-2 items-center justify-center mt-4 text-black cursor-pointer"
+                onClick={async () => {
+                  // Get admin UID from cookie (same as chat-support page)
+                  let adminUid = null;
+                  if (typeof window !== "undefined") {
+                    const adminData = Cookies.get("admin");
+                    if (adminData) {
+                      const parsedAdmin = JSON.parse(adminData);
+
+                      try {
+                        adminUid = parsedAdmin.uid;
+                      } catch {}
+                    }
+                  }
+                  if (!adminUid) {
+                    alert("Admin UID not found in cookies.");
+                    return;
+                  }
+                  // Prepare user profile for chat doc
+                  const userProfile = {
+                    uid: orderDetails.user.uid,
+                    name: orderDetails.user.name,
+                    avatar: orderDetails.user.avatar || "",
+                    phone_number: orderDetails.user.phone_number || "",
+                  };
+                  const chatId = await createOrGetSupportChat(
+                    adminUid,
+                    userProfile
+                  );
+                  // Redirect to chat-support with chatId as query param
+                  router.push(`/chat-support?chatId=${chatId}`);
+                }}
               >
                 <MessageCircleMore className="text-black" /> <p>Chat Now</p>
-              </Link>
+              </button>
             </div>
           </div>
         </div>

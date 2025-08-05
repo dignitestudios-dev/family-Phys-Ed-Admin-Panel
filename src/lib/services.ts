@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import Cookies from "js-cookie";
 import {
@@ -31,6 +32,7 @@ import {
   OrderDetails,
   OrderTrackingStatus,
   ReportedIssue,
+  Notification,
   // ApprovalRequests,
 } from "./types";
 
@@ -543,11 +545,9 @@ const getAllNotifications = (
     )
   );
 
-const createNotification = (payload: CreateNotificationInterface) =>
-  apiHandler<{
-    success: boolean;
-    message: string;
-  }>(() => API.post(`/auth/createNotification`, payload));
+// CREATE Notification (Push Notification)
+const createNotification = (payload: { title: string; body: string }) =>
+  API.post(`/notifications`, payload);
 
 // ########################### ANALYTICS API's ###########################
 
@@ -619,6 +619,7 @@ const getRevenue = (page: number = defaultPage) =>
       // total: number;
       // per_page: number;
       id: number;
+      uid: string;
       name: string;
       avatar: string;
       user_type: "user" | "coach";
@@ -644,6 +645,29 @@ const getRevenue = (page: number = defaultPage) =>
       status: "Active" | "Inactive";
     }[];
   }>(() => API.get(`/revenue?page=${page}`));
+
+const downloadUsersRevenueReport = () =>
+  apiHandler(() => API.get("/users/revenues/pdf", { responseType: "blob" }));
+
+const downloadProductsRevenueReport = () =>
+  API.get("/products/revenues/pdf", { responseType: "blob" });
+
+// GET Notifications
+const getNotifications = (search = "", page = 1) =>
+  apiHandler<{
+    current_page: number;
+    total: number;
+    per_page: number;
+    data: Notification[];
+  }>(() => API.get(`/notifications?page=${page}&search=${search}`));
+
+// DELETE Notification
+const deleteNotification = (notificationId: string) =>
+  apiHandler(() => API.delete(`/notifications/${notificationId}`));
+
+// Mark Report as Read
+const markReportAsRead = (reportId: number | string) =>
+  apiHandler<{ success: boolean; message: string }>(() => API.post(`/reports/${reportId}`));
 
 const api = {
   login,
@@ -682,7 +706,10 @@ const api = {
   disableGroupById,
   getAllNotifications,
   rejectCoach,
+  // ...existing code...
+  getNotifications,
   createNotification,
+  deleteNotification,
   getUserGrowthAnalytics,
   approveCoachProduct,
   activateUser,
@@ -693,6 +720,9 @@ const api = {
   getOrdersDetails,
   updateTrackingStatus,
   getAllReportedIssues,
+  markReportAsRead,
   getRevenue,
+  downloadUsersRevenueReport,
+  downloadProductsRevenueReport,
 };
 export default api;

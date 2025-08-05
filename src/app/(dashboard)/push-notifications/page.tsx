@@ -7,13 +7,15 @@ import Delete from "@/components/icons/Delete";
 import Search from "@/components/icons/Search";
 import useDebounceSearch from "@/hooks/useDebounceSearch";
 import { notificationHooks } from "@/hooks/useNotificationRequests";
+
 import { utils } from "@/lib/utils";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const PushNotifications = () => {
   const { loading, notifications, totalPages, getNotifications } =
     notificationHooks.useGetNotifications();
+  const { loading: deleting, deleteNotification } =
+    notificationHooks.useDeleteNotification();
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [searchValue, setSearhValue] = useState<string>("");
@@ -21,6 +23,11 @@ const PushNotifications = () => {
 
   const handleGetNotifications = async (page?: number) => {
     await getNotifications(searchValueDebounce, page);
+  };
+
+  const handleDelete = async (notificationId: number) => {
+    await deleteNotification(String(notificationId));
+    await handleGetNotifications(1);
   };
 
   useEffect(() => {
@@ -56,6 +63,7 @@ const PushNotifications = () => {
                 <th className="px-4 py-5 text-left text-nowrap rounded-s-[8px]">
                   #
                 </th>
+                <th className="px-4 py-5 text-left text-nowrap">Title</th>
                 <th className="px-4 py-5 text-left text-nowrap">Description</th>
                 <th className="px-4 py-5 text-left text-nowrap">Date</th>
                 <th className="px-4 py-5 text-left text-nowrap">Time</th>
@@ -65,33 +73,29 @@ const PushNotifications = () => {
             </thead>
             <tbody className="mt-10">
               {notifications.map((notification, index) => (
-                <tr
-                  key={notification._id}
-                  className="border-b-1 border-[#D4D4D4]"
-                >
+                <tr key={index} className="border-b-1 border-[#D4D4D4]">
                   <td className="px-4 py-6">{index + 1}</td>
-                  <td className="px-4 py-6">{notification.description}</td>
-                  <td className="px-4 py-6 text-nowrap">
-                    {utils.formatDate(notification.createdAt)}
-                  </td>
-                  <td className="px-4 py-6">
-                    {utils.formatTimeTo12Hour(notification.createdAt)}
-                  </td>
+                  <td className="px-4 py-6">{notification.title}</td>
+                  <td className="px-4 py-6">{notification.body}</td>
+                  <td className="px-4 py-6 text-nowrap">{notification.date}</td>
+                  <td className="px-4 py-6">{notification.time}</td>
                   <td
                     className={`px-4 py-6 ${
-                      notification?.isSent
+                      notification.status === "delivered"
                         ? "text-[#34C759]"
                         : "text-yellow-500"
                     }`}
                   >
-                    {utils.toTitleCase(
-                      notification?.isSent ? "delivered" : "pending"
-                    )}
+                    {utils.toTitleCase(notification.status)}
                   </td>
                   <td>
-                    <span className="cursor-pointer">
+                    <button
+                      className="cursor-pointer disabled:cursor-not-allowed"
+                      onClick={() => handleDelete(notification.notification_id)}
+                      disabled={deleting}
+                    >
                       <Delete />
-                    </span>
+                    </button>
                   </td>
                 </tr>
               ))}

@@ -5,6 +5,7 @@ import PPopup from "@/components/PPopup";
 import MerchandiseCard from "@/components/ui/merchandise-card";
 import { getHooks } from "@/hooks/useGetRequests";
 import { updateHooks } from "@/hooks/useUpdateRequests";
+import { postHooks } from "@/hooks/usePostRequests";
 import { utils } from "@/lib/utils";
 import React, { useState } from "react";
 
@@ -22,6 +23,11 @@ const ReportedIssues = () => {
     totalReportedByUserPages,
     getAllReportedIssues,
   } = getHooks.useGetAllReportedIssues(page);
+
+  // Mark as Read state
+  const [markReadReportId, setMarkReadReportId] = useState<number | null>(null);
+  const { loading: loadingMarkRead, markReportAsRead } =
+    postHooks.useMarkReportAsRead();
 
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [updatedUserStatus, setUpdatedUserStatus] = useState<
@@ -57,6 +63,18 @@ const ReportedIssues = () => {
       await activateUser(selectedUserId);
     }
 
+    getAllReportedIssues();
+  };
+
+  // Mark as Read handlers
+  const handleCloseMarkReadPopup = (show: boolean) => {
+    if (!show) setMarkReadReportId(null);
+  };
+
+  const handleMarkReportAsRead = async () => {
+    if (!markReadReportId) return;
+    await markReportAsRead(markReadReportId);
+    setMarkReadReportId(null);
     getAllReportedIssues();
   };
 
@@ -128,19 +146,28 @@ const ReportedIssues = () => {
                     <td className="px-4 py-6">{user?.time || 0}</td>
                     <td className="px-4 py-6 space-x-6">
                       <button
-                        className="border-b text-red-500 cursor-pointer"
+                        className={`border-b ${
+                          user.is_deactivate ? "text-green-500" : "text-red-500"
+                        } cursor-pointer`}
+                        disabled={loadingActivate || loadingDeactivate}
                         onClick={() =>
                           handleSetUserToUpdateStatus(
                             user.user_id,
-                            "deactivate" // later update this condition according to the user's current status currently the activate key is not coming with the get all reports API data
+                            user.is_deactivate ? "activate" : "deactivate" // later update this condition according to the user's current status currently the activate key is not coming with the get all reports API data
                           )
                         }
                       >
-                        Deactivate
+                        {user.is_deactivate ? "Activate" : "Deactivate"}
                       </button>
-                      <button className="border-b text-green-600 cursor-pointer">
-                        Mark as Read
-                      </button>
+                      {!user.is_marked && (
+                        <button
+                          className="border-b text-green-500 cursor-pointer"
+                          disabled={loadingMarkRead}
+                          onClick={() => setMarkReadReportId(user.report_id)}
+                        >
+                          Mark as Read
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -182,21 +209,30 @@ const ReportedIssues = () => {
                     <td className="px-4 py-6">{user?.date || "N/A"}</td>
 
                     <td className="px-4 py-6">{user?.time || 0}</td>
-                    <td className="px-4 py-6 space-x-6 space-y-3">
+                    <td className="px-4 py-6 space-x-6">
                       <button
-                        className="border-b text-red-500 cursor-pointer"
+                        className={`border-b ${
+                          user.is_deactivate ? "text-green-500" : "text-red-500"
+                        } cursor-pointer`}
+                        disabled={loadingActivate || loadingDeactivate}
                         onClick={() =>
                           handleSetUserToUpdateStatus(
                             user.user_id,
-                            "activate" // later update this condition according to the user's current status currently the activate key is not coming with the get all reports API data
+                            user.is_deactivate ? "activate" : "deactivate" // later update this condition according to the user's current status currently the activate key is not coming with the get all reports API data
                           )
                         }
                       >
-                        Deactivate
+                        {user.is_deactivate ? "Activate" : "Deactivate"}
                       </button>
-                      <button className="border-b text-green-600 cursor-pointer">
-                        Mark as Read
-                      </button>
+                      {!user.is_marked && (
+                        <button
+                          className="border-b text-green-500 cursor-pointer"
+                          disabled={loadingMarkRead}
+                          onClick={() => setMarkReadReportId(user.report_id)}
+                        >
+                          Mark as Read
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -215,6 +251,15 @@ const ReportedIssues = () => {
         show={updatedUserStatus !== null && selectedUserId !== null}
         setShow={handleCloseStatusPopup}
         onConfirm={() => handleUpdateUserStatus()}
+      />
+
+      {/* Mark as Read Popup */}
+      <PPopup
+        title="Mark as Read"
+        description="Are you sure you want to mark this report as read?"
+        show={markReadReportId !== null}
+        setShow={handleCloseMarkReadPopup}
+        onConfirm={handleMarkReportAsRead}
       />
     </>
   );
