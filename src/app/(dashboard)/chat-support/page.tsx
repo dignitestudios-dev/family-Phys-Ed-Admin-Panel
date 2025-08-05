@@ -5,7 +5,7 @@ import { utils } from "@/lib/utils";
 import { SendHorizontal } from "lucide-react";
 import Cookies from "js-cookie";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import {
   listenSupportChats,
   listenSupportChatMessages,
@@ -120,7 +120,10 @@ const ChatSupport = () => {
           {loadingChats ? (
             <>
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="animate-pulse rounded-2xl py-2 px-3 flex justify-between items-start gap-5 mb-2 bg-[#232325]">
+                <div
+                  key={i}
+                  className="animate-pulse rounded-2xl py-2 px-3 flex justify-between items-start gap-5 mb-2 bg-[#232325]"
+                >
                   <div className="flex items-center gap-3">
                     <div className="p-[2px] bg-gradient rounded-full">
                       <div className="h-[43px] w-[43px] rounded-full bg-[#333]" />
@@ -138,7 +141,9 @@ const ChatSupport = () => {
               ))}
             </>
           ) : chats.length === 0 ? (
-            <div className="text-center text-white/60 mt-10">No conversations yet.</div>
+            <div className="text-center text-white/60 mt-10">
+              No conversations yet.
+            </div>
           ) : (
             chats.map((chat) => (
               <div
@@ -219,13 +224,23 @@ const ChatSupport = () => {
                 {loadingMessages ? (
                   <>
                     {[...Array(8)].map((_, i) => (
-                      <div key={i} className={`flex ${i % 2 === 0 ? 'justify-start' : 'justify-end'} mb-3`}>
-                        <div className={`w-2/3 max-w-[85%] py-2 px-3 rounded-lg bg-[#333] animate-pulse`} style={{ minHeight: 32 }} />
+                      <div
+                        key={i}
+                        className={`flex ${
+                          i % 2 === 0 ? "justify-start" : "justify-end"
+                        } mb-3`}
+                      >
+                        <div
+                          className={`w-2/3 max-w-[85%] py-2 px-3 rounded-lg bg-[#333] animate-pulse`}
+                          style={{ minHeight: 32 }}
+                        />
                       </div>
                     ))}
                   </>
                 ) : messages.length === 0 ? (
-                  <div className="text-center text-white/60 mt-10">No messages yet.</div>
+                  <div className="text-center text-white/60 mt-10">
+                    No messages yet.
+                  </div>
                 ) : (
                   messages.map((msg, idx) => (
                     <MessageBox
@@ -277,4 +292,10 @@ const ChatSupport = () => {
   );
 };
 
-export default ChatSupport;
+export default function ChatSupportPage() {
+  return (
+    <Suspense fallback={<div>Loading chat support...</div>}>
+      <ChatSupport />
+    </Suspense>
+  );
+}
