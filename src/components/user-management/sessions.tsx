@@ -53,11 +53,11 @@ const Sessions = ({
             )}
           </div>
         ) : (
-          <ul className="mt-2 space-y-2">
+          <div className="mt-2 space-y-2 flex flex-wrap gap-2">
             {currentData.data.map((session, index) => (
               <SessionCard session={session} key={index} coachId={coachId} />
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>

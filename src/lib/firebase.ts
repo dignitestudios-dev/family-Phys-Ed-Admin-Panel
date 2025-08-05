@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCG7DYppBI05vn2Wo3u2Y3s_KQsoSrGf8Y",
-  authDomain: "family-phys-ed-c36d9.firebaseapp.com",
-  projectId: "family-phys-ed-c36d9",
-  storageBucket: "family-phys-ed-c36d9.firebasestorage.app",
-  messagingSenderId: "146456419976",
-  appId: "1:146456419976:web:b4bce3e6fcd2467cf7c93d",
-  measurementId: "G-WWX3599J1B"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);

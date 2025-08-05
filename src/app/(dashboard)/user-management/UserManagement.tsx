@@ -65,9 +65,12 @@ const UserManagement = () => {
       </div>
 
       {/* <CustomPagination loading={loading} onPageChange={onPageChange} totalPages={totalPages}> */}
-      <div className=" rounded-xl p-4 overflow-y-auto bg-secondary">
+      <div className=" rounded-xl p-4 pt-0 overflow-y-auto bg-secondary">
         <table className="w-full text-white ">
           <thead className="sticky top-0 z-10 bg-[#2C2C2E] p-2">
+            <tr className="h-4 bg-secondary">
+              <td colSpan={10} />
+            </tr>
             <tr>
               <th className="px-4 py-5 font-normal text-left rounded-s-[8px]">
                 #
@@ -106,50 +109,6 @@ const UserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {/* {currentList?.map((item, index) => (
-                <tr key={index} className="border-b border-[#3a3a3c]">
-                  <td className="px-4 py-6">{index + 1}</td>
-                  <td className="px-4 py-6">
-                    <div className="flex items-center gap-3">
-                      <div className="p-[2px] bg-gradient-to-bl from-[#29ABE2] to-[#63CFAC] rounded-full">
-                        <div
-                          className="h-[43px] w-[43px] rounded-full bg-cover bg-center border border-white"
-                          style={{
-                            backgroundImage: `url(${item?.avatar ?? "/default-avatar.png"})`,
-                          }}
-                        />
-                      </div>
-                      {item?.name}
-                    </div>
-                  </td>
-                  <td className="px-4 py-6">{item?.email}</td>
-                  <td className="px-4 py-6">{item?.phone_number || "N/A"}</td>
-                  <td className="px-4 py-6">{item?.address || "N/A"}</td>
-
-                  {selectedTab === "0" ? (
-                    <>
-                      <td className="px-4 py-6">${item?.per_slot_price || 0}</td>
-                      <td className="px-4 py-6">${item?.hourly_slot_price || 0}</td>
-                    </>
-                  ) : (
-                    <>
-                      <td className="px-4 py-6">{item?.fitness_goal ?? "N/A"}</td>
-                      <td className="px-4 py-6">
-                        {(item?.activity_preferences?.join(", ") || "N/A")}
-                      </td>
-                      <td className="px-4 py-6">{item?.fitness_level ?? "N/A"}</td>
-                    </>
-                  )}
-
-                  <td
-                    className={`px-4 py-6 ${
-                      item?.is_deactivate ? "text-[#EE0004]" : "text-[#85D500]"
-                    }`}
-                  >
-                    {item?.is_deactivate ? "Inactive" : "Active"}
-                  </td>
-                </tr>
-              ))} */}
             {selectedTab == "1"
               ? users?.users.data?.map((item, index) => (
                   <tr
