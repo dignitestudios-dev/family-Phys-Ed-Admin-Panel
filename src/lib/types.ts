@@ -379,10 +379,48 @@ export interface CreateNotificationInterface {
 }
 
 export interface UserGrowthAnalytics {
-  totalActiveUsers: number;
-  userGrowthData: {
+  total_users: {
+    value: string;
+    change_from_yesterday: string;
+  };
+  total_coaches: {
+    value: string;
+    change_from_yesterday: string;
+  };
+  total_bookings: {
+    value: string;
+    change_from_yesterday: string;
+  };
+  total_products: {
+    value: string;
+    change_from_yesterday: string;
+  };
+  sales_graph: {
     year: string;
-    users: number;
+    total_sales: number;
+  }[];
+}
+
+export interface DasboardAnalytics {
+  total_users: {
+    value: string;
+    change_from_yesterday: string;
+  };
+  total_coaches: {
+    value: string;
+    change_from_yesterday: string;
+  };
+  total_bookings: {
+    value: string;
+    change_from_yesterday: string;
+  };
+  total_products: {
+    value: string;
+    change_from_yesterday: string;
+  };
+  sales_graph: {
+    year: string;
+    total_sales: number;
   }[];
 }
 

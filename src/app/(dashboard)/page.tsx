@@ -8,8 +8,7 @@ import { analyticsHooks } from "@/hooks/useAnalyticsRequests";
 import PageLoader from "@/components/PageLoader";
 
 const Dashboard = () => {
-  const { loading, analytics, getUserGrowthAnalytics } =
-    analyticsHooks.useUserGrowthAnalytics();
+  const { loading, analytics } = analyticsHooks.useUserGrowthAnalytics();
   const currentYear = new Date().getFullYear().toString();
   const [admin, setAdmin] = useState({
     name: "",
@@ -34,37 +33,28 @@ const Dashboard = () => {
 
   return (
     <>
-      {/* {loading ? (
+      {loading ? (
         <PageLoader />
       ) : (
-        <> */}
-      <div>
-        {/* <p className="text-desc">Hello {admin?.name || "Admin"},</p> */}
-        <h1 className="section-heading">Dashboard</h1>
-      </div>
-      <div className="grid grid-cols-4 gap-5">
-        <DashboardFigure
-          title="Total Users"
-          value={analytics.totalActiveUsers}
-        />
-        {/* <DashboardFigure title="Total Products" value={1140} />
-        <DashboardFigure title="Total Product Sales" value={5489} />
-        <DashboardFigure title="Total Sales Revenue" value={`$${5400}`} /> */}
-      </div>
-      {/* <div className="p-4 bg-white rounded-2xl">
-        <SubscriptionSalesChart />
-      </div> */}
-      <h2 className="text-dark text-2xl font-general-semibold">Sales</h2>
-      <div className="p-4 bg-secondary rounded-2xl">
-        <TotalUsersChart
-          loading={loading}
-          data={analytics.userGrowthData}
-          onDateChange={getUserGrowthAnalytics}
-          defaultYear={currentYear}
-        />
-      </div>
-      {/* </>
-      )} */}
+        <>
+          <div>
+            <h1 className="section-heading">Dashboard</h1>
+          </div>
+          <div className="grid grid-cols-4 gap-5">
+            <DashboardFigure
+              title="Users"
+              data={analytics.total_users}
+            />
+            <DashboardFigure title="Coach" data={analytics.total_coaches} />
+            <DashboardFigure title="Bookings" data={analytics.total_bookings} />
+            <DashboardFigure title="Products" data={analytics.total_products} />
+          </div>
+          <h2 className="text-dark text-2xl font-general-semibold">Sales</h2>
+          <div className="p-4 bg-secondary rounded-2xl">
+            <TotalUsersChart loading={loading} data={analytics.sales_graph} />
+          </div>
+        </>
+      )}
     </>
   );
 };

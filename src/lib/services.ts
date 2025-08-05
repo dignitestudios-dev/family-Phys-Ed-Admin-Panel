@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import Cookies from "js-cookie";
 import {
@@ -33,6 +32,7 @@ import {
   OrderTrackingStatus,
   ReportedIssue,
   Notification,
+  DasboardAnalytics,
   // ApprovalRequests,
 } from "./types";
 
@@ -667,7 +667,14 @@ const deleteNotification = (notificationId: string) =>
 
 // Mark Report as Read
 const markReportAsRead = (reportId: number | string) =>
-  apiHandler<{ success: boolean; message: string }>(() => API.post(`/reports/${reportId}`));
+  apiHandler<{ success: boolean; message: string }>(() =>
+    API.post(`/reports/${reportId}`)
+  );
+
+// Get Dasboard Analytics
+
+const getDashboardAnalytics = () =>
+  apiHandler<DasboardAnalytics>(() => API.get(`/dashboard`));
 
 const api = {
   login,
@@ -706,7 +713,6 @@ const api = {
   disableGroupById,
   getAllNotifications,
   rejectCoach,
-  // ...existing code...
   getNotifications,
   createNotification,
   deleteNotification,
@@ -724,5 +730,6 @@ const api = {
   getRevenue,
   downloadUsersRevenueReport,
   downloadProductsRevenueReport,
+  getDashboardAnalytics,
 };
 export default api;

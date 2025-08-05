@@ -1,44 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "@/lib/services";
-import { UserGrowthAnalytics } from "@/lib/types";
+import { DasboardAnalytics, UserGrowthAnalytics } from "@/lib/types";
 import { utils } from "@/lib/utils";
 
 const useUserGrowthAnalytics = () => {
   const [loading, setLoading] = useState(false);
-  const [analytics, setAnalytics] = useState<UserGrowthAnalytics>({
-    totalActiveUsers: 0,
-    userGrowthData: [],
+  const [analytics, setAnalytics] = useState<DasboardAnalytics>({
+    total_users: {
+      value: "0",
+      change_from_yesterday: "+0.00%",
+    },
+    total_coaches: {
+      value: "0",
+      change_from_yesterday: "+0.00%",
+    },
+    total_bookings: {
+      value: "0",
+      change_from_yesterday: "+0.00%",
+    },
+    total_products: {
+      value: "0",
+      change_from_yesterday: "+0.00%",
+    },
+    sales_graph: [],
   });
 
-  const getUserGrowthAnalytics = async (startYear: string, endYear: string) => {
+  const getDashboardAnalytics = async () => {
     setLoading(true);
     try {
-      // const response = await api.getUserGrowthAnalytics(startYear, endYear);
-      setAnalytics({
-        totalActiveUsers: 1001 + 1221 + 1121 + 1322 + 1456,
-        userGrowthData: [
-          {
-            year: "2021",
-            users: 1001,
-          },
-          {
-            year: "2022",
-            users: 1221,
-          },
-          {
-            year: "2023",
-            users: 1121,
-          },
-          {
-            year: "2024",
-            users: 1322,
-          },
-          {
-            year: "2025",
-            users: 1456,
-          },
-        ],
-      });
+      const response = await api.getDashboardAnalytics();
+
+      setAnalytics(response);
     } catch (error) {
       utils.handleError(error);
     } finally {
@@ -46,7 +38,11 @@ const useUserGrowthAnalytics = () => {
     }
   };
 
-  return { loading, analytics, getUserGrowthAnalytics };
+  useEffect(() => {
+    getDashboardAnalytics();
+  }, []);
+
+  return { loading, analytics, getDashboardAnalytics };
 };
 
 export const analyticsHooks = {

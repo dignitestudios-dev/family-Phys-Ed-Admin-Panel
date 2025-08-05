@@ -17,91 +17,26 @@ import { toast } from "react-toastify";
 
 interface TotalUsersChartProps {
   loading?: boolean;
-  data: { year: string; users: number }[];
-  onDateChange: (startDate: string, endDate: string) => void;
-  defaultYear: string;
+  data: { year: string; total_sales: number }[];
 }
 
 export default function TotalUsersChart({
   loading,
   data,
-  onDateChange,
-  defaultYear,
 }: TotalUsersChartProps) {
-  const { analytics, getUserGrowthAnalytics } =
-    analyticsHooks.useUserGrowthAnalytics();
   // Generate last 10 years including current year
   const currentYear = new Date().getFullYear();
-  const years = Array.from(
-    { length: 10 },
-    (_, i) => (currentYear - i).toString()
+  const years = Array.from({ length: 10 }, (_, i) =>
+    (currentYear - i).toString()
   );
-  const [startYear, setStartYear] = React.useState<string>(defaultYear);
-  const [endYear, setEndYear] = React.useState<string>(defaultYear);
-
-  useEffect(() => {
-    if (startYear && endYear) {
-      const startDate = `${startYear}-01-01`;
-      const endDate = `${endYear}-12-31`;
-      onDateChange(startDate, endDate);
-    }
-  }, [startYear, endYear]);
-
-  const handleStartYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const year = e.target.value;
-    setStartYear(year);
-    if (parseInt(year) > parseInt(endYear)) {
-      setEndYear(year);
-    }
-  };
-
-  const handleEndYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const year = e.target.value;
-    setEndYear(year);
-    if (parseInt(year) < parseInt(startYear)) {
-      setStartYear(year);
-    }
-  };
 
   return (
     <div className="space-y-4">
-      
-      <div className="w-full flex justify-between items-center pb-3 border-b border-[#2121211C]">
-        {/* <div className="flex flex-wrap justify-end items-center gap-4">
-          <div className="flex items-center gap-2">
-            <p className="text-sm text-gray-500">From:</p>
-            <select
-              value={startYear}
-              onChange={handleStartYearChange}
-              className="w-[120px] border border-gray-300 rounded-md shadow-sm focus:border-green-400 focus:ring-2 focus:ring-green-200 px-2 py-1"
-            >
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex items-center gap-2">
-            <p className="text-sm text-gray-500">To:</p>
-            <select
-              value={endYear}
-              onChange={handleEndYearChange}
-              className="w-[120px] border border-gray-300 rounded-md shadow-sm focus:border-green-400 focus:ring-2 focus:ring-green-200 px-2 py-1"
-            >
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div> */}
-      </div>
+      <div className="w-full flex justify-between items-center pb-3 border-b border-[#2121211C]"></div>
       <div className="flex items-center gap-6 mb-4">
         <div className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-[4px] bg-[#CAFF8A]"></div>
-          <span className="text-sm">User</span>
+          <span className="text-sm">Sales</span>
         </div>
       </div>
       <div className="h-[300px] w-full">
@@ -139,12 +74,12 @@ export default function TotalUsersChart({
             <Tooltip
               formatter={(value) => {
                 if (Number(value) >= 1000000) {
-                  return [`${(Number(value) / 1000000).toFixed(1)}M`, "Users"];
+                  return [`${(Number(value) / 1000000).toFixed(1)}M`, "Sales"];
                 }
-                return [value, "Users"];
+                return [value, "Sales"];
               }}
             />
-            <Bar dataKey="users" fill="#C0F765" radius={[12, 12, 0, 0]} />
+            <Bar dataKey="total_sales" fill="#C0F765" radius={[12, 12, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
