@@ -419,7 +419,9 @@ export interface DasboardAnalytics {
     change_from_yesterday: string;
   };
   sales_graph: {
-    year: string;
+    time: string;
+    product_sales: number;
+    session_sales: number;
     total_sales: number;
   }[];
 }
