@@ -18,7 +18,7 @@ function Merchandise({ products }: { products: any[] }) {
             width={300}
             height={300}
           />
-          <h1 className="text-white">No Merchandise Requests Available</h1>
+          <h1 className="text-white">No Merchandise Available</h1>
         </div>
       )}
     </div>
