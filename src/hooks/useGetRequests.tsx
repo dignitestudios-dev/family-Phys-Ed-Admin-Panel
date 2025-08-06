@@ -38,10 +38,10 @@ const useGetAllUsers = () => {
   const [totalUsersPages, setTotalUsersPages] = useState<number>(1);
   const [totalCoachesPages, setTotalCoachesPages] = useState<number>(1);
 
-  const getAllUsers = async (page?: number) => {
+  const getAllUsers = async (search: string, page?: number) => {
     setLoading(true);
     try {
-      const response = await api.getAllUsers(page);
+      const response = await api.getAllUsers(search, page);
 
       setUsers(response);
       const userTotalPages = Math.ceil(

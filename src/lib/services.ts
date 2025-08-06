@@ -224,8 +224,10 @@ const resetPassword = (
 
 // ########################### USERS API's ###########################
 
-const getAllUsers = (page: number = defaultPage) =>
-  apiHandler<UserInterface>(() => API.get(`/users?page${page}`));
+const getAllUsers = (search: string = "", page: number = defaultPage) =>
+  apiHandler<UserInterface>(() =>
+    API.get(`/users?page=${page}&search=${search}`)
+  );
 
 const getAllRequests = () =>
   apiHandler<ApprovalRequests>(() =>

@@ -18,11 +18,11 @@ const UserManagement = () => {
     getHooks.useGetAllUsers();
 
   useEffect(() => {
-    getAllUsers();
-  }, []);
+    getAllUsers(searchValueDebounce);
+  }, [searchValueDebounce]);
 
   const onPageChange = (page: number) => {
-    getAllUsers(page);
+    getAllUsers(searchValueDebounce, page);
   };
 
   return (
