@@ -11,7 +11,7 @@ function Details({ fitness_goal, activity_preferences, fitness_level }: { fitnes
             <div className="bg-secondary p-5 rounded-2xl" >
                 <h1 className="text-white font-bold text-2xl mb-4">Activity Preferences</h1>
                 <div className="flex flex-wrap gap-4">
-                {activity_preferences.map((act , idx)=>(
+                {activity_preferences?.map((act , idx)=>(
                     <div className="text-white w-[25%] text-center bg-[#2a2a2b] p-2 rounded-xl" key={idx} >{act}</div>
                 ))}
                 </div>

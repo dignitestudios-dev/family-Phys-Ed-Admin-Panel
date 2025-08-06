@@ -200,10 +200,13 @@ const useApproveCoachProduct = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const toggleApproveCoachProduct = async (id: string): Promise<boolean> => {
+  const toggleApproveCoachProduct = async (
+    id: string,
+    additionalPrice: number | string
+  ): Promise<boolean> => {
     setLoading(true);
     try {
-      const response = await api.approveCoachProduct(id);
+      const response = await api.approveCoachProduct(id, additionalPrice);
 
       toast.success(response?.message);
       router.push("/requests");
@@ -330,7 +333,6 @@ const useCreateCommunity = () => {
 
   return { loading, createCommunity };
 };
-
 
 // Hook to mark a report as read
 const useMarkReportAsRead = () => {

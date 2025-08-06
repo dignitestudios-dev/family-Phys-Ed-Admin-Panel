@@ -191,9 +191,11 @@ const rejectCoach = (id: string, reason: string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
     API.post(`profile-approval-requests/${id}/reject`, { reason })
   );
-const approveCoachProduct = (id: string) =>
+const approveCoachProduct = (id: string, additionalPrice: number | string) =>
   apiHandler<{ success: boolean; message: string }>(() =>
-    API.post(`product-approval-requests/${id}/approve`)
+    API.post(`product-approval-requests/${id}/approve`, {
+      additional_price: additionalPrice,
+    })
   );
 
 const activateUser = (id: number | string) =>
@@ -219,18 +221,8 @@ const resetPassword = (
 
 // ########################### USERS API's ###########################
 
-const getAllUsers = (
-  search: string = "",
-  isSuspended: string,
-  page: number = defaultPage,
-  limit: number = defaultLimit
-) =>
-  apiHandler<UserInterface>(() =>
-    API.get(
-      // `/users?page=${page}&limit=${limit}&search=${search}${isSuspended}`
-      `/users`
-    )
-  );
+const getAllUsers = (page: number = defaultPage) =>
+  apiHandler<UserInterface>(() => API.get(`/users?page${page}`));
 
 const getAllRequests = () =>
   apiHandler<ApprovalRequests>(() =>
@@ -546,8 +538,12 @@ const getAllNotifications = (
   );
 
 // CREATE Notification (Push Notification)
-const createNotification = (payload: { title: string; body: string }) =>
-  API.post(`/notifications`, payload);
+const createNotification = (payload: {
+  title: string;
+  body: string;
+  date: string;
+  time: string;
+}) => API.post(`/notifications`, payload);
 
 // ########################### ANALYTICS API's ###########################
 
@@ -647,7 +643,7 @@ const getRevenue = (page: number = defaultPage) =>
   }>(() => API.get(`/revenue?page=${page}`));
 
 const downloadUsersRevenueReport = () =>
-  apiHandler(() => API.get("/users/revenues/pdf", { responseType: "blob" }));
+  API.get("/users/revenues/pdf", { responseType: "blob" });
 
 const downloadProductsRevenueReport = () =>
   API.get("/products/revenues/pdf", { responseType: "blob" });

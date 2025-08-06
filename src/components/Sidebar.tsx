@@ -33,6 +33,7 @@ import ChatSupport from "./icons/sidebar/ChatSupport";
 import ChatSupportSelected from "./icons/sidebar/ChatSupportSelected";
 import RevenueReport from "./icons/sidebar/RevenueReport";
 import RevenueReportSelected from "./icons/sidebar/RevenueReportSelected";
+import RequestIconSelected from "./icons/sidebar/RequestIconSelected";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -53,9 +54,9 @@ const Sidebar = () => {
     },
     {
       title: "Requests",
-      path: "/requests ",
+      path: "/requests",
       icon: <RequestIcon />,
-      iconSelected: <RequestIcon />,
+      iconSelected: <RequestIconSelected />,
     },
     {
       title: "Orders",
@@ -97,6 +98,12 @@ const Sidebar = () => {
 
   const isActiveRoute = useCallback(
     (linkPath: string) => {
+      if (
+        linkPath.includes("merchandise") &&
+        pathname.includes("product-detail")
+      )
+        return true;
+
       if (linkPath === "/") return pathname === "/";
       return pathname.startsWith(linkPath);
     },

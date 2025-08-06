@@ -224,7 +224,8 @@ const OrderDetails = () => {
 
               <div className="mt-4 flex justify-between items-center">
                 <p className="text-white font-extralight">
-                  Subtotal ({orderDetails.order_items.length || 0} item(s))
+                  Subtotal ( {orderDetails.order_items.length || 0}{" "}
+                  {orderDetails.order_items.length <= 1 ? "item" : "items"} )
                 </p>
                 <p className="text-white">
                   ${orderDetails.order_summary.subtotal}

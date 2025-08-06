@@ -21,7 +21,7 @@ const Sessions = ({
   return (
     <div className="relative">
       <div className="flex gap-4 mb-4 absolute -top-9 bg-[#2C2C2E] left-4 rounded-xl z-20">
-        {tabOptions.map((tab) => (
+        {tabOptions?.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -54,7 +54,7 @@ const Sessions = ({
           </div>
         ) : (
           <div className="mt-2 space-y-2 flex flex-wrap gap-2">
-            {currentData.data.map((session, index) => (
+            {currentData?.data?.map((session, index) => (
               <SessionCard session={session} key={index} coachId={coachId} />
             ))}
           </div>

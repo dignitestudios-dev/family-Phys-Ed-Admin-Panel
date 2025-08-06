@@ -2,12 +2,12 @@
 import { Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ChevronRight, MapPin } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Slider from "../slider/slider";
-import DangerPopup from "../DangerPopup";
 import { postHooks } from "@/hooks/usePostRequests";
-import Link from "next/link";
+import LiveMerchandiseForm from "./LiveMerchandiseForm";
 
 type Props = {
   product: Product;
@@ -16,9 +16,10 @@ type Props = {
 function ProductDetails({ product }: Props) {
   const router = useRouter();
   const [popup, setPopup] = useState(false);
-  const { toggleApproveCoachProduct } = postHooks.useApproveCoachProduct();
-  const handleApproveProduct = () => {
-    toggleApproveCoachProduct(String(product.id));
+  const { loading, toggleApproveCoachProduct } =
+    postHooks.useApproveCoachProduct();
+  const handleApproveProduct = async (additionalPrice: number | string) => {
+    await toggleApproveCoachProduct(String(product.id), additionalPrice);
     setPopup(false);
   };
   return (
@@ -28,7 +29,7 @@ function ProductDetails({ product }: Props) {
           <button onClick={() => router.back()} className="outline-none">
             <ArrowLeft />
           </button>
-          <h1 className="section-heading ">Product Detail</h1>
+          <h1 className="section-heading ">Product Details</h1>
           <div
             className={cn(
               product.is_approved
@@ -57,7 +58,7 @@ function ProductDetails({ product }: Props) {
           <div className="flex flex-col gap-3">
             <div className="flex justify-between">
               <div>
-                <h1 className="text-2xl font-bold">{product.name}</h1>{" "}
+                <h1 className="text-2xl font-bold mb-2">{product.name}</h1>{" "}
                 <h4 className="text-xs flex gap-2 items-center">
                   <MapPin size={14} className="text-primary" />
                   {product.location}
@@ -147,7 +148,7 @@ function ProductDetails({ product }: Props) {
         </div>
       </div>
 
-      <DangerPopup
+      <LiveMerchandiseForm
         title="Make Merchandise Live"
         desc="Are you sure you want to make this merchandise live? It will become visible to users immediately."
         cancelTitle="No"
@@ -155,6 +156,7 @@ function ProductDetails({ product }: Props) {
         show={popup}
         onClose={() => setPopup(false)}
         onContinue={handleApproveProduct}
+        loading={loading}
       />
     </>
   );

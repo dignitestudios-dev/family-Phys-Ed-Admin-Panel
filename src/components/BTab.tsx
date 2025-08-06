@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { LuLoaderCircle } from "react-icons/lu";
 
 type BTabProps = {
@@ -10,6 +10,7 @@ type BTabProps = {
   onBtnClick?: any;
   disabled?: boolean;
   xl?: boolean;
+  className?: string;
 };
 
 const BTab: React.FC<BTabProps> = ({
@@ -20,6 +21,7 @@ const BTab: React.FC<BTabProps> = ({
   w,
   onBtnClick,
   disabled = false,
+  className,
 }) => {
   return (
     <button
@@ -38,7 +40,7 @@ const BTab: React.FC<BTabProps> = ({
         loading || disabled
           ? "cursor-not-allowed opacity-75"
           : "cursor-pointer active:scale-[.95]"
-      }`}
+      } ${className}`}
       onClick={onBtnClick}
       disabled={loading || disabled}
     >

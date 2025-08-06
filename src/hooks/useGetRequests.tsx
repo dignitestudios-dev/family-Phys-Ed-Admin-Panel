@@ -32,34 +32,28 @@ import { useEffect, useState } from "react";
 const useGetAllUsers = () => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<UserInterface | null>(null);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalUsersPages, setTotalUsersPages] = useState<number>(1);
+  const [totalCoachesPages, setTotalCoachesPages] = useState<number>(1);
 
   const getAllUsers = async (
-    search: string,
-    selectedTab: "0" | "1" | "2" | "" = "0",
     page?: number,
-    limit?: number
   ) => {
     setLoading(true);
     try {
-      const isSuspendedBoolean: string =
-        selectedTab === "" || selectedTab === "0"
-          ? ""
-          : selectedTab === "1"
-          ? "&isSuspended=false"
-          : selectedTab === "2"
-          ? "&isSuspended=true"
-          : "";
-
       const response = await api.getAllUsers(
-        search,
-        isSuspendedBoolean,
         page,
-        limit
       );
-      console.log(response);
+
       setUsers(response);
-      // setTotalPages(response?.data?.pagination?.totalPages);
+      const userTotalPages = Math.ceil(
+        response?.users?.total / response?.users?.per_page
+      );
+      const coachesTotalPages = Math.ceil(
+        response?.coaches?.total / response?.coaches?.per_page
+      );
+
+      setTotalUsersPages(userTotalPages);
+      setTotalCoachesPages(coachesTotalPages);
     } catch (error) {
       utils.handleError(error);
     } finally {
@@ -67,7 +61,7 @@ const useGetAllUsers = () => {
     }
   };
 
-  return { loading, users, totalPages, getAllUsers };
+  return { loading, users, totalUsersPages, totalCoachesPages, getAllUsers };
 };
 
 const useGetAllProfileReq = () => {
@@ -76,10 +70,8 @@ const useGetAllProfileReq = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
 
   const getAllRequests = async (
-    search: string,
-    selectedTab: "0" | "1" | "2" | "" = "0",
-    page?: number,
-    limit?: number
+    selectedTab: "0" | "1" | "" = "0",
+    page?: number
   ) => {
     setLoading(true);
     try {
@@ -822,6 +814,7 @@ const useDownloadRevenueReport = (activeTab: 0 | 1) => {
           String(new Date())
         )}.pdf`;
       }
+
       const url = window.URL.createObjectURL(
         new Blob([response.data], { type: "application/pdf" })
       );

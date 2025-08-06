@@ -195,7 +195,7 @@ const UserDetails = () => {
           </div>
 
           <div className="rounded-lg bg-secondary font-medium flex items-center p-1 w-fit shadow-[0px_4px_19.4px_0px_#0000000D]">
-            {tabs.map((tab, index) => (
+            {tabs?.map((tab, index) => (
               <BTab
                 key={index}
                 title={tab}

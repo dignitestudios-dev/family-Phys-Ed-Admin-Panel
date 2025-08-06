@@ -8,9 +8,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
+type UserType = "all" | "user" | "coach";
+
 const RevenueReport = () => {
   const router = useRouter();
   const tabs = ["Users", "Merchandise"];
+  const userTypes: UserType[] = ["all", "user", "coach"];
   const {
     loading,
     users,
@@ -22,6 +25,7 @@ const RevenueReport = () => {
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
   const { loading: downloadingReport, downloadRevenueReport } =
     getHooks.useDownloadRevenueReport(activeTab);
+  const [selectedUserType, setSelectedUserType] = useState<UserType>("all");
 
   const onPageChange = (page: number) => {
     getRevenue(page);
@@ -51,87 +55,106 @@ const RevenueReport = () => {
       </div>
 
       {activeTab === 0 ? (
-        <CustomPagination
-          loading={loading}
-          onPageChange={onPageChange}
-          totalPages={totalUsersPages}
-        >
-          {!users.length ? (
-            <p className="text-white/50">No revenue found.</p>
-          ) : (
-            <div className="bg-secondary rounded-xl px-4 pb-4 overflow-y-auto">
-              <table className="w-full">
-                <thead className="sticky top-0 z-10">
-                  <tr>
-                    <th colSpan={7} className="h-[16px] bg-secondary" />
-                  </tr>
-                  <tr className="bg-[#2C2C2E]">
-                    <th className="px-4 py-5 text-left text-nowrap rounded-s-[8px]">
-                      #
-                    </th>
-                    <th className="px-4 py-5 text-left text-nowrap">Name</th>
-                    <th className="px-4 py-5 text-left text-nowrap">
-                      User Type
-                    </th>
-                    <th className="px-4 py-5 text-left text-nowrap">
-                      Sessions Attended
-                    </th>
-                    <th className="px-4 py-5 text-left text-nowrap">
-                      Custom Request Posted
-                    </th>
-                    <th className="px-4 py-5 text-left text-nowrap">
-                      Total Spent
-                    </th>
-                    <th className="px-4 py-5 text-left text-nowrap">
-                      Total Refund
-                    </th>
-                    <th className="px-4 py-5 text-left text-nowrap">
-                      App Revenue
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="mt-10">
-                  {users.map((user, index) => (
-                    <tr
-                      key={index}
-                      className="border-b-1 border-[#D4D4D4] cursor-pointer"
-                      onClick={() =>
-                        router.push(
-                          `/user-management/${user.uid}?role=${user.user_type}`
-                        )
-                      }
-                    >
-                      <td className="px-4 py-6">{index + 1}</td>
-                      <td className="px-4 py-6">
-                        <div className="flex items-center gap-3">
-                          <div className="p-[2px] bg-gradient-to-bl from-[#29ABE2] to-[#63CFAC] rounded-full">
-                            <div
-                              className="h-[43px] w-[43px] rounded-full bg-cover bg-center border border-white"
-                              style={{
-                                backgroundImage: `url(${
-                                  user?.avatar ?? "/default-avatar.png"
-                                })`,
-                              }}
-                            />
-                          </div>
-                          {user?.name}
-                        </div>
-                      </td>
-                      <td className="px-4 py-6 text-nowrap">
-                        {user.user_type}
-                      </td>
-                      <td className="px-4 py-6">{user.attended_sessions}</td>
-                      <td className="px-4 py-6">{user.requests_posted}</td>
-                      <td className="px-4 py-6">{user.spent_amount}</td>
-                      <td className="px-4 py-6">{user.refunded_amount}</td>
-                      <td className="px-4 py-6">{user.total_revenue}</td>
+        <>
+          <div className="flex gap-3">
+            <p>User Type: </p>
+            <ul className="flex gap-2">
+              {userTypes.map((userType) => (
+                <li>
+                  <button
+                    className={`${
+                      selectedUserType === userType && "text-primary underline"
+                    } cursor-pointer disabled:cursor-not-allowed`}
+                    onClick={() => setSelectedUserType(userType)}
+                  >
+                    {utils.toTitleCase(userType)}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <CustomPagination
+            loading={loading}
+            onPageChange={onPageChange}
+            totalPages={totalUsersPages}
+          >
+            {!users.length ? (
+              <p className="text-white/50">No revenue found.</p>
+            ) : (
+              <div className="bg-secondary rounded-xl px-4 pb-4 overflow-y-auto">
+                <table className="w-full">
+                  <thead className="sticky top-0 z-10">
+                    <tr>
+                      <th colSpan={7} className="h-[16px] bg-secondary" />
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </CustomPagination>
+                    <tr className="bg-[#2C2C2E]">
+                      <th className="px-4 py-5 text-left text-nowrap rounded-s-[8px]">
+                        #
+                      </th>
+                      <th className="px-4 py-5 text-left text-nowrap">Name</th>
+                      <th className="px-4 py-5 text-left text-nowrap">
+                        User Type
+                      </th>
+                      <th className="px-4 py-5 text-left text-nowrap">
+                        Sessions Attended
+                      </th>
+                      <th className="px-4 py-5 text-left text-nowrap">
+                        Custom Request Posted
+                      </th>
+                      <th className="px-4 py-5 text-left text-nowrap">
+                        Total Spent
+                      </th>
+                      <th className="px-4 py-5 text-left text-nowrap">
+                        Total Refund
+                      </th>
+                      <th className="px-4 py-5 text-left text-nowrap">
+                        App Revenue
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="mt-10">
+                    {users.map((user, index) => (
+                      <tr
+                        key={index}
+                        className="border-b-1 border-[#D4D4D4] cursor-pointer"
+                        onClick={() =>
+                          router.push(
+                            `/user-management/${user.uid}?role=${user.user_type}`
+                          )
+                        }
+                      >
+                        <td className="px-4 py-6">{index + 1}</td>
+                        <td className="px-4 py-6">
+                          <div className="flex items-center gap-3">
+                            <div className="p-[2px] bg-gradient-to-bl from-[#29ABE2] to-[#63CFAC] rounded-full">
+                              <div
+                                className="h-[43px] w-[43px] rounded-full bg-cover bg-center border border-white"
+                                style={{
+                                  backgroundImage: `url(${
+                                    user?.avatar ?? "/default-avatar.png"
+                                  })`,
+                                }}
+                              />
+                            </div>
+                            {user?.name}
+                          </div>
+                        </td>
+                        <td className="px-4 py-6 text-nowrap">
+                          {user.user_type}
+                        </td>
+                        <td className="px-4 py-6">{user.attended_sessions}</td>
+                        <td className="px-4 py-6">{user.requests_posted}</td>
+                        <td className="px-4 py-6">{user.spent_amount}</td>
+                        <td className="px-4 py-6">{user.refunded_amount}</td>
+                        <td className="px-4 py-6">{user.total_revenue}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CustomPagination>
+        </>
       ) : activeTab === 1 ? (
         <CustomPagination
           loading={loading}
