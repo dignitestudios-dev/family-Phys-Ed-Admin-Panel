@@ -3,17 +3,18 @@ import BButton from "@/components/BButton";
 import BTab from "@/components/BTab";
 import CustomPagination from "@/components/CustomPagination";
 import { getHooks } from "@/hooks/useGetRequests";
+import { UserType } from "@/lib/types";
 import { utils } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-type UserType = "all" | "user" | "coach";
-
 const RevenueReport = () => {
   const router = useRouter();
   const tabs = ["Users", "Merchandise"];
-  const userTypes: UserType[] = ["all", "user", "coach"];
+  const userTypes: UserType[] = ["user", "coach"];
+  const [selectedUserType, setSelectedUserType] = useState<UserType>("user");
+
   const {
     loading,
     users,
@@ -21,11 +22,10 @@ const RevenueReport = () => {
     totalUsersPages,
     totalMerchandisesPages,
     getRevenue,
-  } = getHooks.useGetRevenue();
+  } = getHooks.useGetRevenue(selectedUserType);
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
   const { loading: downloadingReport, downloadRevenueReport } =
-    getHooks.useDownloadRevenueReport(activeTab);
-  const [selectedUserType, setSelectedUserType] = useState<UserType>("all");
+    getHooks.useDownloadRevenueReport(activeTab, selectedUserType);
 
   const onPageChange = (page: number) => {
     getRevenue(page);
@@ -95,15 +95,28 @@ const RevenueReport = () => {
                       <th className="px-4 py-5 text-left text-nowrap">
                         User Type
                       </th>
-                      <th className="px-4 py-5 text-left text-nowrap">
-                        Sessions Attended
-                      </th>
-                      <th className="px-4 py-5 text-left text-nowrap">
-                        Custom Request Posted
-                      </th>
-                      <th className="px-4 py-5 text-left text-nowrap">
-                        Total Spent
-                      </th>
+                      {selectedUserType === "user" ? (
+                        <>
+                          <th className="px-4 py-5 text-left text-nowrap">
+                            Sessions Attended
+                          </th>
+                          <th className="px-4 py-5 text-left text-nowrap">
+                            Custom Request Posted
+                          </th>
+                          <th className="px-4 py-5 text-left text-nowrap">
+                            Total Spent
+                          </th>
+                        </>
+                      ) : (
+                        <>
+                          <th className="px-4 py-5 text-left text-nowrap">
+                            Total Sessions Hosted
+                          </th>
+                          <th className="px-4 py-5 text-left text-nowrap">
+                            Total Earnings
+                          </th>
+                        </>
+                      )}
                       <th className="px-4 py-5 text-left text-nowrap">
                         Total Refund
                       </th>
@@ -142,9 +155,24 @@ const RevenueReport = () => {
                         <td className="px-4 py-6 text-nowrap">
                           {user.user_type}
                         </td>
-                        <td className="px-4 py-6">{user.attended_sessions}</td>
-                        <td className="px-4 py-6">{user.requests_posted}</td>
-                        <td className="px-4 py-6">{user.spent_amount}</td>
+                        {selectedUserType === "user" ? (
+                          <>
+                            <td className="px-4 py-6">
+                              {user?.attended_sessions}
+                            </td>
+                            <td className="px-4 py-6">
+                              {user?.requests_posted}
+                            </td>
+                            <td className="px-4 py-6">{user?.spent_amount}</td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="px-4 py-6">
+                              {user?.total_session_hosted}
+                            </td>
+                            <td className="px-4 py-6">{user.total_earnings}</td>
+                          </>
+                        )}
                         <td className="px-4 py-6">{user.refunded_amount}</td>
                         <td className="px-4 py-6">{user.total_revenue}</td>
                       </tr>

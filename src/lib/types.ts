@@ -715,10 +715,22 @@ export interface RevenueUser {
   uid: string;
   name: string;
   avatar: string;
-  user_type: "user" | "coach";
+  user_type: "user";
   attended_sessions: number;
   requests_posted: number;
   spent_amount: number;
+  refunded_amount: number;
+  total_revenue: number;
+}
+
+export interface RevenueCoach {
+  id: number;
+  uid: string;
+  name: string;
+  avatar: string;
+  user_type: "coach";
+  total_session_hosted: number;
+  total_earnings: string;
   refunded_amount: number;
   total_revenue: number;
 }
@@ -745,3 +757,5 @@ export interface Notification {
   status: "delivered" | "pending";
   create_at: string;
 }
+
+export type UserType = "user" | "coach";

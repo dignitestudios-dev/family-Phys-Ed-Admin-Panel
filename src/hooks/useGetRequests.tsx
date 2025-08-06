@@ -21,13 +21,16 @@ import {
   ReportedIssue,
   ReportedPostInterface,
   ReportedUsersInterface,
+  RevenueCoach,
   RevenueMerchandise,
   RevenueUser,
   UserDetailsInterface,
   UserInterface,
+  UserType,
 } from "@/lib/types";
 import { utils } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const useGetAllUsers = () => {
   const [loading, setLoading] = useState(true);
@@ -35,14 +38,10 @@ const useGetAllUsers = () => {
   const [totalUsersPages, setTotalUsersPages] = useState<number>(1);
   const [totalCoachesPages, setTotalCoachesPages] = useState<number>(1);
 
-  const getAllUsers = async (
-    page?: number,
-  ) => {
+  const getAllUsers = async (page?: number) => {
     setLoading(true);
     try {
-      const response = await api.getAllUsers(
-        page,
-      );
+      const response = await api.getAllUsers(page);
 
       setUsers(response);
       const userTotalPages = Math.ceil(
@@ -749,9 +748,9 @@ const useGetAllReportedIssues = (page?: number) => {
   };
 };
 
-const useGetRevenue = () => {
+const useGetRevenue = (selectedUserType: UserType) => {
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState<RevenueUser[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [merchandises, setMerchandises] = useState<RevenueMerchandise[]>([]);
   const [totalUsersPages, setTotalUsersPages] = useState<number>(1);
   const [totalMerchandisesPages, setTotalMerchandisesPages] =
@@ -760,18 +759,22 @@ const useGetRevenue = () => {
   const getRevenue = async (page?: number) => {
     setLoading(true);
     try {
-      const response = await api.getRevenue(page);
+      const response = await api.getRevenue(page, selectedUserType);
       console.log("Revenue API call: ", response);
-      setUsers(response?.users || []);
-      setMerchandises(response?.merchandise || []);
-      const usersTotalPages = 1;
-      //  Math.ceil(
-      //   response?.new_orders?.total / response?.new_orders?.per_page
-      // );
-      const coachesTotalPages = 1;
-      // Math.ceil(
-      //   response?.order_history?.total / response?.order_history?.per_page
-      // );
+      setUsers(
+        selectedUserType === "coach"
+          ? response?.coaches?.data || []
+          : response?.users?.data || []
+      );
+      setMerchandises(response?.merchandise?.data || []);
+      const usersTotalPages =
+        selectedUserType === "coach"
+          ? Math.ceil(response?.coaches?.total / response?.coaches?.per_page)
+          : Math.ceil(response?.users?.total / response?.users?.per_page);
+
+      const coachesTotalPages = Math.ceil(
+        response?.merchandise?.total / response?.merchandise?.per_page
+      );
       setTotalUsersPages(usersTotalPages);
       setTotalMerchandisesPages(coachesTotalPages);
     } catch (error) {
@@ -783,7 +786,7 @@ const useGetRevenue = () => {
 
   useEffect(() => {
     getRevenue(1);
-  }, []);
+  }, [selectedUserType]);
 
   return {
     loading,
@@ -795,7 +798,7 @@ const useGetRevenue = () => {
   };
 };
 
-const useDownloadRevenueReport = (activeTab: 0 | 1) => {
+const useDownloadRevenueReport = (activeTab: 0 | 1, userType: UserType) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const downloadRevenueReport = async () => {
@@ -804,13 +807,23 @@ const useDownloadRevenueReport = (activeTab: 0 | 1) => {
       let response;
       let filename;
       if (activeTab === 0) {
-        response = await api.downloadUsersRevenueReport();
-        filename = `users-revenue-report-${utils.formatDate(
-          String(new Date())
-        )}.pdf`;
+        if (userType === "coach") {
+          response = await api.downloadCoachesRevenueReport();
+          filename = `Coaches Revenue Report-${utils.formatDate(
+            String(new Date())
+          )}.pdf`;
+        } else if (userType === "user") {
+          response = await api.downloadUsersRevenueReport();
+          filename = `Users Revenue Report-${utils.formatDate(
+            String(new Date())
+          )}.pdf`;
+        } else {
+          toast.error("Invalid user type");
+          return;
+        }
       } else {
         response = await api.downloadProductsRevenueReport();
-        filename = `products-revenue-report-${utils.formatDate(
+        filename = `Products Revenue Report-${utils.formatDate(
           String(new Date())
         )}.pdf`;
       }

@@ -33,6 +33,9 @@ import {
   ReportedIssue,
   Notification,
   DasboardAnalytics,
+  UserType,
+  RevenueCoach,
+  RevenueUser,
   // ApprovalRequests,
 } from "./types";
 
@@ -608,42 +611,44 @@ const getAllReportedIssues = (page: number = defaultPage) =>
     };
   }>(() => API.get(`/reports?page=${page}`));
 
-const getRevenue = (page: number = defaultPage) =>
+const getRevenue = (page: number = defaultPage, selectedUserType: UserType) =>
   apiHandler<{
     users: {
-      // current_page: number;
-      // total: number;
-      // per_page: number;
-      id: number;
-      uid: string;
-      name: string;
-      avatar: string;
-      user_type: "user" | "coach";
-      attended_sessions: number;
-      requests_posted: number;
-      spent_amount: number;
-      refunded_amount: number;
-      total_revenue: number;
-    }[];
+      current_page: number;
+      total: number;
+      per_page: number;
+      data: RevenueUser[];
+    };
+    coaches: {
+      current_page: number;
+      total: number;
+      per_page: number;
+      data: RevenueCoach[];
+    };
     merchandise: {
-      // current_page: number;
-      // total: number;
-      // per_page: number;
-      id: number;
-      image: string;
-      product_name: string;
-      coach_name: string;
-      price_per_unit: string;
-      total_stock: number;
-      units_sold: number;
-      stock_left: number;
-      revenue_earned: number;
-      status: "Active" | "Inactive";
-    }[];
-  }>(() => API.get(`/revenue?page=${page}`));
+      current_page: number;
+      total: number;
+      per_page: number;
+      data: {
+        id: number;
+        image: string;
+        product_name: string;
+        coach_name: string;
+        price_per_unit: string;
+        total_stock: number;
+        units_sold: number;
+        stock_left: number;
+        revenue_earned: number;
+        status: "Active" | "Inactive";
+      }[];
+    };
+  }>(() => API.get(`/revenue?page=${page}&user_type=${selectedUserType}`));
 
 const downloadUsersRevenueReport = () =>
   API.get("/users/revenues/pdf", { responseType: "blob" });
+
+const downloadCoachesRevenueReport = () =>
+  API.get("/coach/revenues/pdf", { responseType: "blob" });
 
 const downloadProductsRevenueReport = () =>
   API.get("/products/revenues/pdf", { responseType: "blob" });
@@ -725,6 +730,7 @@ const api = {
   markReportAsRead,
   getRevenue,
   downloadUsersRevenueReport,
+  downloadCoachesRevenueReport,
   downloadProductsRevenueReport,
   getDashboardAnalytics,
 };
