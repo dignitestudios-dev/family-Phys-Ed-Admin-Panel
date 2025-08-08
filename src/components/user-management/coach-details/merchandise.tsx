@@ -13,8 +13,8 @@ function Merchandise({ products }: { products: any[] }) {
       ) : (
         <div className="flex flex-col justify-center items-center w-full h-full">
           <Image
-            src={"/images/illustration.png"}
-            alt="no"
+            src={"/images/Illustration.png"}
+            alt="No Data"
             width={300}
             height={300}
           />

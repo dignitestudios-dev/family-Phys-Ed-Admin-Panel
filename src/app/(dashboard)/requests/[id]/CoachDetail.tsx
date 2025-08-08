@@ -2,7 +2,6 @@
 import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-;
 import BTab from "@/components/BTab";
 
 import DangerPopup from "@/components/DangerPopup";
@@ -23,14 +22,15 @@ import DangerRejectPopup from "@/components/DangerRejectPopup";
 type SelectedTabs = "" | "0" | "1" | "2" | "3";
 
 const CoachDetails = () => {
-
   const tabs = ["Detail", "Portfolio", "Sessions", "Merchandise"];
   const { loading, user, setUser, getUserById } = getHooks.useGetCoachDetails();
   const { loading: suspendLoading, toggleSuspendUser } =
     postHooks.useToggleSuspendUser();
-  const { loading: deleteLoading, toggleRejectCoach } = postHooks.useRejectCoach();
-  const { loading: approveLoading, toggleApproveCoach } = postHooks.useApproveCoach();
-const [reason,setReason] = useState("")
+  const { loading: deleteLoading, toggleRejectCoach } =
+    postHooks.useRejectCoach();
+  const { loading: approveLoading, toggleApproveCoach } =
+    postHooks.useApproveCoach();
+  const [reason, setReason] = useState("");
   const router = useRouter();
   const { id } = useParams();
   const searchParams = useSearchParams();
@@ -44,7 +44,7 @@ const [reason,setReason] = useState("")
     delete: boolean;
     disable: boolean;
     approve: boolean;
-  }>({ delete: false, disable: false , approve:false });
+  }>({ delete: false, disable: false, approve: false });
 
   const handleTabChange = (index: SelectedTabs) => {
     const newParams = new URLSearchParams(searchParams);
@@ -59,7 +59,7 @@ const [reason,setReason] = useState("")
   }, [currentTab]);
 
   useEffect(() => {
-    id && getUserById(id as string );
+    id && getUserById(id as string);
   }, [id]);
 
   const handleToggleDisablePopup = (value: boolean) => {
@@ -76,19 +76,16 @@ const [reason,setReason] = useState("")
     }));
   };
 
-  const handleToggleRejectUser =  () => {
- toggleRejectCoach(String(user?.coach_id) as string , reason);
- setReason("")
-  handleToggleDisablePopup(false);
+  const handleToggleRejectUser = () => {
+    toggleRejectCoach(String(user?.coach_id) as string, reason);
+    setReason("");
+    handleToggleDisablePopup(false);
   };
 
+  const handleToggleApproveUser = () => {
+    toggleApproveCoach(String(user?.coach_id) as string);
 
-
-  const handleToggleApproveUser =  () => {
-   toggleApproveCoach(String(user?.coach_id) as string);
-
- handleToggleApprovePopup(false);
-
+    handleToggleApprovePopup(false);
   };
 
   return (
@@ -97,14 +94,13 @@ const [reason,setReason] = useState("")
         <PageLoader />
       ) : (
         <div className="flex flex-col gap-4">
-
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 text-white">
-          <div onClick={()=>router.back()} className="outline-none">
-           <ArrowLeft />
-          </div>
-            <h1 className="section-heading ">Coach Profile</h1>
-</div>
+              <div onClick={() => router.back()} className="outline-none">
+                <ArrowLeft />
+              </div>
+              <h1 className="section-heading ">Coach Profile</h1>
+            </div>
             <div className="flex gap-2 items-center">
               {/* <div
                 className="bg-[#FF3B30] rounded-[10px] h-[48px] w-[44px] cursor-pointer active:scale-[0.95] transition-all flex justify-center items-center"
@@ -113,10 +109,16 @@ const [reason,setReason] = useState("")
                 <Delete />
               </div> */}
 
-              <button onClick={()=>handleToggleDisablePopup(true)} className={cn( "bg-[#FF363A]" , "p-2 px-8 rounded-lg text-white")} >
+              <button
+                onClick={() => handleToggleDisablePopup(true)}
+                className={cn("bg-[#FF363A]", "p-2 px-8 rounded-lg text-white")}
+              >
                 Reject
               </button>
-              <button onClick={()=>handleToggleApprovePopup(true)} className={cn("bg-[#00C369]" , "p-2 px-8 rounded-lg text-white")} >
+              <button
+                onClick={() => handleToggleApprovePopup(true)}
+                className={cn("bg-[#00C369]", "p-2 px-8 rounded-lg text-white")}
+              >
                 Approve
               </button>
             </div>
@@ -154,14 +156,24 @@ const [reason,setReason] = useState("")
               </div>
 
               {/* <p className="text-sm text-white">@{user?.name}</p> */}
-              <h4 className="text-white text-sm">{user?.experience}+ Years of Experience</h4>
+              <h4 className="text-white text-sm">
+                {user?.experience}+ Years of Experience
+              </h4>
 
               <div className="flex items-center gap-4 text-xs text-white">
                 <div className="flex items-center gap-1  ">
-                  <Phone size={20} className="text-primary" />
-                  <p> {user?.phone_number}</p>
+                  <Phone size={20} className="text-primary" />{" "}
+                  <p>
+                    {`${
+                      user?.phone_number.startsWith("+1")
+                        ? user?.phone_number
+                        : user?.phone_number.startsWith("1")
+                        ? `+${user?.phone_number}`
+                        : `+1${user?.phone_number}`
+                    }` || "N/A"}
+                  </p>
                 </div>
-              
+
                 <div className="flex items-center gap-1  ">
                   <Mail size={20} className="text-primary" />
                   <p> {user?.email}</p>
@@ -169,7 +181,8 @@ const [reason,setReason] = useState("")
               </div>
               <div className="flex items-center gap-2 text-xs text-white">
                 <MapPin size={20} className="text-primary" />
-                {user?.location}</div>
+                {user?.location}
+              </div>
 
               {/* <p className="text-desc text-sm">{user?.fitness_level}</p> */}
             </div>
@@ -194,7 +207,10 @@ const [reason,setReason] = useState("")
             ) : selectedTab === "1" ? (
               <Portfolio media={user?.portfolio!} />
             ) : selectedTab === "2" ? (
-              <Sessions sessions={user?.sessions!} coachId={String(user?.coach_id)} />
+              <Sessions
+                sessions={user?.sessions!}
+                coachId={String(user?.coach_id)}
+              />
             ) : selectedTab === "3" ? (
               <Merchandise products={user?.products!} />
             ) : (
@@ -205,9 +221,8 @@ const [reason,setReason] = useState("")
           <DangerRejectPopup
             title={"Reject Profile"}
             desc={`Are you sure you want to
-              ${user?.is_deactivate ? "Activate" : "Deactivate"
-            } this coach`}
-             setReason={setReason}
+              ${user?.is_deactivate ? "Activate" : "Deactivate"} this coach`}
+            setReason={setReason}
             doneTitle={`Yes, ${user?.is_deactivate ? "Enable" : "Disable"} Now`}
             show={showAlert.disable}
             onClose={() => handleToggleDisablePopup(false)}

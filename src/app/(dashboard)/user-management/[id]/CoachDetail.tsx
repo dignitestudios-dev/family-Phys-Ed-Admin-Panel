@@ -194,8 +194,16 @@ const CoachDetails = () => {
 
               <div className="flex items-center gap-4 text-xs text-white">
                 <div className="flex items-center gap-1  ">
-                  <Phone size={20} className="text-primary" />
-                  <p> {user?.phone_number}</p>
+                  <Phone size={20} className="text-primary" />{" "}
+                  <p>
+                    {`${
+                      user?.phone_number.startsWith("+1")
+                        ? user?.phone_number
+                        : user?.phone_number.startsWith("1")
+                        ? `+${user?.phone_number}`
+                        : `+1${user?.phone_number}`
+                    }` || "N/A"}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-1  ">

@@ -108,7 +108,13 @@ const Requests = () => {
                       </td>
                       <td className="px-4 py-6">{item?.email}</td>
                       <td className="px-4 py-6">
-                        {item?.phone_number || "N/A"}
+                        {`${
+                          item?.phone_number.startsWith("+1")
+                            ? item?.phone_number
+                            : item?.phone_number.startsWith("1")
+                            ? `+${item?.phone_number}`
+                            : `+1${item?.phone_number}`
+                        }` || "N/A"}{" "}
                       </td>
                       <td className="px-4 py-6">{item?.address || "N/A"}</td>
 

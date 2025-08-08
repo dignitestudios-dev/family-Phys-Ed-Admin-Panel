@@ -33,6 +33,8 @@ const ChatSupport = () => {
       setAdminUid(parsedAdmin.uid);
     }
   }, []);
+  
+  console.log("Chats: ", chats)
 
   // Listen to all support chats
   // Only auto-select first chat on initial load, or select by chatId from query param
@@ -160,7 +162,7 @@ const ChatSupport = () => {
                     <div
                       className="h-[43px] w-[43px] rounded-full bg-cover bg-center border-2 border-[#1C1C1E]"
                       style={{
-                        backgroundImage: chat.profile.avatar
+                        backgroundImage: chat?.profile?.avatar
                           ? `url(${process.env.NEXT_PUBLIC_MEDIA_URL}${chat.profile.avatar})`
                           : "/default-avatar.png",
                       }}
@@ -206,7 +208,7 @@ const ChatSupport = () => {
                     <div
                       className="h-[43px] w-[43px] rounded-full bg-cover bg-center border-2 border-[#1C1C1E]"
                       style={{
-                        backgroundImage: selectedChat.profile.avatar
+                        backgroundImage: selectedChat?.profile?.avatar
                           ? `url(${process.env.NEXT_PUBLIC_MEDIA_URL}${selectedChat.profile.avatar})`
                           : "/default-avatar.png",
                       }}

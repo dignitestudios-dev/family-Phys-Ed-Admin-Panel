@@ -263,7 +263,13 @@ const OrderDetails = () => {
                   </div>
 
                   <p className="text-sm text-white/50">
-                    {orderDetails.user.phone_number}
+                    {`${
+                      orderDetails.user?.phone_number.startsWith("+1")
+                        ? orderDetails.user?.phone_number
+                        : orderDetails.user?.phone_number.startsWith("1")
+                        ? `+${orderDetails.user?.phone_number}`
+                        : `+1${orderDetails.user?.phone_number}`
+                    }` || "N/A"}
                   </p>
                 </div>
               </div>

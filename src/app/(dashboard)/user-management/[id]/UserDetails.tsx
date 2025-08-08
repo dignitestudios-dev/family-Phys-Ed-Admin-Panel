@@ -177,7 +177,15 @@ const UserDetails = () => {
               <div className="flex items-center gap-2 text-white">
                 <div className="flex items-center gap-1 text-sm ">
                   <Phone size={20} className="text-primary" />
-                  <p className="text-white"> {user?.phone_number}</p>
+                  <p className="text-white">
+                    {`${
+                      user?.phone_number.startsWith("+1")
+                        ? user?.phone_number
+                        : user?.phone_number.startsWith("1")
+                        ? `+${user?.phone_number}`
+                        : `+1${user?.phone_number}`
+                    }` || "N/A"}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-1 text-sm ">
