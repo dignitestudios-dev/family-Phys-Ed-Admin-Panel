@@ -14,15 +14,20 @@ const Requests = () => {
   const tabs = ["Profile Requests", "Merchandise Requests"];
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState<SelectedTabs>("0");
-  const { loading, users, totalPages, getAllRequests } =
-    getHooks.useGetAllProfileReq();
+  const {
+    loading,
+    users,
+    profileTotalPages,
+    merchandiseTotalPages,
+    getAllRequests,
+  } = getHooks.useGetAllProfileReq();
 
   useEffect(() => {
-    getAllRequests(selectedTab, 1);
+    getAllRequests(1);
   }, []);
 
   const onPageChange = (page: number) => {
-    getAllRequests(selectedTab, page);
+    getAllRequests(page);
   };
 
   return (
@@ -47,12 +52,17 @@ const Requests = () => {
       <CustomPagination
         loading={loading}
         onPageChange={onPageChange}
-        totalPages={totalPages}
+        totalPages={
+          selectedTab === "0" ? profileTotalPages : merchandiseTotalPages
+        }
       >
-        <div className=" rounded-xl p-4 overflow-y-auto bg-secondary">
+        <div className=" rounded-xl p-4 pt-0 overflow-y-auto bg-secondary">
           {selectedTab == "0" ? (
             <table className="w-full text-white ">
-              <thead className="sticky top-0 z-10 bg-[#2C2C2E] p-2">
+              <thead className="sticky top-0 z-10 bg-[#2C2C2E] p-2 !pt-0">
+                <tr className="h-4 bg-[#1C1C1E]">
+                  <td colSpan={8}></td>
+                </tr>
                 <tr>
                   <th className="px-4 py-5 font-normal text-left rounded-s-[8px]">
                     #
@@ -142,7 +152,7 @@ const Requests = () => {
               </tbody>
             </table>
           ) : !users?.merchandise_requests?.data?.length ? (
-            <p className="text-white/50">No merchandise request found</p>
+            <p className="text-white/50 pt-4">No merchandise request found</p>
           ) : (
             users?.merchandise_requests?.data?.map((p) => (
               <MerchandiseCard key={p.id} product={p} />

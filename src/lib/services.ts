@@ -229,12 +229,9 @@ const getAllUsers = (search: string = "", page: number = defaultPage) =>
     API.get(`/users?page=${page}&search=${search}`)
   );
 
-const getAllRequests = () =>
+const getAllRequests = (page: number = defaultPage) =>
   apiHandler<ApprovalRequests>(() =>
-    API.get(
-      // `/users?page=${page}&limit=${limit}&search=${search}${isSuspended}`
-      `/approval-requests`
-    )
+    API.get(`/approval-requests?page=${page}`)
   );
 
 const getUserById = (id: string) =>

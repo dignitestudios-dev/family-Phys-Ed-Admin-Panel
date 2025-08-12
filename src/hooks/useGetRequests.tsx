@@ -66,27 +66,27 @@ const useGetAllUsers = () => {
 const useGetAllProfileReq = () => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<ApprovalRequests | undefined>();
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const [profileTotalPages, setProfileTotalPages] = useState<number>(1);
+  const [merchandiseTotalPages, setMerchandiseTotalPages] = useState<number>(1);
 
   const getAllRequests = async (
-    selectedTab: "0" | "1" | "" = "0",
     page?: number
   ) => {
     setLoading(true);
     try {
-      const isSuspendedBoolean: string =
-        selectedTab === "" || selectedTab === "0"
-          ? ""
-          : selectedTab === "1"
-          ? "&isSuspended=false"
-          : selectedTab === "2"
-          ? "&isSuspended=true"
-          : "";
-
-      const response = await api.getAllRequests();
+      const response = await api.getAllRequests(page);
 
       setUsers(response);
-      // setTotalPages(response?.data?.pagination?.totalPages);
+      const profileDataTotalPages = Math.ceil(
+        response?.profile_requests?.total / response?.profile_requests?.per_page
+      );
+      const merchandiseDataTotalPages = Math.ceil(
+        response?.merchandise_requests?.total /
+          response?.merchandise_requests?.per_page
+      );
+
+      setProfileTotalPages(profileDataTotalPages);
+      setMerchandiseTotalPages(merchandiseDataTotalPages);
     } catch (error) {
       utils.handleError(error);
     } finally {
@@ -94,7 +94,13 @@ const useGetAllProfileReq = () => {
     }
   };
 
-  return { loading, users, totalPages, getAllRequests };
+  return {
+    loading,
+    users,
+    profileTotalPages,
+    merchandiseTotalPages,
+    getAllRequests,
+  };
 };
 
 const useGetUsersDetails = () => {

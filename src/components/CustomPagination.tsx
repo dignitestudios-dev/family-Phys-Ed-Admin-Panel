@@ -46,7 +46,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
       {loading && page <= 1 ? (
         <PageLoader />
       ) : (
-        <div className="bg-secondary p-2 rounded-xl h-full flex flex-col gap-2 justify-between overflow-auto">
+        <div className="bg-secondary p-2 pt-0 rounded-xl h-full flex flex-col gap-2 justify-between overflow-auto">
           {loading && page > 1 ? <PageLoader /> : children}
           <div className="w-full flex justify-end">
             <div className="w-fit flex gap-2 items-center">
