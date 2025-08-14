@@ -186,12 +186,6 @@ const UserManagement = () => {
                   <th className="px-4 py-5 text-left font-normal">
                     Fitness Goals
                   </th>
-                  <th className="px-4 py-5 text-left font-normal">
-                    Activity Preferences
-                  </th>
-                  <th className="px-4 py-5 text-left font-normal">
-                    Fitness Level
-                  </th>
 
                   <th className="px-4 py-5 text-left font-normal rounded-e-[8px]">
                     Status
@@ -236,12 +230,6 @@ const UserManagement = () => {
                     <td className="px-4 py-6">{item?.address || "N/A"}</td>
 
                     <>
-                      <td className="px-4 py-6">
-                        {item?.fitness_goal ?? "N/A"}
-                      </td>
-                      <td className="px-4 py-6">
-                        {item?.activity_preferences?.join(", ") || "N/A"}
-                      </td>
                       <td className="px-4 py-6">
                         {item?.fitness_level ?? "N/A"}
                       </td>
