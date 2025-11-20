@@ -33,17 +33,16 @@ const ChatSupport = () => {
       setAdminUid(parsedAdmin.uid);
     }
   }, []);
-  
-  console.log("Chats: ", chats)
+
+  console.log("Chats: ", chats);
 
   // Listen to all support chats
   // Only auto-select first chat on initial load, or select by chatId from query param
   const initialChatSelected = useRef(false);
   useEffect(() => {
-    if (!adminUid) return;
-    setLoadingChats(true);
-    const chatIdFromQuery = searchParams.get("chatId");
-    const unsub = listenSupportChats(adminUid, (data: any[]) => {
+    const unsub = listenSupportChats(adminUid as string, (data: any[]) => {
+      const chatIdFromQuery = searchParams.get("chatId");
+
       const sorted = data.sort(
         (a, b) => (b.created_at?.seconds || 0) - (a.created_at?.seconds || 0)
       );
@@ -60,6 +59,16 @@ const ChatSupport = () => {
       }
       setLoadingChats(false);
     });
+
+    try {
+      if (!adminUid) return;
+      setLoadingChats(true);
+      unsub();
+    } catch (error: any) {
+      console.log("Error on chats: ", error);
+    } finally {
+      setLoadingChats(false);
+    }
     return () => {
       unsub();
       initialChatSelected.current = false;
