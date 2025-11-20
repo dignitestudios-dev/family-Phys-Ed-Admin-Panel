@@ -49,7 +49,9 @@ const ChatSupport = () => {
       setChats(sorted);
       if (!initialChatSelected.current && sorted.length > 0) {
         if (chatIdFromQuery) {
-          const found = sorted.find((c) => c.id === chatIdFromQuery);
+          const found = sorted.find(
+            (c) => c?.user_uid === chatIdFromQuery
+          );
           if (found) setSelectedChat(found);
           else setSelectedChat(sorted[0]);
         } else {

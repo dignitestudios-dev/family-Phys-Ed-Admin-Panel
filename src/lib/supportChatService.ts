@@ -16,10 +16,7 @@ import {
 
 // Listen to all support chats for admin (all users who ever messaged admin)
 export function listenSupportChats(adminUid: string, callback: any) {
-  const q = query(
-    collection(db, "support_chats"),
-    where("members", "array-contains", adminUid)
-  );
+  const q = query(collection(db, "support_chats"));
   return onSnapshot(q, async (snapshot) => {
     const chats = await Promise.all(
       snapshot.docs.map(async (docSnap) => {
