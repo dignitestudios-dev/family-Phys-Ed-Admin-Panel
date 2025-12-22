@@ -2,6 +2,7 @@
 import CustomPagination from "@/components/CustomPagination";
 import useDebounceSearch from "@/hooks/useDebounceSearch";
 import { getHooks } from "@/hooks/useGetRequests";
+import { utils } from "@/lib/utils";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -116,7 +117,8 @@ const UserManagement = () => {
                             className="h-[43px] w-[43px] rounded-full bg-cover bg-center border border-white"
                             style={{
                               backgroundImage: `url(${
-                                item?.avatar ?? "/default-avatar.png"
+                                utils.formatImagePath(item?.avatar || "") ??
+                                "/default-avatar.png"
                               })`,
                             }}
                           />
@@ -209,7 +211,8 @@ const UserManagement = () => {
                             className="h-[43px] w-[43px] rounded-full bg-cover bg-center border border-white"
                             style={{
                               backgroundImage: `url(${
-                                item?.avatar ?? "/default-avatar.png"
+                                utils.formatImagePath(item?.avatar) ??
+                                "/default-avatar.png"
                               })`,
                             }}
                           />

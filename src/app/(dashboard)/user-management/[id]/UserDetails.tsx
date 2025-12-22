@@ -10,7 +10,7 @@ import { getHooks } from "@/hooks/useGetRequests";
 import PageLoader from "@/components/PageLoader";
 import { postHooks } from "@/hooks/usePostRequests";
 import { deleteHooks } from "@/hooks/useDeleteRequests";
-import { cn } from "@/lib/utils";
+import { cn, utils } from "@/lib/utils";
 import { ArrowLeft, Mail, MapPin, Phone } from "lucide-react";
 import Details from "@/components/user-management/user-details/details";
 import Sessions from "@/components/user-management/sessions";
@@ -145,7 +145,9 @@ const UserDetails = () => {
               <div
                 className="h-[150px] w-[150px] rounded-full bg-cover bg-center border-[3px] border-white"
                 style={{
-                  backgroundImage: `url(http://family-phys-ed-s3.s3.amazonaws.com/${user?.avatar}?alt=media)`,
+                  backgroundImage: `url(${utils.formatImagePath(
+                    user?.avatar
+                  )}?alt=media)`,
                 }}
               />
             </div>

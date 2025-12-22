@@ -13,7 +13,7 @@ import Details from "@/components/user-management/coach-details/details";
 import Portfolio from "@/components/user-management/coach-details/portfolio";
 import Sessions from "@/components/user-management/sessions";
 import Merchandise from "@/components/user-management/coach-details/merchandise";
-import { cn } from "@/lib/utils";
+import { cn, utils } from "@/lib/utils";
 
 type SelectedTabs = "" | "0" | "1" | "2" | "3";
 
@@ -144,7 +144,7 @@ const CoachDetails = () => {
               <div
                 className="h-[150px] w-[150px] rounded-full bg-cover bg-center border-[3px] border-white"
                 style={{
-                  backgroundImage: `url(https://family-phys-ed-s3.s3.amazonaws.com/${user?.avatar})`,
+                  backgroundImage: `url(${utils.formatImagePath(user?.avatar)})`,
                 }}
               />
             </div>

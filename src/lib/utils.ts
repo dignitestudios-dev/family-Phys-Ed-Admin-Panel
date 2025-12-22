@@ -2,6 +2,7 @@
 import { clsx, type ClassValue } from "clsx";
 import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
+import { IMAGE_URL } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -95,6 +96,11 @@ const formatChatTime = (
   }
 };
 
+const formatImagePath = (path?: string | null) => {
+  if (!path) return "";
+  return `${IMAGE_URL}/${path}`;
+};
+
 export const utils = {
   cn,
   formatDate,
@@ -105,4 +111,5 @@ export const utils = {
   getYear,
   formatRelativeTime,
   formatChatTime,
+  formatImagePath,
 };

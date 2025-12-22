@@ -144,7 +144,7 @@ const RevenueReport = () => {
                                 className="h-[43px] w-[43px] rounded-full bg-cover bg-center border border-white"
                                 style={{
                                   backgroundImage: `url(${
-                                    user?.avatar ?? "/default-avatar.png"
+                                    utils.formatImagePath(user?.avatar) ?? "/default-avatar.png"
                                   })`,
                                 }}
                               />

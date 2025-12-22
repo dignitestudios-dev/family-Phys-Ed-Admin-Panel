@@ -117,19 +117,32 @@ const Details: React.FC<Props> = ({ coach }) => {
 
       {/* REVIEWS */}
       {coach.reviews?.length > 0 && (
-        <div>
+        <div className="bg-secondary p-4 rounded-2xl">
           <h3 className="text-lg font-semibold mb-2">Reviews</h3>
-          <div className="space-y-4">
+          <div className="grid grid-cols-3 gap-4">
             {coach.reviews.map((review, index) => (
               <div
                 key={index}
-                className="bg-[#1e1e1e] p-3 rounded-lg border border-[#333]"
+                className="flex items-start gap-2 bg-[#2C2C2E] p-3 rounded-lg"
               >
-                <p className="font-medium text-sm">{review.name}</p>
-                <p className="text-xs text-yellow-400">
-                  Rating: {review.rating}/5
-                </p>
-                <p className="text-sm text-[#cfcfcf] mt-1">{review.comment}</p>
+                <div
+                  className={`bg-[#444445] border-2 border-[#67676a] rounded-full bg-cover bg-center`}
+                >
+                  <Image
+                    src={utils.formatImagePath(review?.user_avatar)}
+                    alt="User Avatar"
+                    width={56}
+                    height={56}
+                    className="h-14 w-14 min-h-14 min-w-14 rounded-full object-cover"
+                  />
+                </div>
+                <div>
+                  <p className="font-medium">{review?.user_name}</p>
+                  <p className="text-xs text-yellow-400">
+                    Rating: {review.rating}/5
+                  </p>
+                  <p className="text-sm text-[#cfcfcf] mt-1">{review?.text}</p>
+                </div>
               </div>
             ))}
           </div>
