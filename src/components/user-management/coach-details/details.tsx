@@ -1,8 +1,11 @@
+import Delete from "@/components/icons/Delete";
 import { CoachDetailsInterface } from "@/lib/types";
 import { utils } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { deleteHooks } from "@/hooks/useDeleteRequests";
+import { LuLoaderCircle } from "react-icons/lu";
 // import { CoachDetailsInterface } from "@/types"; // Update path based on your project
 
 interface Props {
@@ -10,6 +13,27 @@ interface Props {
 }
 
 const Details: React.FC<Props> = ({ coach }) => {
+  const { deleteCoachReview } = deleteHooks.useDeleteCoachReview();
+  const [localReviews, setLocalReviews] = useState(coach.reviews || []);
+  const [deletingReviews, setDeletingReviews] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    setLocalReviews(coach.reviews || []);
+  }, [coach.reviews]);
+
+  const handleDeleteReview = async (review_id: string) => {
+    setDeletingReviews(prev => new Set(prev).add(review_id));
+    const success = await deleteCoachReview(coach.coach_uid, review_id);
+    if (success) {
+      setLocalReviews(prev => prev.filter(r => r.id !== review_id));
+    }
+    setDeletingReviews(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(review_id);
+      return newSet;
+    });
+  };
+
   return (
     <div className="flex flex-col gap-6   rounded-lg text-white overflow-hidden">
       {/* BIO */}
@@ -116,15 +140,26 @@ const Details: React.FC<Props> = ({ coach }) => {
       )}
 
       {/* REVIEWS */}
-      {coach.reviews?.length > 0 && (
+      {localReviews?.length > 0 && (
         <div className="bg-secondary p-4 rounded-2xl">
           <h3 className="text-lg font-semibold mb-2">Reviews</h3>
           <div className="grid grid-cols-3 gap-4">
-            {coach.reviews.map((review, index) => (
+            {localReviews.map((review, index) => (
               <div
                 key={index}
-                className="flex items-start gap-2 bg-[#2C2C2E] p-3 rounded-lg"
+                className="relative flex items-start gap-2 bg-[#2C2C2E] p-3 rounded-lg"
               >
+                <button
+                  className="absolute top-2 right-2 cursor-pointer"
+                  onClick={() => handleDeleteReview(review.id)}
+                  disabled={deletingReviews.has(review.id)}
+                >
+                  {deletingReviews.has(review.id) ? (
+                    <LuLoaderCircle className="animate-spin w-4 h-4" />
+                  ) : (
+                    <Delete />
+                  )}
+                </button>
                 <div
                   className={`bg-[#444445] border-2 border-[#67676a] rounded-full bg-cover bg-center`}
                 >

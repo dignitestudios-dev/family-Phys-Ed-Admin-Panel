@@ -83,9 +83,30 @@ const useDeleteGroup = () => {
   return { loading, deleteGroup };
 };
 
+const useDeleteCoachReview = () => {
+  const [loading, setLoading] = useState(false);
+
+  const deleteCoachReview = async (coach_uid: string, review_id: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+      const response = await api.deleteCoachReview(coach_uid, review_id);
+      toast.success(response?.message);
+      return true;
+    } catch (error) {
+      utils.handleError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, deleteCoachReview };
+};
+
 export const deleteHooks = {
   useDeleteUser,
   useDeletePost,
   useDeleteCommunity,
   useDeleteGroup,
+  useDeleteCoachReview,
 };

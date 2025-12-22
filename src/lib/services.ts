@@ -676,6 +676,12 @@ const markReportAsRead = (reportId: number | string) =>
 const getDashboardAnalytics = () =>
   apiHandler<DasboardAnalytics>(() => API.get(`/dashboard`));
 
+// Delete Coach Review
+const deleteCoachReview = (coach_uid: string, review_id: string) =>
+  apiHandler<{ success: boolean; message: string }>(() =>
+    API.delete(`/coach/reviews`, { data: { coach_uid, review_id } })
+  );
+
 const api = {
   login,
   getAllUsers,
@@ -732,5 +738,6 @@ const api = {
   downloadCoachesRevenueReport,
   downloadProductsRevenueReport,
   getDashboardAnalytics,
+  deleteCoachReview,
 };
 export default api;
