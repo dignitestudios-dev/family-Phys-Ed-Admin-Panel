@@ -15,19 +15,21 @@ interface Props {
 const Details: React.FC<Props> = ({ coach }) => {
   const { deleteCoachReview } = deleteHooks.useDeleteCoachReview();
   const [localReviews, setLocalReviews] = useState(coach.reviews || []);
-  const [deletingReviews, setDeletingReviews] = useState<Set<string>>(new Set());
+  const [deletingReviews, setDeletingReviews] = useState<Set<string>>(
+    new Set()
+  );
 
   useEffect(() => {
     setLocalReviews(coach.reviews || []);
   }, [coach.reviews]);
 
   const handleDeleteReview = async (review_id: string) => {
-    setDeletingReviews(prev => new Set(prev).add(review_id));
+    setDeletingReviews((prev) => new Set(prev).add(review_id));
     const success = await deleteCoachReview(coach.coach_uid, review_id);
     if (success) {
-      setLocalReviews(prev => prev.filter(r => r.id !== review_id));
+      setLocalReviews((prev) => prev.filter((r) => r.id !== review_id));
     }
-    setDeletingReviews(prev => {
+    setDeletingReviews((prev) => {
       const newSet = new Set(prev);
       newSet.delete(review_id);
       return newSet;
@@ -140,11 +142,15 @@ const Details: React.FC<Props> = ({ coach }) => {
       )}
 
       {/* REVIEWS */}
-      {localReviews?.length > 0 && (
-        <div className="bg-secondary p-4 rounded-2xl">
-          <h3 className="text-lg font-semibold mb-2">Reviews</h3>
-          <div className="grid grid-cols-3 gap-4">
-            {localReviews.map((review, index) => (
+      <div className="bg-secondary p-4 rounded-2xl">
+        <h3 className="text-lg font-semibold mb-2">Reviews</h3>
+        <div className="grid grid-cols-3 gap-4">
+          {!localReviews?.length ? (
+            <div>
+              <p className="text-gray-400">No reviews yet.</p>
+            </div>
+          ) : (
+            localReviews.map((review, index) => (
               <div
                 key={index}
                 className="relative flex items-start gap-2 bg-[#2C2C2E] p-3 rounded-lg"
@@ -179,10 +185,10 @@ const Details: React.FC<Props> = ({ coach }) => {
                   <p className="text-sm text-[#cfcfcf] mt-1">{review?.text}</p>
                 </div>
               </div>
-            ))}
-          </div>
+            ))
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
