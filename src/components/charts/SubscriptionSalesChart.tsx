@@ -26,68 +26,7 @@ export default function SubscriptionSalesChart({
   loading,
   data,
 }: TotalUsersChartProps) {
-  data = [
-    {
-      time: "2025-08-06T22:59:00.000Z", // 10:59 PM
-      product_sales: 2900,
-      session_sales: 2100,
-      total_sales: 5000,
-    },
-    {
-      time: "2025-08-06T23:59:00.000Z",
-      product_sales: 1100,
-      session_sales: 5000,
-      total_sales: 6100,
-    },
-    {
-      time: "2025-08-07T00:59:00.000Z",
-      product_sales: 2400,
-      session_sales: 3250,
-      total_sales: 3650,
-    },
-    {
-      time: "2025-08-07T01:59:00.000Z",
-      product_sales: 3600,
-      session_sales: 5700,
-      total_sales: 7300,
-    },
-    {
-      time: "2025-08-07T02:59:00.000Z",
-      product_sales: 4200,
-      session_sales: 3400,
-      total_sales: 7600,
-    },
-    {
-      time: "2025-08-07T03:59:00.000Z",
-      product_sales: 6100, // Matches $7,357 tooltip
-      session_sales: 5500, // Matches $6,987 tooltip
-      total_sales: 11600,
-    },
-    {
-      time: "2025-08-07T04:59:00.000Z",
-      product_sales: 4800,
-      session_sales: 5000,
-      total_sales: 9800,
-    },
-    {
-      time: "2025-08-07T05:59:00.000Z",
-      product_sales: 5200,
-      session_sales: 4700,
-      total_sales: 9900,
-    },
-    {
-      time: "2025-08-07T06:59:00.000Z",
-      product_sales: 5400,
-      session_sales: 4900,
-      total_sales: 10300,
-    },
-    {
-      time: "2025-08-07T07:59:00.000Z",
-      product_sales: 5800,
-      session_sales: 5100,
-      total_sales: 10900,
-    },
-  ];
+  
 
   // Colors for each line
   const COLORS = {
