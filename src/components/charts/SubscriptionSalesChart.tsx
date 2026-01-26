@@ -26,7 +26,68 @@ export default function SubscriptionSalesChart({
   loading,
   data,
 }: TotalUsersChartProps) {
-  
+  // data = [
+  //   {
+  //     time: "2025-08-06T22:59:00.000Z", // 10:59 PM
+  //     product_sales: 2900,
+  //     session_sales: 2100,
+  //     total_sales: 5000,
+  //   },
+  //   {
+  //     time: "2025-08-06T23:59:00.000Z",
+  //     product_sales: 1100,
+  //     session_sales: 5000,
+  //     total_sales: 6100,
+  //   },
+  //   {
+  //     time: "2025-08-07T00:59:00.000Z",
+  //     product_sales: 2400,
+  //     session_sales: 3250,
+  //     total_sales: 3650,
+  //   },
+  //   {
+  //     time: "2025-08-07T01:59:00.000Z",
+  //     product_sales: 3600,
+  //     session_sales: 5700,
+  //     total_sales: 7300,
+  //   },
+  //   {
+  //     time: "2025-08-07T02:59:00.000Z",
+  //     product_sales: 4200,
+  //     session_sales: 3400,
+  //     total_sales: 7600,
+  //   },
+  //   {
+  //     time: "2025-08-07T03:59:00.000Z",
+  //     product_sales: 6100, // Matches $7,357 tooltip
+  //     session_sales: 5500, // Matches $6,987 tooltip
+  //     total_sales: 11600,
+  //   },
+  //   {
+  //     time: "2025-08-07T04:59:00.000Z",
+  //     product_sales: 4800,
+  //     session_sales: 5000,
+  //     total_sales: 9800,
+  //   },
+  //   {
+  //     time: "2025-08-07T05:59:00.000Z",
+  //     product_sales: 5200,
+  //     session_sales: 4700,
+  //     total_sales: 9900,
+  //   },
+  //   {
+  //     time: "2025-08-07T06:59:00.000Z",
+  //     product_sales: 5400,
+  //     session_sales: 4900,
+  //     total_sales: 10300,
+  //   },
+  //   {
+  //     time: "2025-08-07T07:59:00.000Z",
+  //     product_sales: 5800,
+  //     session_sales: 5100,
+  //     total_sales: 10900,
+  //   },
+  // ];
 
   // Colors for each line
   const COLORS = {
@@ -68,96 +129,117 @@ export default function SubscriptionSalesChart({
         <h2 className="text-dark text-2xl font-general-semibold">Sales</h2>
       </div>
 
-      <div className="flex items-center gap-6 mb-4">
-        <div className="flex items-center gap-2">
-          <div
-            className="h-3 w-3 rounded-full"
-            style={{
-              background: COLORS.product,
-              boxShadow: "0 0 12px 2px #FFD60088",
-            }}
-          ></div>
-          <span className="text-sm" style={{ color: COLORS.product }}>
-            Product Sales
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div
-            className="h-3 w-3 rounded-full"
-            style={{
-              background: COLORS.session,
-              boxShadow: "0 0 12px 2px #00BFFF88",
-            }}
-          ></div>
-          <span className="text-sm" style={{ color: COLORS.session }}>
-            Session Sales
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div
-            className="h-3 w-3 rounded-full"
-            style={{
-              background: COLORS.total,
-              boxShadow: "0 0 12px 2px #FFA50088",
-            }}
-          ></div>
-          <span className="text-sm" style={{ color: COLORS.total }}>
-            Total Sales
-          </span>
-        </div>
-      </div>
-
-      <div className="h-[320px] w-full bg-[#232329] rounded-xl p-4">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={data}
-            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+      {data.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-[320px] w-full bg-[#232329] rounded-xl p-4">
+          <svg
+            className="w-16 h-16 mb-4 text-gray-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            {GLOW_FILTERS}
-            <CartesianGrid
-              strokeDasharray="3 3"
-              vertical={false}
-              stroke="#444"
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
             />
-            <XAxis
-              dataKey="time"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 12, fill: "#fff" }}
-              tickFormatter={utils.formatTimeTo12Hour}
-            />
-            <YAxis
-              domain={[0, "auto"]}
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 12, fill: "#fff" }}
-              tickFormatter={(value) => {
-                if (value >= 1000000) {
-                  return `${(value / 1000000).toFixed(1)}M`;
-                } else if (value >= 1000) {
-                  return `${(value / 1000).toFixed(0)}K`;
-                }
-                return value;
-              }}
-            />
-            <Tooltip
-              contentStyle={{
-                background: "#232329",
-                border: "none",
-                color: "#fff",
-              }}
-              labelFormatter={utils.formatTimeTo12Hour}
-              formatter={(value) => {
-                const val = Number(value);
-                if (val >= 1_000_000) {
-                  return [`${(val / 1_000_000).toFixed(1)}M`, ""];
-                } else if (val >= 1000) {
-                  return [`${(val / 1000).toFixed(0)}K`, ""];
-                }
-                return [val, ""];
-              }}
-            />
-            {/* <Legend
+          </svg>
+          <p className="text-gray-400 text-lg">
+            No sales data for last 24 hours
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="flex items-center gap-6 mb-4">
+            <div className="flex items-center gap-2">
+              <div
+                className="h-3 w-3 rounded-full"
+                style={{
+                  background: COLORS.product,
+                  boxShadow: "0 0 12px 2px #FFD60088",
+                }}
+              ></div>
+              <span className="text-sm" style={{ color: COLORS.product }}>
+                Product Sales
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div
+                className="h-3 w-3 rounded-full"
+                style={{
+                  background: COLORS.session,
+                  boxShadow: "0 0 12px 2px #00BFFF88",
+                }}
+              ></div>
+              <span className="text-sm" style={{ color: COLORS.session }}>
+                Session Sales
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div
+                className="h-3 w-3 rounded-full"
+                style={{
+                  background: COLORS.total,
+                  boxShadow: "0 0 12px 2px #FFA50088",
+                }}
+              ></div>
+              <span className="text-sm" style={{ color: COLORS.total }}>
+                Total Sales
+              </span>
+            </div>
+          </div>
+
+          <div className="h-[320px] w-full bg-[#232329] rounded-xl p-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={data}
+                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+              >
+                {GLOW_FILTERS}
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#444"
+                />
+                <XAxis
+                  dataKey="time"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 12, fill: "#fff" }}
+                  tickFormatter={utils.formatTimeTo12Hour}
+                />
+                <YAxis
+                  domain={[0, "auto"]}
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 12, fill: "#fff" }}
+                  tickFormatter={(value) => {
+                    if (value >= 1000000) {
+                      return `${(value / 1000000).toFixed(1)}M`;
+                    } else if (value >= 1000) {
+                      return `${(value / 1000).toFixed(0)}K`;
+                    }
+                    return value;
+                  }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    background: "#232329",
+                    border: "none",
+                    color: "#fff",
+                  }}
+                  labelFormatter={utils.formatTimeTo12Hour}
+                  formatter={(value) => {
+                    const val = Number(value);
+                    if (val >= 1_000_000) {
+                      return [`${(val / 1_000_000).toFixed(1)}M`, ""];
+                    } else if (val >= 1000) {
+                      return [`${(val / 1000).toFixed(0)}K`, ""];
+                    }
+                    return [val, ""];
+                  }}
+                />
+                {/* <Legend
               verticalAlign="top"
               align="right"
               iconType="circle"
@@ -168,48 +250,50 @@ export default function SubscriptionSalesChart({
                 return value;
               }}
             /> */}
-            <Line
-              type="monotone"
-              dataKey="product_sales"
-              stroke={COLORS.product}
-              strokeWidth={3}
-              dot={false}
-              filter="url(#glow-yellow)"
-              activeDot={{
-                r: 7,
-                fill: COLORS.product,
-                filter: "url(#glow-yellow)",
-              }}
-            />
-            <Line
-              type="monotone"
-              dataKey="session_sales"
-              stroke={COLORS.session}
-              strokeWidth={3}
-              dot={false}
-              filter="url(#glow-blue)"
-              activeDot={{
-                r: 7,
-                fill: COLORS.session,
-                filter: "url(#glow-blue)",
-              }}
-            />
-            <Line
-              type="monotone"
-              dataKey="total_sales"
-              stroke={COLORS.total}
-              strokeWidth={3}
-              dot={false}
-              filter="url(#glow-orange)"
-              activeDot={{
-                r: 7,
-                fill: COLORS.total,
-                filter: "url(#glow-orange)",
-              }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+                <Line
+                  type="monotone"
+                  dataKey="product_sales"
+                  stroke={COLORS.product}
+                  strokeWidth={3}
+                  dot={false}
+                  filter="url(#glow-yellow)"
+                  activeDot={{
+                    r: 7,
+                    fill: COLORS.product,
+                    filter: "url(#glow-yellow)",
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="session_sales"
+                  stroke={COLORS.session}
+                  strokeWidth={3}
+                  dot={false}
+                  filter="url(#glow-blue)"
+                  activeDot={{
+                    r: 7,
+                    fill: COLORS.session,
+                    filter: "url(#glow-blue)",
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="total_sales"
+                  stroke={COLORS.total}
+                  strokeWidth={3}
+                  dot={false}
+                  filter="url(#glow-orange)"
+                  activeDot={{
+                    r: 7,
+                    fill: COLORS.total,
+                    filter: "url(#glow-orange)",
+                  }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </>
+      )}
     </div>
   );
 }
