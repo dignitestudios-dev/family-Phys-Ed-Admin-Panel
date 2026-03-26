@@ -11,7 +11,7 @@ import PageLoader from "@/components/PageLoader";
 import { postHooks } from "@/hooks/usePostRequests";
 import { deleteHooks } from "@/hooks/useDeleteRequests";
 import { cn, utils } from "@/lib/utils";
-import { ArrowLeft, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowLeft, Mail, MapPin, Phone, Trash2 } from "lucide-react";
 import Details from "@/components/user-management/user-details/details";
 import Sessions from "@/components/user-management/sessions";
 
@@ -109,12 +109,12 @@ const UserDetails = () => {
             </div>
 
             <div className="flex gap-2 items-center">
-              {/* <div
+              <div
                 className="bg-[#FF3B30] rounded-[10px] h-[48px] w-[44px] cursor-pointer active:scale-[0.95] transition-all flex justify-center items-center"
                 onClick={() => handleToggleDeletePopup(true)}
               >
-                <Delete />
-              </div> */}
+                <Trash2 size={20} className="text-white" />
+              </div>
 
               {user?.is_deactivate ? (
                 <button
@@ -252,6 +252,17 @@ const UserDetails = () => {
             show={showAlert.activate}
             onClose={() => handleToggleActivatePopup(false)}
             onContinue={handleActivateUser}
+            loading={deleteLoading}
+          />
+
+          <DangerPopup
+            title="Delete User"
+            desc="Are you sure you want to permanently delete this user?"
+            doneTitle="Yes, Delete"
+            cancelTitle="Cancel"
+            show={showAlert.delete}
+            onClose={() => handleToggleDeletePopup(false)}
+            onContinue={handleDeleteUser}
             loading={deleteLoading}
           />
         </>

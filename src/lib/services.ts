@@ -322,7 +322,7 @@ const deleteUser = (id: string) =>
   apiHandler<{
     success: boolean;
     message: string;
-  }>(() => API.delete(`/auth/deleteAccount/${id}`));
+  }>(() => API.delete(`/users/${id}`));
 
 const getPostById = (id: string, type: string) =>
   apiHandler<{

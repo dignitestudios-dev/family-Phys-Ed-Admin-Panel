@@ -8,7 +8,7 @@ import { getHooks } from "@/hooks/useGetRequests";
 import PageLoader from "@/components/PageLoader";
 import { postHooks } from "@/hooks/usePostRequests";
 import { deleteHooks } from "@/hooks/useDeleteRequests";
-import { ArrowLeft, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowLeft, Mail, MapPin, Phone, Trash2 } from "lucide-react";
 import Details from "@/components/user-management/coach-details/details";
 import Portfolio from "@/components/user-management/coach-details/portfolio";
 import Sessions from "@/components/user-management/sessions";
@@ -109,12 +109,12 @@ const CoachDetails = () => {
               <h1 className="section-heading ">Coach Profile</h1>
             </div>
             <div className="flex gap-2 items-center">
-              {/* <div
+              <div
                 className="bg-[#FF3B30] rounded-[10px] h-[48px] w-[44px] cursor-pointer active:scale-[0.95] transition-all flex justify-center items-center"
                 onClick={() => handleToggleDeletePopup(true)}
               >
-                <Delete />
-              </div> */}
+                <Trash2 size={20} className="text-white" />
+              </div>
               {user?.is_deactivate ? (
                 <button
                   onClick={() => handleToggleActivatePopup(true)}
@@ -268,6 +268,17 @@ const CoachDetails = () => {
             show={showAlert.activate}
             onClose={() => handleToggleActivatePopup(false)}
             onContinue={handleActivateUser}
+            loading={deleteLoading}
+          />
+
+          <DangerPopup
+            title="Delete Coach"
+            desc="Are you sure you want to permanently delete this coach?"
+            doneTitle="Yes, Delete"
+            cancelTitle="Cancel"
+            show={showAlert.delete}
+            onClose={() => handleToggleDeletePopup(false)}
+            onContinue={handleDeleteUser}
             loading={deleteLoading}
           />
         </div>

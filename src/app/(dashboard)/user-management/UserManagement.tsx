@@ -1,9 +1,11 @@
 "use client";
 import CustomPagination from "@/components/CustomPagination";
+import DangerPopup from "@/components/DangerPopup";
 import useDebounceSearch from "@/hooks/useDebounceSearch";
+import { deleteHooks } from "@/hooks/useDeleteRequests";
 import { getHooks } from "@/hooks/useGetRequests";
 import { utils } from "@/lib/utils";
-import { Search } from "lucide-react";
+import { Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -17,6 +19,11 @@ const UserManagement = () => {
   const searchValueDebounce: string = useDebounceSearch(searchValue);
   const { loading, users, totalCoachesPages, totalUsersPages, getAllUsers } =
     getHooks.useGetAllUsers();
+  const { loading: deleteLoading, deleteUser } = deleteHooks.useDeleteUser();
+  const [deleteModal, setDeleteModal] = useState<{ show: boolean; uid: string }>({
+    show: false,
+    uid: "",
+  });
 
   useEffect(() => {
     getAllUsers(searchValueDebounce);
@@ -24,6 +31,17 @@ const UserManagement = () => {
 
   const onPageChange = (page: number) => {
     getAllUsers(searchValueDebounce, page);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, uid: string) => {
+    e.stopPropagation();
+    setDeleteModal({ show: true, uid });
+  };
+
+  const handleConfirmDelete = async () => {
+    const success = await deleteUser(deleteModal.uid);
+    if (success) getAllUsers(searchValueDebounce);
+    setDeleteModal({ show: false, uid: "" });
   };
 
   return (
@@ -93,8 +111,11 @@ const UserManagement = () => {
                     Hourly Slot Price
                   </th>
 
-                  <th className="px-4 py-5 text-left font-normal rounded-e-[8px]">
+                  <th className="px-4 py-5 text-left font-normal">
                     Status
+                  </th>
+                  <th className="px-4 py-5 text-left font-normal rounded-e-[8px]">
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -156,6 +177,14 @@ const UserManagement = () => {
                     >
                       {item?.is_deactivate ? "Inactive" : "Active"}
                     </td>
+                    <td className="px-4 py-6">
+                      <button
+                        onClick={(e) => handleDeleteClick(e, item.coach_uid)}
+                        className="text-[#EE0004] hover:opacity-75 active:scale-90 transition-all"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -189,8 +218,11 @@ const UserManagement = () => {
                     Fitness Goals
                   </th>
 
-                  <th className="px-4 py-5 text-left font-normal rounded-e-[8px]">
+                  <th className="px-4 py-5 text-left font-normal">
                     Status
+                  </th>
+                  <th className="px-4 py-5 text-left font-normal rounded-e-[8px]">
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -247,6 +279,14 @@ const UserManagement = () => {
                     >
                       {item?.is_deactivate ? "Inactive" : "Active"}
                     </td>
+                    <td className="px-4 py-6">
+                      <button
+                        onClick={(e) => handleDeleteClick(e, item.user_uid)}
+                        className="text-[#EE0004] hover:opacity-75 active:scale-90 transition-all"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -256,6 +296,17 @@ const UserManagement = () => {
       ) : (
         <p>Invalid Tab Selected</p>
       )}
+
+      <DangerPopup
+        title="Delete User"
+        desc="Are you sure you want to permanently delete this user?"
+        doneTitle="Yes, Delete"
+        cancelTitle="Cancel"
+        show={deleteModal.show}
+        onClose={() => setDeleteModal({ show: false, uid: "" })}
+        onContinue={handleConfirmDelete}
+        loading={deleteLoading}
+      />
     </>
   );
 };
