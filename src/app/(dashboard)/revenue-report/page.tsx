@@ -3,6 +3,7 @@ import BButton from "@/components/BButton";
 import BTab from "@/components/BTab";
 import CustomPagination from "@/components/CustomPagination";
 import { getHooks } from "@/hooks/useGetRequests";
+import { PER_PAGE } from "@/lib/constants";
 import { UserType } from "@/lib/types";
 import { utils } from "@/lib/utils";
 import Image from "next/image";
@@ -24,10 +25,12 @@ const RevenueReport = () => {
     getRevenue,
   } = getHooks.useGetRevenue(selectedUserType);
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const { loading: downloadingReport, downloadRevenueReport } =
     getHooks.useDownloadRevenueReport(activeTab, selectedUserType);
 
   const onPageChange = (page: number) => {
+    setCurrentPage(page);
     getRevenue(page);
   };
 
@@ -49,29 +52,33 @@ const RevenueReport = () => {
             title={tab}
             key={index}
             active={activeTab === index}
-            onBtnClick={() => setActiveTab(index as 0 | 1)}
+            onBtnClick={() => {
+              setCurrentPage(1);
+              setActiveTab(index as 0 | 1);
+            }}
           />
         ))}
       </div>
 
       {activeTab === 0 ? (
         <>
-          <div className="flex gap-3">
-            <p>User Type: </p>
-            <ul className="flex gap-2">
+          <div className="flex items-center gap-4">
+            <p>User Type:</p>
+            <div className="flex bg-[#1C1C1E] items-center w-fit p-1 rounded-lg gap-3">
               {userTypes.map((userType) => (
-                <li>
-                  <button
-                    className={`${
-                      selectedUserType === userType && "text-primary underline"
-                    } cursor-pointer disabled:cursor-not-allowed`}
-                    onClick={() => setSelectedUserType(userType)}
-                  >
-                    {utils.toTitleCase(userType)}
-                  </button>
-                </li>
+                <BTab
+                  key={userType}
+                  title={utils.toTitleCase(userType)}
+                  active={selectedUserType === userType}
+                  onBtnClick={() => {
+                    setCurrentPage(1);
+                    setSelectedUserType(userType);
+                  }}
+                  className="min-w-28"
+                  w="fit"
+                />
               ))}
-            </ul>
+            </div>
           </div>
           <CustomPagination
             loading={loading}
@@ -136,7 +143,7 @@ const RevenueReport = () => {
                           )
                         }
                       >
-                        <td className="px-4 py-6">{index + 1}</td>
+                        <td className="px-4 py-6">{(currentPage - 1) * PER_PAGE + index + 1}</td>
                         <td className="px-4 py-6">
                           <div className="flex items-center gap-3">
                             <div className="p-[2px] bg-gradient-to-bl from-[#29ABE2] to-[#63CFAC] rounded-full">
@@ -236,7 +243,7 @@ const RevenueReport = () => {
                         router.push(`/product-detail/${merchandise.id}`)
                       }
                     >
-                      <td className="px-4 py-6">{index + 1}</td>
+                      <td className="px-4 py-6">{(currentPage - 1) * PER_PAGE + index + 1}</td>
                       <td className="px-4 py-6 text-nowrap">
                         <div className="bg-[#FCD146] w-20 h-20 rounded-2xl overflow-hidden">
                           <Image

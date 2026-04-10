@@ -7,7 +7,7 @@ import Delete from "@/components/icons/Delete";
 import Search from "@/components/icons/Search";
 import useDebounceSearch from "@/hooks/useDebounceSearch";
 import { notificationHooks } from "@/hooks/useNotificationRequests";
-
+import { PER_PAGE } from "@/lib/constants";
 import { utils } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 
@@ -18,6 +18,7 @@ const PushNotifications = () => {
     notificationHooks.useDeleteNotification();
 
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchValue, setSearhValue] = useState<string>("");
   const searchValueDebounce: string = useDebounceSearch(searchValue);
 
@@ -31,10 +32,12 @@ const PushNotifications = () => {
   };
 
   useEffect(() => {
+    setCurrentPage(1);
     handleGetNotifications(1);
   }, [searchValueDebounce]);
 
   const onPageChange = (page: number) => {
+    setCurrentPage(page);
     handleGetNotifications(page);
   };
 
@@ -74,7 +77,7 @@ const PushNotifications = () => {
             <tbody className="mt-10">
               {notifications.map((notification, index) => (
                 <tr key={index} className="border-b-1 border-[#D4D4D4]">
-                  <td className="px-4 py-6">{index + 1}</td>
+                  <td className="px-4 py-6">{(currentPage - 1) * PER_PAGE + index + 1}</td>
                   <td className="px-4 py-6">{notification.title}</td>
                   <td className="px-4 py-6">{notification.body}</td>
                   <td className="px-4 py-6 text-nowrap">{notification.date}</td>

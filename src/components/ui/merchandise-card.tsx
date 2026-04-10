@@ -17,18 +17,24 @@ function MerchandiseCard({
   };
 }) {
   return (
-    <div className="bg-[#2C2C2E] p-2 w-[32.5%] text-white rounded-xl ">
+    <div className="bg-[#2C2C2E] p-2 w-full text-white rounded-xl">
       <div className="flex flex-col">
-        <Image
-          className="w-[500px] h-[120px] rounded-xl object-cover"
-          src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${product.images[0]}`}
-          alt="img"
-          width={500}
-          height={120}
-        />
+        {product?.images?.length ? (
+          <Image
+            className="w-[500px] h-[120px] rounded-xl object-cover"
+            src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${product.images[0]}`}
+            alt="img"
+            width={500}
+            height={120}
+          />
+        ) : (
+          <div className="w-full h-[120px] rounded-xl bg-secondary flex items-center justify-center">
+            <p className="text-white/50">No image available</p>
+          </div>
+        )}
         <div className="flex justify-between border-b py-2">
           <div>
-            <h1>{product.title}</h1>
+            <h1 className="font-bold text-xl">{product.title}</h1>
             <p className="text-xs">
               Category:{" "}
               <span className="text-primary">{`${product.category}`}</span>{" "}
@@ -39,7 +45,7 @@ function MerchandiseCard({
             <h4
               className={cn(
                 product.is_approved ? " text-green-600" : " text-yellow-600",
-                "rounded-full text-xs text-center"
+                "rounded-full text-xs text-center",
               )}
             >
               {product.is_approved ? "Live" : "Pending"}

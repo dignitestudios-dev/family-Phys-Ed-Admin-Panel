@@ -6,7 +6,9 @@ import MerchandiseCard from "@/components/ui/merchandise-card";
 import { getHooks } from "@/hooks/useGetRequests";
 import { updateHooks } from "@/hooks/useUpdateRequests";
 import { postHooks } from "@/hooks/usePostRequests";
+import { PER_PAGE } from "@/lib/constants";
 import { utils } from "@/lib/utils";
+import { X } from "lucide-react";
 import React, { useState } from "react";
 
 type SelectedTabs = 0 | 1; // 0: Coaches, 1: Users
@@ -28,6 +30,9 @@ const ReportedIssues = () => {
   const [markReadReportId, setMarkReadReportId] = useState<number | null>(null);
   const { loading: loadingMarkRead, markReportAsRead } =
     postHooks.useMarkReportAsRead();
+
+  const [showOtherReasonModal, setShowOtherReasonModal] = useState(false);
+  const [selectedOtherReason, setSelectedOtherReason] = useState("");
 
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [updatedUserStatus, setUpdatedUserStatus] = useState<
@@ -76,6 +81,11 @@ const ReportedIssues = () => {
     await markReportAsRead(markReadReportId);
     setMarkReadReportId(null);
     getAllReportedIssues();
+  };
+
+  const handleOpenOtherReason = (reason: string | null) => {
+    setSelectedOtherReason(reason || "N/A");
+    setShowOtherReasonModal(true);
   };
 
   return (
@@ -133,13 +143,31 @@ const ReportedIssues = () => {
                     key={index}
                     className="border-b cursor-pointer border-[#3a3a3c]"
                   >
-                    <td className="px-4 py-6">{index + 1}</td>
+                    <td className="px-4 py-6">{(page - 1) * PER_PAGE + index + 1}</td>
                     <td className="px-4 py-6">
                       <div className="flex users-center gap-3">
                         {user?.name}
                       </div>
                     </td>
-                    <td className="px-4 py-6">{user?.reason || "N/A"}</td>
+                    <td className="px-4 py-6">
+                      <div className="flex items-center gap-2">
+                        <span>{user?.reason || "N/A"}</span>
+                        {String(user?.reason || "")
+                          .trim()
+                          .toLowerCase() === "other" && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleOpenOtherReason(user?.other_reason)
+                            }
+                            className="border-b border-primary text-primary text-sm hover:opacity-80"
+                            title="View other reason"
+                          >
+                            View reason
+                          </button>
+                        )}
+                      </div>
+                    </td>
                     <td className="px-4 py-6">{user?.reported_by || "N/A"}</td>
                     <td className="px-4 py-6">{user?.date || "N/A"}</td>
 
@@ -198,13 +226,31 @@ const ReportedIssues = () => {
                     key={index}
                     className="border-b cursor-pointer border-[#3a3a3c]"
                   >
-                    <td className="px-4 py-6">{index + 1}</td>
+                    <td className="px-4 py-6">{(page - 1) * PER_PAGE + index + 1}</td>
                     <td className="px-4 py-6">
                       <div className="flex users-center gap-3">
                         {user?.name}
                       </div>
                     </td>
-                    <td className="px-4 py-6">{user?.reason || "N/A"}</td>
+                    <td className="px-4 py-6">
+                      <div className="flex items-center gap-2">
+                        <span>{user?.reason || "N/A"}</span>
+                        {String(user?.reason || "")
+                          .trim()
+                          .toLowerCase() === "other" && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleOpenOtherReason(user?.other_reason)
+                            }
+                            className="border-b border-primary text-primary text-sm hover:opacity-80"
+                            title="View other reason"
+                          >
+                            View reason
+                          </button>
+                        )}
+                      </div>
+                    </td>
                     <td className="px-4 py-6">{user?.reported_by || "N/A"}</td>
                     <td className="px-4 py-6">{user?.date || "N/A"}</td>
 
@@ -261,6 +307,40 @@ const ReportedIssues = () => {
         setShow={handleCloseMarkReadPopup}
         onConfirm={handleMarkReportAsRead}
       />
+
+      {showOtherReasonModal && (
+        <div
+          className="fixed top-0 left-0 w-full h-screen bg-black/50 flex items-center justify-center"
+          style={{ zIndex: 9999 }}
+        >
+          <div className="bg-[#1C1C1E] rounded-xl p-6 w-[500px] max-w-[92vw] border border-[#3a3a3c]">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-general-semibold text-white">
+                Other Reason
+              </h3>
+              <button
+                type="button"
+                className="text-white/70 hover:text-white"
+                onClick={() => setShowOtherReasonModal(false)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <p className="text-white/70 leading-relaxed whitespace-pre-wrap">
+              {selectedOtherReason}
+            </p>
+            <div className="flex justify-end mt-6">
+              <button
+                type="button"
+                className="bg-gradient text-black px-6 py-2 rounded-md font-general-medium"
+                onClick={() => setShowOtherReasonModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

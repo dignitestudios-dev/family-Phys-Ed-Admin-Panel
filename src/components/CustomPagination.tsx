@@ -8,6 +8,7 @@ type CustomPaginationProps = {
   totalPages: number;
   onPageChange: (page: number) => void;
   children: React.ReactNode;
+  resetTrigger?: string | number;
 };
 
 const CustomPagination: React.FC<CustomPaginationProps> = ({
@@ -15,13 +16,16 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
   totalPages,
   onPageChange,
   children,
+  resetTrigger,
 }) => {
   const [page, setPage] = useState(1);
 
+  useEffect(() => {
+    setPage(1);
+  }, [resetTrigger]);
+
   const preventPrevious = useMemo(() => page === 1, [page, totalPages]);
   const preventNext = useMemo(() => page >= totalPages, [page, totalPages]);
-
-  console.log("preventNext: ", preventNext);
 
   const goNext = () => {
     if (preventNext) return;
@@ -38,8 +42,6 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
       return prev - 1;
     });
   };
-
-  console.log(totalPages, "Total Pages in Custom Pagination");
 
   return (
     <>

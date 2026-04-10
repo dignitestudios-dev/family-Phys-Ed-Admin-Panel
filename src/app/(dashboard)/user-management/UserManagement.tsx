@@ -4,6 +4,7 @@ import DangerPopup from "@/components/DangerPopup";
 import useDebounceSearch from "@/hooks/useDebounceSearch";
 import { deleteHooks } from "@/hooks/useDeleteRequests";
 import { getHooks } from "@/hooks/useGetRequests";
+import { PER_PAGE } from "@/lib/constants";
 import { utils } from "@/lib/utils";
 import { Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -16,20 +17,27 @@ const UserManagement = () => {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState<SelectedTabs>("0");
   const [searchValue, setSearhValue] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const searchValueDebounce: string = useDebounceSearch(searchValue);
+  const paginationResetTrigger = `${selectedTab}-${searchValueDebounce}`;
   const { loading, users, totalCoachesPages, totalUsersPages, getAllUsers } =
     getHooks.useGetAllUsers();
   const { loading: deleteLoading, deleteUser } = deleteHooks.useDeleteUser();
-  const [deleteModal, setDeleteModal] = useState<{ show: boolean; uid: string }>({
+  const [deleteModal, setDeleteModal] = useState<{
+    show: boolean;
+    uid: string;
+  }>({
     show: false,
     uid: "",
   });
 
   useEffect(() => {
-    getAllUsers(searchValueDebounce);
+    setCurrentPage(1);
+    getAllUsers(searchValueDebounce, 1);
   }, [searchValueDebounce]);
 
   const onPageChange = (page: number) => {
+    setCurrentPage(page);
     getAllUsers(searchValueDebounce, page);
   };
 
@@ -42,6 +50,13 @@ const UserManagement = () => {
     const success = await deleteUser(deleteModal.uid);
     if (success) getAllUsers(searchValueDebounce);
     setDeleteModal({ show: false, uid: "" });
+  };
+
+  const handleSelectTab = (index: number) => {
+    setSearhValue("");
+    setCurrentPage(1);
+    getAllUsers("", 1);
+    setSelectedTab(String(index) as SelectedTabs);
   };
 
   return (
@@ -59,7 +74,7 @@ const UserManagement = () => {
                     ? "bg-primary rounded-sm font-general-medium"
                     : "text-desc"
                 }`}
-                onClick={() => setSelectedTab(String(index) as SelectedTabs)}
+                onClick={() => handleSelectTab(index)}
               >
                 {tab}
               </p>
@@ -85,7 +100,8 @@ const UserManagement = () => {
         <CustomPagination
           loading={loading}
           onPageChange={onPageChange}
-          totalPages={totalUsersPages}
+          totalPages={totalCoachesPages}
+          resetTrigger={paginationResetTrigger}
         >
           <div className=" rounded-xl p-4 pt-0 overflow-y-auto bg-secondary">
             <table className="w-full text-white ">
@@ -111,9 +127,7 @@ const UserManagement = () => {
                     Hourly Slot Price
                   </th>
 
-                  <th className="px-4 py-5 text-left font-normal">
-                    Status
-                  </th>
+                  <th className="px-4 py-5 text-left font-normal">Status</th>
                   <th className="px-4 py-5 text-left font-normal rounded-e-[8px]">
                     Actions
                   </th>
@@ -125,12 +139,12 @@ const UserManagement = () => {
                     key={index}
                     onClick={() =>
                       router.push(
-                        `/user-management/${item.coach_uid}?role=coach`
+                        `/user-management/${item.coach_uid}?role=coach`,
                       )
                     }
                     className="border-b cursor-pointer border-[#3a3a3c]"
                   >
-                    <td className="px-4 py-6">{index + 1}</td>
+                    <td className="px-4 py-6">{(currentPage - 1) * PER_PAGE + index + 1}</td>
                     <td className="px-4 py-6">
                       <div className="flex items-center gap-3">
                         <div className="p-[2px] bg-gradient-to-bl from-[#29ABE2] to-[#63CFAC] rounded-full">
@@ -153,8 +167,8 @@ const UserManagement = () => {
                         item?.phone_number.startsWith("+1")
                           ? item?.phone_number
                           : item?.phone_number.startsWith("1")
-                          ? `+${item?.phone_number}`
-                          : `+1${item?.phone_number}`
+                            ? `+${item?.phone_number}`
+                            : `+1${item?.phone_number}`
                       }` || "N/A"}
                     </td>
                     <td className="px-4 py-6">{item?.address || "N/A"}</td>
@@ -195,7 +209,8 @@ const UserManagement = () => {
         <CustomPagination
           loading={loading}
           onPageChange={onPageChange}
-          totalPages={totalCoachesPages}
+          totalPages={totalUsersPages}
+          resetTrigger={paginationResetTrigger}
         >
           <div className=" rounded-xl p-4 pt-0 overflow-y-auto bg-secondary">
             <table className="w-full text-white ">
@@ -218,9 +233,7 @@ const UserManagement = () => {
                     Fitness Goals
                   </th>
 
-                  <th className="px-4 py-5 text-left font-normal">
-                    Status
-                  </th>
+                  <th className="px-4 py-5 text-left font-normal">Status</th>
                   <th className="px-4 py-5 text-left font-normal rounded-e-[8px]">
                     Actions
                   </th>
@@ -235,7 +248,7 @@ const UserManagement = () => {
                     }
                     className="border-b cursor-pointer border-[#3a3a3c]"
                   >
-                    <td className="px-4 py-6">{index + 1}</td>
+                    <td className="px-4 py-6">{(currentPage - 1) * PER_PAGE + index + 1}</td>
                     <td className="px-4 py-6">
                       <div className="flex items-center gap-3">
                         <div className="p-[2px] bg-gradient-to-bl from-[#29ABE2] to-[#63CFAC] rounded-full">
@@ -258,8 +271,8 @@ const UserManagement = () => {
                         item?.phone_number.startsWith("+1")
                           ? item?.phone_number
                           : item?.phone_number.startsWith("1")
-                          ? `+${item?.phone_number}`
-                          : `+1${item?.phone_number}`
+                            ? `+${item?.phone_number}`
+                            : `+1${item?.phone_number}`
                       }` || "N/A"}
                     </td>
                     <td className="px-4 py-6">{item?.address || "N/A"}</td>

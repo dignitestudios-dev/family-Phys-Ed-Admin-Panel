@@ -4,6 +4,7 @@ import CustomPagination from "@/components/CustomPagination";
 import MerchandiseCard from "@/components/ui/merchandise-card";
 import useDebounceSearch from "@/hooks/useDebounceSearch";
 import { getHooks } from "@/hooks/useGetRequests";
+import { PER_PAGE } from "@/lib/constants";
 import { utils } from "@/lib/utils";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ const Requests = () => {
   const tabs = ["Profile Requests", "Merchandise Requests"];
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState<SelectedTabs>("0");
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const {
     loading,
     users,
@@ -28,7 +30,13 @@ const Requests = () => {
   }, []);
 
   const onPageChange = (page: number) => {
+    setCurrentPage(page);
     getAllRequests(page);
+  };
+
+  const handleSelectTab = (tab: SelectedTabs) => {
+    setCurrentPage(1);
+    setSelectedTab(tab);
   };
 
   return (
@@ -42,7 +50,7 @@ const Requests = () => {
                 key={index}
                 title={tab}
                 active={selectedTab === String(index)}
-                onBtnClick={() => setSelectedTab(String(index) as SelectedTabs)}
+                onBtnClick={() => handleSelectTab(String(index) as SelectedTabs)}
                 className="w-[220px]"
               />
             ))}
@@ -101,7 +109,7 @@ const Requests = () => {
                       }
                       className="border-b cursor-pointer border-[#3a3a3c]"
                     >
-                      <td className="px-4 py-6">{index + 1}</td>
+                      <td className="px-4 py-6">{(currentPage - 1) * PER_PAGE + index + 1}</td>
                       <td className="px-4 py-6">
                         <div className="flex items-center gap-3">
                           <div className="p-[2px] bg-gradient-to-bl from-[#29ABE2] to-[#63CFAC] rounded-full">
@@ -109,7 +117,8 @@ const Requests = () => {
                               className="h-[43px] w-[43px] rounded-full bg-cover bg-center border border-white"
                               style={{
                                 backgroundImage: `url(${
-                                  utils.formatImagePath(item?.avatar) ?? "/default-avatar.png"
+                                  utils.formatImagePath(item?.avatar) ??
+                                  "/default-avatar.png"
                                 })`,
                               }}
                             />
@@ -123,8 +132,8 @@ const Requests = () => {
                           item?.phone_number.startsWith("+1")
                             ? item?.phone_number
                             : item?.phone_number.startsWith("1")
-                            ? `+${item?.phone_number}`
-                            : `+1${item?.phone_number}`
+                              ? `+${item?.phone_number}`
+                              : `+1${item?.phone_number}`
                         }` || "N/A"}{" "}
                       </td>
                       <td className="px-4 py-6">{item?.address || "N/A"}</td>
@@ -155,9 +164,11 @@ const Requests = () => {
           ) : !users?.merchandise_requests?.data?.length ? (
             <p className="text-white/50 pt-4">No merchandise request found</p>
           ) : (
-            users?.merchandise_requests?.data?.map((p) => (
-              <MerchandiseCard key={p.id} product={p} />
-            ))
+            <div className="grid grid-cols-3 gap-6 my-6">
+              {users?.merchandise_requests?.data?.map((p) => (
+                  <MerchandiseCard key={p.id} product={p} />
+              ))}
+            </div>
           )}
         </div>
       </CustomPagination>

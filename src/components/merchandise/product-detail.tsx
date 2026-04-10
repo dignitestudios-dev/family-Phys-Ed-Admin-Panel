@@ -52,7 +52,11 @@ function ProductDetails({ product }: Props) {
       </div>
       <div className="bg-secondary h-full overflow-y-auto flex gap-2 p-4 rounded-2xl">
         <div className="w-[50%]">
-          <Slider images={product.products_images} />
+          {product?.products_images?.length ? (<Slider images={product.products_images} />) : (
+            <div className="w-full h-full rounded-xl bg-[#2a2a2c] flex items-center justify-center">
+              <p className="text-white/50">No image available</p>
+            </div>
+          )}
         </div>
         <div className="w-[50%]">
           <div className="flex flex-col gap-3">
