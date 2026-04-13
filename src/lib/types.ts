@@ -670,6 +670,7 @@ export interface Order {
   tracking_status: OrderTrackingStatus;
   cancellation_reason: string | null;
   order_items: OrderItem[];
+  total_amount: string;
 }
 
 export interface OrderItem {

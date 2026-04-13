@@ -60,7 +60,7 @@ const OrderProduct: React.FC<{ order: Order; showOrderStatus?: boolean }> = ({
 
                 <div>
                   <p className="text-white/50">Price</p>
-                  <p className="text-xl">${item?.price}</p>
+                  <p className="text-xl">${order?.total_amount}</p>
                 </div>
               </div>
             </div>
