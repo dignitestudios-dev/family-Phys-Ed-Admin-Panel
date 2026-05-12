@@ -60,17 +60,21 @@ function SessionCard({
 }) {
   const searchParams = useSearchParams();
   const statusClassName = getSessionStatusBadgeClassName(session?.status);
+  console.log("session", session);
 
   return (
     <div className="bg-[#2C2C2E] p-2 w-[32.5%] text-white rounded-xl ">
       <div className="flex flex-col">
         {/* <Image className="w-[500px] h-[100px] rounded-xl" src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${session?.images[0]}`} alt="img" width={500} height={120} /> */}
         <div className="flex justify-between border-b py-2">
-          <h1>Booking ID #123456</h1>
+          <h1>
+            {searchParams.get("role") === "coach" ? "Session" : "Booking"} ID #
+            {session?.booking_id || session?.session_id}
+          </h1>
           <h1
             className={cn(
               "rounded-full px-3 py-1 text-xs font-semibold",
-              statusClassName
+              statusClassName,
             )}
           >
             {formatSessionStatus(session?.status)}

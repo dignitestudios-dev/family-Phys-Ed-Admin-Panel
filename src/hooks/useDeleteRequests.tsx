@@ -103,10 +103,31 @@ const useDeleteCoachReview = () => {
   return { loading, deleteCoachReview };
 };
 
+const useDeleteMerchandise = () => {
+  const [loading, setLoading] = useState(false);
+
+  const deleteMerchandise = async (product_id: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+      const response = await api.deleteMerchandise(product_id);
+      toast.success(response?.message);
+      return true;
+    } catch (error) {
+      utils.handleError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, deleteMerchandise };
+};
+
 export const deleteHooks = {
   useDeleteUser,
   useDeletePost,
   useDeleteCommunity,
   useDeleteGroup,
   useDeleteCoachReview,
+  useDeleteMerchandise,
 };

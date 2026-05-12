@@ -1,13 +1,15 @@
 "use client";
 import { Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, ChevronRight, MapPin } from "lucide-react";
+import { ArrowLeft, ChevronRight, MapPin, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Slider from "../slider/slider";
 import { postHooks } from "@/hooks/usePostRequests";
 import LiveMerchandiseForm from "./LiveMerchandiseForm";
+import DangerPopup from "@/components/DangerPopup";
+import { deleteHooks } from "@/hooks/useDeleteRequests";
 
 type Props = {
   product: Product;
@@ -16,12 +18,23 @@ type Props = {
 function ProductDetails({ product }: Props) {
   const router = useRouter();
   const [popup, setPopup] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const { loading, toggleApproveCoachProduct } =
     postHooks.useApproveCoachProduct();
+  const { loading: deleteLoading, deleteMerchandise } =
+    deleteHooks.useDeleteMerchandise();
+
   const handleApproveProduct = async (additionalPrice: number | string) => {
     await toggleApproveCoachProduct(String(product.id), additionalPrice);
     setPopup(false);
   };
+
+  const handleDeleteProduct = async () => {
+    const success = await deleteMerchandise(String(product.id));
+    if (success) router.push("/merchandise");
+    setDeleteModal(false);
+  };
+
   return (
     <>
       <div className="flex items-center justify-between mb-6">
@@ -41,14 +54,22 @@ function ProductDetails({ product }: Props) {
             {product.is_approved ? "Live" : "Pending"}
           </div>
         </div>
-        {!product.is_approved && (
-          <button
-            onClick={() => setPopup(true)}
-            className="cursor-pointer bg-primary p-2 px-6 text-black rounded-sm"
+        <div className="flex items-center gap-2">
+          <div
+            className="bg-[#FF3B30] rounded-[10px] h-[48px] w-[44px] cursor-pointer active:scale-[0.95] transition-all flex justify-center items-center"
+            onClick={() => setDeleteModal(true)}
           >
-            Live Merchandise
-          </button>
-        )}
+            <Trash2 size={20} className="text-white" />
+          </div>
+          {!product.is_approved && (
+            <button
+              onClick={() => setPopup(true)}
+              className="cursor-pointer bg-primary p-2 px-6 text-black rounded-sm"
+            >
+              Live Merchandise
+            </button>
+          )}
+        </div>
       </div>
       <div className="bg-secondary h-full overflow-y-auto flex gap-2 p-4 rounded-2xl">
         <div className="w-[50%]">
@@ -161,6 +182,17 @@ function ProductDetails({ product }: Props) {
         onClose={() => setPopup(false)}
         onContinue={handleApproveProduct}
         loading={loading}
+      />
+
+      <DangerPopup
+        title="Delete Merchandise"
+        desc="Are you sure you want to permanently delete this product?"
+        doneTitle="Yes, Delete"
+        cancelTitle="Cancel"
+        show={deleteModal}
+        onClose={() => setDeleteModal(false)}
+        onContinue={handleDeleteProduct}
+        loading={deleteLoading}
       />
     </>
   );

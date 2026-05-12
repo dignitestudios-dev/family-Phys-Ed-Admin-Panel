@@ -682,6 +682,11 @@ const deleteCoachReview = (coach_uid: string, review_id: string) =>
     API.delete(`/coach/reviews`, { data: { coach_uid, review_id } })
   );
 
+const deleteMerchandise = (product_id: string) =>
+  apiHandler<{ success: boolean; message: string }>(() =>
+    API.delete(`/products/${product_id}`)
+  );
+
 const api = {
   login,
   getAllUsers,
@@ -739,5 +744,6 @@ const api = {
   downloadProductsRevenueReport,
   getDashboardAnalytics,
   deleteCoachReview,
+  deleteMerchandise,
 };
 export default api;
